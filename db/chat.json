@@ -1,0 +1,24 @@
+{ "_id" : { "$oid" : "520d0d32ca8a938bf677a177" }, "identifier" : "crank_success", "fields" : 2, "text" : "No prob %1, I went ahead and originated a call for you to %2" }
+{ "_id" : { "$oid" : "520d0d64ca8a938bf677a178" }, "fields" : 2, "identifier" : "crank_success", "text" : "Got it man, we're about to find out if the fridge is running @ %2" }
+{ "_id" : { "$oid" : "520d1c30ca8a938bf677a17a" }, "fields" : 2, "identifier" : "crank_success", "text" : "Calling %2, because %1 wants to know if they have Prince Albert in a can" }
+{ "_id" : { "$oid" : "5210b2c2ca8ad18a0b230b42" }, "fields" : 2, "identifier" : "crank_foo", "text" : "%1, this is a test where I say %2" }
+{ "_id" : { "$oid" : "521bb9f7ca8a2e7368d98c53" }, "fields" : 2, "identifier" : "command_unknown", "text" : "!%2 isn't a command I know. I'd try !help" }
+{ "_id" : { "$oid" : "521bba19ca8a2e7368d98c54" }, "fields" : 2, "identifier" : "command_unknown", "text" : "Sorry %1, I don't know the command !%2 (try !help)" }
+{ "_id" : { "$oid" : "521bba46ca8a2e7368d98c55" }, "fields" : 2, "identifier" : "command_unknown", "text" : "Dang, %1, no one has programmed !%2 -- my developers must be lazy. (try !help)" }
+{ "_id" : { "$oid" : "521bbad2ca8a2e7368d98c56" }, "fields" : 0, "identifier" : "crank_format", "text" : "!crank expects a format like: !crank \"<crank text>\" <10 digit number>" }
+{ "_id" : { "$oid" : "521bbb98ca8a2e7368d98c57" }, "fields" : 2, "identifier" : "command_unknown", "text" : "Hey %1, is !%2 a spelling mistake? My developers are omnicient and coded everything a bot could do, except misspellings (try !help)" }
+{ "_id" : { "$oid" : "521bbc0dca8a2e7368d98c58" }, "fields" : 1, "identifier" : "pastebin_weberror", "text" : "Dang it! I tried to retrieve that pastebin entry, but I got error code: %1" }
+{ "_id" : { "$oid" : "521bbc4eca8a2e7368d98c59" }, "fields" : 0, "identifier" : "pastebin_iderror", "text" : "Damn, I didn't see the pastebin.com ID on your URL, check the URL you pasted." }
+{ "_id" : { "$oid" : "521bbc86ca8a2e7368d98c5a" }, "fields" : 0, "identifier" : "pastebin_format", "text" : "!pastecrank expects a format like: !pastecrank http://pastebin.com/identifier <10 digit number>" }
+{ "_id" : { "$oid" : "521bbcbcca8a2e7368d98c5b" }, "fields" : 1, "identifier" : "crank_callinprogress", "text" : "Yo %1, ummm... Someone's already making a crank call, and we're just using a lowly single voice channel for this, sorry man (try later)" }
+{ "_id" : { "$oid" : "521bbcd9ca8a2e7368d98c5c" }, "fields" : 1, "identifier" : "crank_callinprogress", "text" : "Hey %1, there's already a call in progress (try again in a few.)" }
+{ "_id" : { "$oid" : "521bbd04ca8a2e7368d98c5d" }, "fields" : 1, "identifier" : "crank_callinprogress", "text" : "Big gulps huh? Welp, see ya later. (There's already a call in progress, %1)" }
+{ "_id" : { "$oid" : "521bbd2aca8a2e7368d98c5e" }, "fields" : 1, "identifier" : "crank_callinprogress", "text" : "Duuuude, someone is already making a crank. You'll have to try again, %1" }
+{ "_id" : { "$oid" : "521fae2dca8aaa698f9f1a4a" }, "fields" : 4, "identifier" : "note_send", "text" : "Hey %1, %2 sent you a note %3, saying: %4" }
+{ "_id" : { "$oid" : "5220964bca8aaa698f9f1a4b" }, "fields" : 1, "identifier" : "note_format", "text" : "%1, !note expects a nick, and a message like: !note somedude hey you'll hear this next time you talk" }
+{ "_id" : { "$oid" : "5220990cca8aaa698f9f1a4c" }, "fields" : 1, "identifier" : "note_saved", "text" : "Cool %1, I'll let them know next time they're active." }
+{ "_id" : { "$oid" : "52209928ca8aaa698f9f1a4d" }, "fields" : 1, "identifier" : "note_saved", "text" : "Dually noted." }
+{ "_id" : { "$oid" : "52209933ca8aaa698f9f1a4e" }, "fields" : 1, "identifier" : "note_saved", "text" : "Got that save for you %1; letting 'em know asap." }
+{ "_id" : { "$oid" : "52209948ca8aaa698f9f1a4f" }, "fields" : 1, "identifier" : "note_saved", "text" : "Hey %1, was that a joke about their mom? I can't save that (just kidding, saved the note for you)" }
+{ "_id" : { "$oid" : "52209965ca8aaa698f9f1a50" }, "fields" : 1, "identifier" : "note_saved", "text" : "Saved that note by printing it on a dot-matrix printer @ 300 dB. Or, just saved it to a db and I'll regurgitate it later." }
+{ "_id" : { "$oid" : "52209e65ca8aaa698f9f1a51" }, "fields" : 0, "identifier" : "help", "text" : "You can find help @ https://code.google.com/p/whistler-bot/wiki/Help" }
