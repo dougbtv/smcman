@@ -68,7 +68,7 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					case "smc": 		smc.startSMC(command,from); break;
 					
 					case "in":
-					case "in":
+					case "join":
 					case "imin":        smc.joinSMC();  break;
 					
 					case "cancel":
@@ -77,6 +77,10 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					case "forfeit":
 						break;
 
+					// ---------------------------------------------------------
+					// -- Note command(s)
+					// ---------------------------------------------------------
+					
 					case "note":
 						// Leave a note for someone to read the next time they speak.
 						this.note.leaveAMessage(from,command.args);
