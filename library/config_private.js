@@ -16,7 +16,7 @@ function define(name, value) {
 // see also: 
 // 		http://mongoosejs.com/docs/connections.html
 //		http://docs.mongodb.org/manual/tutorial/enable-authentication/
-define("MONGO_CONNECT_STRING",'mongodb://10.0.0.2/whistler');
+define("MONGO_CONNECT_STRING",'mongodb://localhost/smcman');
 
 define("IRC_SERVER",'irc.freenode.net');
 define("IRC_CHANNEL",'#smcbot');

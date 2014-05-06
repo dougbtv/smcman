@@ -65,9 +65,15 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					// -- SMC commands.
 					// ---------------------------------------------------------
 					
-					case "smc": 		smc.startSMC(command); break;
+					case "smc": 		smc.startSMC(command,from); break;
+					
+					case "in":
 					case "in":
 					case "imin":        smc.joinSMC();  break;
+					
+					case "cancel":
+					case "admincancel": smc.cancelSMC(); break;
+
 					case "forfeit":
 						break;
 
