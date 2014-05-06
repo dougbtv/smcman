@@ -42,7 +42,7 @@ You'll want to import the mongo db's (you can find the original json files in th
 To export the mongo db's
 
     mongoexport --db smcman --collection chat --out chat.json
-    mongoexport --db smcman --collection notes --out notes.json
+    mongoexport --db smcman --collection notes --out notes.json 
 
 ---
 **Basic Usage**
