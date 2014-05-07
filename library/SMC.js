@@ -66,6 +66,10 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 
 			} else {
 
+				// We should check if they're an admin.
+				// If they're not, they're not allowed.
+				bot.say("nickserv", "info " + from);
+
 				chat.say("smc_cancel_notallowed",[from]);
 
 			}

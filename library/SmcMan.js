@@ -1,5 +1,5 @@
 // ------------------------------------------- -
-// ----- Whistler - the guts of the bot. ---- -
+// ----- SMCMAN - the guts of the bot. ---- -
 // ----------------------------------------- -
 
 module.exports = function(bot, mongoose, db, constants, privates) {
@@ -61,6 +61,11 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 						// This happens when someone just speaks a "!" only in a single line, which happens on IRC more than one might think!
 						break;
 
+					case "help":
+						// Ask for some help.
+						this.chat.say("help",[]);
+						break;
+						
 					// ---------------------------------------------------------
 					// -- SMC commands.
 					// ---------------------------------------------------------
@@ -74,6 +79,8 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					case "cancel":
 					case "admincancel": smc.cancelSMC(command,from); break;
 
+					case "out":
+					case "imout":
 					case "forfeit":
 						break;
 
@@ -84,11 +91,6 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					case "note":
 						// Leave a note for someone to read the next time they speak.
 						this.note.leaveAMessage(from,command.args);
-						break;
-						
-					case "help":
-						// Ask for some help.
-						this.chat.say("help",[]);
 						break;
 						
 					default:
