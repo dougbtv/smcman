@@ -67,7 +67,8 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					
 				} else {
 					
-					this.ircSay("That's an error. I'm saying a generic thing, because I can't find what I'm supposed to specifically say. I'll slap myself about with a trout. [identifier: " + identifier + "]");
+					this.ircSay("That's an error. I'm saying a generic thing, because I can't find what I'm supposed to specifically say. I'll slap myself about with a trout. [identifier: " 
+						+ identifier + " / length: " + parameters.length + "]");
 					
 				}
 				

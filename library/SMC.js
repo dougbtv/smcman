@@ -1,4 +1,4 @@
-module.exports = function(bot, chat, mongoose, db, constants, privates) {
+module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) {
 
 	// Our static phases.
 	var PHASE_INTIALIZED = 1;
@@ -61,8 +61,10 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 				console.log("!trace the smc doc now: ",smc);
 				// Do we have enough participants to start?
 				if (smc.smcers.length > 1) {
-					// That's good.
+					// That's good, we can start!
 					chat.say("smc_starting_now",[smc.nicklist]);
+
+
 				} else {
 					// There's not enough people to start.
 					chat.say("smc_not_enough",[smc.originator]);
@@ -80,8 +82,16 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 
 	this.tearDownSMC = function() {
 
+		// We're tearin' 'er down.
 		console.log("Tearing down SMC!!! !trace");
-		smc.phase = false;
+
+		// Clear out our SMC doc.
+		smc = new SMC;
+
+		// Cancel any scheduled job.
+		if (this.job) {
+			this.job.cancel();
+		}
 
 	}
 
@@ -90,7 +100,6 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 
 		for (var i = 0; i < smc.smcers.length; i++) {
 			var eachnick = smc.smcers[i].nick
-			console.log("!trace each nick: ",eachnick);
 			if (eachnick == needlenick) {
 				return true;
 			}
@@ -107,8 +116,6 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 		if (command.args.match(/['"].+['"]\s\d\d\s\d\d/)) {
 
 			// Setup our SMC properties.
-
-			console.log("!trace that's good");
 
 			if (!smc.phase) {
 
@@ -170,6 +177,8 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 
 	}
 
+
+
 	this.cancelSMC = function(from) {
 
 		if (smc.phase) {
@@ -183,10 +192,21 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 
 				// We should check if they're an admin.
 				// If they're not, they're not allowed.
-				bot.say("nickserv", "info " + from);
+				smcman.isAdmin(from,function(admin_status){
 
-				chat.say("smc_cancel_notallowed",[smc.originator]);
+					if (admin_status) {
+						// Cool an admin can stop this.
+						this.tearDownSMC();
+						chat.say("smc_admin_cancel",[from]);
 
+					} else {
+						// They're not allowed to.
+						chat.say("smc_cancel_notallowed",[smc.originator]);
+					}
+
+				}.bind(this));
+
+				
 			}
 
 		} else {
@@ -224,6 +244,44 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 			chat.say("smc_join_nosmc",[from]);
 		}
 
+	}
+
+	this.forfeitSMC = function(from) {
+
+		if (smc.phase) {
+
+			if (this.isParticipant(from)) {
+				
+				// Remove them from the array.
+				var newlist = [];
+				for (var i = 0; i < smc.smcers.length; i++) {
+					var eachnick = smc.smcers[i].nick;
+					console.log("!trace eachnic: ",eachnick);
+					if (eachnick != from) {
+						newlist.push(smc.smcers[i]);
+					}
+				}
+				smc.smcers = newlist;
+
+				// Let 'em know they're leaving
+				chat.say("smc_forfeit",[from]);
+			
+			} else {
+				chat.say("smc_quit_nojoin",[from]);
+			}
+
+		} else {
+			chat.say("smc_quit_nosmc",[from]);
+		}
+
+	}
+
+	// shows debug info about smc.
+	this.traceIt = function(from) {
+
+		console.log("------------------------------------------");
+		console.log("smc document: ",smc);
+		console.log("------------------------------------------");
 
 	}
 

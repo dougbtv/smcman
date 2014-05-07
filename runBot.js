@@ -18,7 +18,7 @@ try {
 } catch (e) {
 	// Ok, there's no "my privates" so, we want to warn them, and then just include the template.
 	console.log("NOTICE: Oops! Looks like you should copy the file ./library/config_private.js to ./library/config_private_mine.js -- so it's private for you.");
-	console.log("We'll include the template file for you, but, to avoid committing your private info to the repo, you should copy it (see README.txt)");
+	console.log("We'll include the template file for you, but, to avoid committing your private info to the repo, you should copy it (see README.md)");
 	var privates = require("./library/config_private.js");
 }
 
@@ -86,5 +86,16 @@ bot.addListener("message", function(from, to, text, message) {
 	
 });
 
+bot.addListener("notice", function(from, to, text, message) {
+	
+	/* console.log("message",message);
+	console.log("text",text);
+	console.log("from",from);
+	console.log("to",to); */
+	
+	// Let's have smcman handle this command.
+	smcman.noticeHandler(text,from);
+	
+});
 
 

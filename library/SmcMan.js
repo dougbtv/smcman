@@ -17,6 +17,16 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	this.privates = privates;
 	this.mongoose = mongoose;
 	this.db = db;
+
+	// We'll create our admin schema so we only do it once.
+	// Setup our schemas.
+	var adminSchema = this.mongoose.Schema({
+		nick: String,
+		is_dev: Boolean,
+	}, { collection: 'admins' });
+	
+	// Compile it to a model.
+	var Admin = this.mongoose.model('Admin', adminSchema);
 	
 	// We have a "Chat" object which uses mongo to make for a data-driven "chat" from this bot.
 	Chat = require("./Chat.js");
@@ -26,9 +36,12 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	Note = require("./Note.js");
 	this.note = new Note(this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 	
+	// Here's a dispatcher for notices. We're using it for a nick & a callback.
+	this.isRegisteredCallback = null;
+
 	// We have an object to describe an SMC itself.
 	var SMC = require("./SMC.js");       // The object describing an SMC itself.
-	var smc = new SMC(this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+	var smc = new SMC(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 	
 	
 	// --------------------------------------------------------- Handle command.
@@ -74,15 +87,17 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					
 					case "in":
 					case "join":
-					case "imin":        smc.joinSMC(from);  break;
+					case "imin":        smc.joinSMC(from);  		break;
 					
 					case "cancel":
-					case "admincancel": smc.cancelSMC(from); break;
+					case "admincancel": smc.cancelSMC(from); 		break;
 
 					case "out":
 					case "imout":
-					case "forfeit":
+					case "forfeit": 	smc.forfeitSMC(from); 		break;
 						break;
+
+					case "trace": 		smc.traceIt(from);			break;
 
 					// ---------------------------------------------------------
 					// -- Note command(s)
@@ -105,6 +120,85 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 		}
 		
 	};
+
+	this.isAdmin = function(in_nick,callback) {
+
+		// Ok, first we're going to look for them in mongo.
+		Admin.count({ nick: in_nick }, function (err, count) {
+			if (count) {
+
+				// They're listed as an admin.
+				// But, are they registered?
+				this.isRegistered(in_nick,function(registered_status){
+					// Call it back with the registered status.
+					callback(registered_status);
+				});
+
+			} else {
+				// They're not an admin. We just return false to the callback.
+				callback(false);
+			}
+
+		}.bind(this));
+
+		// If they're in mongo, we'll check if they're registered.
+
+
+	}
+
+	this.isRegistered = function(nick,callback) {
+
+		// So first we check and see if they're registered. Which we have to handle via a dispatcher.
+		// We have two disparate events, which is kind of tricky.
+		this.isRegisteredCallback = function(intext) {
+
+			// Go and break up the intext by spaces, and the third element is the ACC status.
+			// A status of "3" means logged in.
+			// http://stackoverflow.com/questions/1682920/determine-if-a-user-is-idented-on-irc
+			var parts = intext.split(" ");
+			var acc_status = parseInt(parts[2]);
+
+			var is_registered = false;
+			if (acc_status == 3) {
+				is_registered = true;
+			}
+
+			// Ok, we'll get this after we send and ACC to nickserv.
+			callback(is_registered);
+
+		}; 
+
+		// Next, we send a ACC to nickserv, which tells us if they're registered.
+		this.bot.say("nickserv", "acc " + nick);
+
+
+	}
+
+	this.noticeHandler = function(text,from) {
+
+		// So we got a notice.
+		switch(from) {
+
+			case "NickServ":
+				console.log("!trace -- NOTICE NICKSERV: " + from + " / text: " + text);
+				// Check if it's a registration request.
+				if (text.match(/^.+\sACC/)) {
+					// That's a registration request.
+					if (this.isRegisteredCallback) {
+						this.isRegisteredCallback(text);
+					}
+				} else {
+					// Other things you'd do here.
+				}
+				break;
+
+			default:
+				console.log("!trace -- NOTICE from: " + from + " / text: " + text);
+				break;
+
+		}
+
+	}
    
 	// --------------------------------------------------------- Parse a command.
 	this.parseCommand = function(text,from) {
