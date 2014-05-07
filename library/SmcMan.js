@@ -74,10 +74,10 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					
 					case "in":
 					case "join":
-					case "imin":        smc.joinSMC();  break;
+					case "imin":        smc.joinSMC(from);  break;
 					
 					case "cancel":
-					case "admincancel": smc.cancelSMC(command,from); break;
+					case "admincancel": smc.cancelSMC(from); break;
 
 					case "out":
 					case "imout":

@@ -7,10 +7,10 @@
 
 
 // -- Requires
-var irc = require("irc");						// IRC Module (npm installed)
+var irc = require("irc");								// IRC Module (npm installed)
 var constants = require("./library/config_general.js");	// Constants module (w/ general configs)
-var mongoose = require('mongoose');				// Require mongoose.
-
+var mongoose = require('mongoose');						// Require mongoose.
+sprintf = require('sprintf-js').sprintf;				// Create a global for sprintf.
 
 // Conditionally include the private constants, with a reminder if you don't copy it to your own private file. (see README.txt)
 try {

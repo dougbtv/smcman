@@ -13,7 +13,7 @@
 { "_id" : { "$oid" : "52209e65ca8aaa698f9f1a51" }, "fields" : 0, "identifier" : "help", "text" : "You can find help @ https://code.google.com/p/whistler-bot/wiki/Help" }
 { "_id" : { "$oid" : "53683e17683fa765918cdce5" }, "fields" : 0, "identifier" : "smc_command_error", "text" : "I expect a format like: !smc 'some topic' 05 04" }
 { "_id" : { "$oid" : "53683f58683fa765918cdce6" }, "fields" : 0, "identifier" : "smc_already_in_progress", "text" : "Sorry, there's already an SMC in progress. Use !join to show you have the TF" }
-{ "_id" : { "$oid" : "53684112683fa765918cdce7" }, "fields" : 4, "identifier" : "smc_started", "text" : "%1 has started an SMC! Rending %2 for %4 minutes starting @ **:%3 Go ahead and !join" }
+{ "_id" : { "$oid" : "53684112683fa765918cdce7" }, "fields" : 4, "identifier" : "smc_started", "text" : "%1 has started an SMC! Modeling %2 for %4 minutes starting @ **:%3 Go ahead and !join" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4894" }, "fields" : 2, "identifier" : "fixed", "text" : "%0 has reported that Bug #%1 has been fixed." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4895" }, "fields" : 2, "identifier" : "fixed", "text" : "Hooray! Bug #%1 was fixed by %0!" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4896" }, "fields" : 2, "identifier" : "remove", "text" : "%0 has removed Bug #%1 from the bug list. Maybe this wasn't a bug..." }
@@ -120,18 +120,18 @@
 { "_id" : { "$oid" : "53696b204a3647a8c53b48fb" }, "fields" : 1, "identifier" : "whosin", "text" : "%0, no one has started an SMC right now." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48fc" }, "fields" : 1, "identifier" : "whosin", "text" : "You're late to the party, %0, there's no SMC. You could start one, though." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48fd" }, "fields" : 1, "identifier" : "whosin", "text" : "%0, always wants an SMC to be happening! Well, there isn't one right now. Deal with it." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48fe" }, "fields" : 1, "identifier" : "imin", "text" : "%0 is IN! Definitely has the TF." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48ff" }, "fields" : 1, "identifier" : "imin", "text" : "Woohoo! %0 is in! Bring on the competition!" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4900" }, "fields" : 1, "identifier" : "imin", "text" : "Way to go %0! You have some serious balls." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4901" }, "fields" : 1, "identifier" : "imin", "text" : "Watch out SMCers! %0 has joined and is taking names." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4902" }, "fields" : 1, "identifier" : "imin", "text" : "%0 wants to model something! Get out of his way!" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4903" }, "fields" : 1, "identifier" : "imin", "text" : "Are you sure %0? You better not cry like a girl if you lose." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4904" }, "fields" : 1, "identifier" : "imin", "text" : "Bring it on. %0 is in." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4905" }, "fields" : 1, "identifier" : "imin", "text" : "Hear ye, hear ye: the right honorable %0 has decided to partake in the Challenge of the Speed Modeling!" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4906" }, "fields" : 0, "identifier" : "imin", "text" : "Dude, you're already in. You can't join twice!" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4907" }, "fields" : 1, "identifier" : "imin", "text" : "%0, you've already said you're in. I've got you covered." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4908" }, "fields" : 1, "identifier" : "imin", "text" : "%0 is so eager to SMC, he's joining more than once!" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4909" }, "fields" : 1, "identifier" : "imin", "text" : "Easy there, %0. You only have to join the one time." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48fe" }, "fields" : 1, "identifier" : "smc_join", "text" : "%0 is IN! Definitely has the TF." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48ff" }, "fields" : 1, "identifier" : "smc_join", "text" : "Woohoo! %0 is in! Bring on the competition!" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4900" }, "fields" : 1, "identifier" : "smc_join", "text" : "Way to go %0! You have some serious balls." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4901" }, "fields" : 1, "identifier" : "smc_join", "text" : "Watch out SMCers! %0 has joined and is taking names." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4902" }, "fields" : 1, "identifier" : "smc_join", "text" : "%0 wants to model something! Get out of his way!" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4903" }, "fields" : 1, "identifier" : "smc_join", "text" : "Are you sure %0? You better not cry like a girl if you lose." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4904" }, "fields" : 1, "identifier" : "smc_join", "text" : "Bring it on. %0 is in." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4905" }, "fields" : 1, "identifier" : "smc_join", "text" : "Hear ye, hear ye: the right honorable %0 has decided to partake in the Challenge of the Speed Modeling!" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4906" }, "fields" : 0, "identifier" : "smc_join_alreadyin", "text" : "Dude, you're already in. You can't join twice!" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4907" }, "fields" : 1, "identifier" : "smc_join_alreadyin", "text" : "%0, you've already said you're in. I've got you covered." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4908" }, "fields" : 1, "identifier" : "smc_join_alreadyin", "text" : "%0 is so eager to SMC, he's joining more than once!" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4909" }, "fields" : 1, "identifier" : "smc_join_alreadyin", "text" : "Easy there, %0. You only have to join the one time." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b490a" }, "fields" : 1, "identifier" : "forfeit", "text" : "%0 quits and goes crying home to mommy." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b490b" }, "fields" : 1, "identifier" : "forfeit", "text" : "%0 is out! Doesn't have the TF." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b490c" }, "fields" : 1, "identifier" : "forfeit", "text" : "%0 has quit. Oh, the shame!" }
@@ -208,8 +208,8 @@
 { "_id" : { "$oid" : "53696b204a3647a8c53b4953" }, "fields" : 2, "identifier" : "utube", "text" : "YouTube results for '%0' are here: %1" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4954" }, "fields" : 3, "identifier" : "smcstart", "text" : "We have an SMC set up! We're modeling '%0' for %1 minutes starting at **:%2. Say !in or !imin to join, or !cancel." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4955" }, "fields" : 3, "identifier" : "smcstart", "text" : "It's SMC time! We're doing '%0' for %1 minutes starting at **:%2. Say !in or !imin if you have the TF!" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4956" }, "fields" : 1, "identifier" : "smctimer", "text" : "%0 the SMC is starting! GO GO GO GO GOOOOOOOOOO!" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4957" }, "fields" : 1, "identifier" : "smctimer", "text" : "%0 start modeling! The SMC has started! GOOOOOOOO!" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4956" }, "fields" : 1, "identifier" : "smc_starting_now", "text" : "%0 the SMC is starting! GO GO GO GO GOOOOOOOOOO!" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4957" }, "fields" : 1, "identifier" : "smc_starting_now", "text" : "%0 start modeling! The SMC has started! GOOOOOOOO!" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4958" }, "fields" : 0, "identifier" : "smctimer", "text" : "The SMC has been CANCELED! You need more than one participant." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4959" }, "fields" : 0, "identifier" : "smctimer", "text" : "CANCELED! More than one person needs to participate. This is a competition, not practice. ;)" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b495a" }, "fields" : 1, "identifier" : "smctimer", "text" : "%0 HALF THE TIME IS OVER! Don't forget to save." }
@@ -332,9 +332,14 @@
 { "_id" : { "$oid" : "53696b204a3647a8c53b49cf" }, "fields" : 0, "identifier" : "hug", "text" : "hugs everyone in the channel!" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b49d0" }, "fields" : 1, "identifier" : "devlist", "text" : "Bow before the bot developers! %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b49d1" }, "fields" : 1, "identifier" : "devlist", "text" : "These people maintain the bot, and deserve your respect: %0" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b49d2" }, "fields" : 1, "identifier" : "imin", "text" : "%0 is in! The testicular fortitude is strong with this one." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b49d3" }, "fields" : 1, "identifier" : "imin", "text" : "%0 is preparing to whip some ass." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b49d2" }, "fields" : 1, "identifier" : "smc_join", "text" : "%0 is in! The testicular fortitude is strong with this one." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b49d3" }, "fields" : 1, "identifier" : "smc_join", "text" : "%0 is preparing to whip some ass." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b49d4" }, "fields" : 2, "identifier" : "uploadinsertion", "text" : "%0, use this link to upload your file: %1 you have 20 minutes to upload." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b49d5" }, "fields" : 1, "identifier" : "imin", "text" : "Aww shucks %0, sorry man, theres already 10 people in this smc. Try the next round!" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b49d5" }, "fields" : 1, "identifier" : "smc_join_toomany", "text" : "Aww shucks %0, sorry man, theres already 10 people in this smc. Try the next round!" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b49d6" }, "fields" : 1, "identifier" : "fart", "text" : "rips a juice-blaster right at %0, asking \"Juice, anyone?\"" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b49d7" }, "fields" : 0, "identifier" : "fart", "text" : "whistles a crescendo of Taco Bell out of his undulating sphincter" }
+{ "_id" : { "$oid" : "536a515ac6886509d5ad0159" }, "fields" : 1, "identifier" : "smc_not_enough", "text" : "%0 -- sorry to tell you, not enough people joined so, we had to cancel this smc :(" }
+{ "_id" : { "$oid" : "536a5167c6886509d5ad015a" }, "fields" : 1, "identifier" : "smc_not_enough", "text" : "%0 -- shucks, we needed at least 2 people to start this SMC" }
+{ "_id" : { "$oid" : "536a517bc6886509d5ad015b" }, "fields" : 1, "identifier" : "smc_not_enough", "text" : "%0, welp dude, smc was canceled because we didn't have enough people join." }
+{ "_id" : { "$oid" : "536a54b5c6886509d5ad015c" }, "fields" : 1, "identifier" : "smc_join_nosmc", "text" : "%0, damn, there's no SMC right now. So use !smc to create one if you want" }
+{ "_id" : { "$oid" : "536a54c6c6886509d5ad015d" }, "fields" : 1, "identifier" : "smc_join_nosmc", "text" : "%0, so yeah, you uhhh... Gotta start an SMC before you can join one." }

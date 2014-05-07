@@ -22,6 +22,8 @@
     "mongoose"   :  "*",
     "request"   :  "*",
     "moment"   :  "*",
+    "node-schedule" : "*",
+    "sprintf-js" : "*",
     "exec-sync"   :  "*"
   }
 }
