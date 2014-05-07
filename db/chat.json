@@ -108,10 +108,10 @@
 { "_id" : { "$oid" : "53696b204a3647a8c53b48ef" }, "fields" : 1, "identifier" : "team", "text" : "These people are responsible for the channel and its bot (me). Check 'em out: %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48f0" }, "fields" : 1, "identifier" : "smc", "text" : "We are calling an SMC! %0, set '!topic someTopic', '!startsat 05' (minute on the clock), '!length 20' (number of minutes), or !cancel. Everyone else, say !imin or !in to join (!forfeit or !out to leave)." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48f1" }, "fields" : 1, "identifier" : "smc", "text" : "It's SMC time! Bring it! -- %0, set it up: set !topic someTopic, !startsat 00 (minute on the clock), !length 00 (number of minutes), or !cancel. Participants, say !imin or !in to join, or say !forfeit or !out to leave." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48f2" }, "fields" : 1, "identifier" : "smc", "text" : "%0, your memory is terrible. You already started an SMC. Use !cancel if you have to." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48f3" }, "fields" : 1, "identifier" : "smc", "text" : "%0 is an idiot, and tried to start an SMC when one had already been started! We all laugh at you." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48f4" }, "fields" : 2, "identifier" : "smc", "text" : "Too bad %0, %1 already started an SMC. You can join this one by saying !imin or !in." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48f5" }, "fields" : 2, "identifier" : "smc", "text" : "Hey %0! Wait your turn! %1 has already started an SMC. Join up with !imin or !in." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48f2" }, "fields" : 1, "identifier" : "smc_alreadystarted_by_owner", "text" : "%0, your memory is terrible. You already started an SMC. Use !cancel if you have to." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48f3" }, "fields" : 1, "identifier" : "smc_already_in_progress", "text" : "%0 is an idiot, and tried to start an SMC when one had already been started! We all laugh at you." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48f4" }, "fields" : 2, "identifier" : "smc_already_in_progress", "text" : "Too bad %0, %1 already started an SMC. You can join this one by saying !imin or !in." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48f5" }, "fields" : 2, "identifier" : "smc_already_in_progress", "text" : "Hey %0! Wait your turn! %1 has already started an SMC. Join up with !imin or !in." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48f6" }, "fields" : 1, "identifier" : "whosin", "text" : "No one has joined SMC '%0' yet! Say !imin or !in to join." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48f7" }, "fields" : 0, "identifier" : "whosin", "text" : "Gah! We can't have an SMC without participants! Quick, someone say !in or !imin to join!" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48f8" }, "fields" : 3, "identifier" : "whosin", "text" : "%0 %1 competing in this SMC [Topic: '%2']" }
@@ -138,14 +138,14 @@
 { "_id" : { "$oid" : "53696b204a3647a8c53b490d" }, "fields" : 1, "identifier" : "forfeit", "text" : "%0 is a quitter." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b490e" }, "fields" : 2, "identifier" : "forfeit", "text" : "Give it up for %0! ... No, wait. %0 just gives up." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b490f" }, "fields" : 1, "identifier" : "forfeit", "text" : "I shall heap ridicule and shame upon you and your house, %0, for you have quit the SMC." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4910" }, "fields" : 1, "identifier" : "cancel", "text" : "%0 has cancelled the SMC! We now return you to your regularly scheduled chat." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4911" }, "fields" : 1, "identifier" : "cancel", "text" : "CANCELLED! I don't know why. Ask %0." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4912" }, "fields" : 1, "identifier" : "cancel", "text" : "%0, there's no SMC started yet." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4913" }, "fields" : 0, "identifier" : "cancel", "text" : "A wise person once told me, \"you cannot cancel an SMC that has not yet been started.\" Wow. That's deep." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4914" }, "fields" : 0, "identifier" : "cancel", "text" : "Ow! Quit trying to cancel a non-existent SMC! You have to start one first." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4915" }, "fields" : 1, "identifier" : "cancel", "text" : "%0, are you lost? No SMC has been started." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4916" }, "fields" : 2, "identifier" : "cancel", "text" : "Sorry, %0, only %1 (or an admin) can cancel this SMC." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4917" }, "fields" : 1, "identifier" : "cancel", "text" : "OI! Only %1 (or an admin) can cancel this SMC." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4910" }, "fields" : 1, "identifier" : "smc_cancel", "text" : "%0 has cancelled the SMC! We now return you to your regularly scheduled chat." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4911" }, "fields" : 1, "identifier" : "smc_cancel", "text" : "CANCELLED! I don't know why. Ask %0." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4912" }, "fields" : 1, "identifier" : "smc_no_cancel", "text" : "%0, there's no SMC started yet." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4913" }, "fields" : 0, "identifier" : "smc_no_cancel", "text" : "A wise person once told me, \"you cannot cancel an SMC that has not yet been started.\" Wow. That's deep." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4914" }, "fields" : 0, "identifier" : "smc_no_cancel", "text" : "Ow! Quit trying to cancel a non-existent SMC! You have to start one first." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4915" }, "fields" : 1, "identifier" : "smc_no_cancel", "text" : "%0, are you lost? No SMC has been started." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4916" }, "fields" : 2, "identifier" : "smc_cancel_notallowed", "text" : "Sorry, %0, only %1 (or an admin) can cancel this SMC." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4917" }, "fields" : 1, "identifier" : "smc_cancel_notallowed", "text" : "OI! Only %1 (or an admin) can cancel this SMC." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4918" }, "fields" : 1, "identifier" : "topic", "text" : "The topic has been set to: %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4919" }, "fields" : 1, "identifier" : "topic", "text" : "New topic! %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b491a" }, "fields" : 1, "identifier" : "topic", "text" : "Behold the almighty topic: %0" }
