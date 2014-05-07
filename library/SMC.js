@@ -11,11 +11,12 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 		console.log("!trace command: ",command);
 
 		// Check for a properly formatted argument format.
-		if (command.args.match(/\".+\"\s\d\d\s\d\d/)) {
+		if (command.args.match(/['"].+['"]\s\d\d\s\d\d/)) {
 
 			// Setup our SMC properties.
 			originator = from;
 			topic = command.arglist[0];
+			topic = topic.replace(/['"]/g,"");
 			startsat = command.arglist[1];
 			length = command.arglist[2];
 
@@ -23,12 +24,20 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 
 			if (!is_running) {
 
-				chat.say("smc_started",[from,topic,startsat,length]);
+				chat.say("smcstart",[topic,length,startsat]);
 				is_running = true;
 
 			} else {
 
-				chat.say("smc_already_in_progress",[]);
+				if (originator == from) {
+
+					chat.say("smc_alreadystarted_by_owner",[from]);
+
+				} else {
+
+					chat.say("smc_already_in_progress",[]);
+
+				}
 
 			}
 
@@ -42,8 +51,7 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 
 	this.cancelSMC = function(command,from) {
 
-		if () {}
-
+		
 
 	}
 

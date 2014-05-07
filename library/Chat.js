@@ -47,10 +47,15 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					line = chat[this.randomId(chat.length)];
 					
 					// Now go and replace it's symbols with our parameters..
-					output = line.text;
+					var output = line.text;
+					var plus = 1;
+					re_matchzero = /\%0/g;
+					if (output.match(re_matchzero)) {
+						plus = 0;
+					}
 					for (var i=0; i<parameters.length; i++) {
 						// console.log("the eye",i);
-						symbolid = i+1;
+						symbolid = i+plus;
 						re = new RegExp("%" + symbolid);
 						// console.log(re);
 						// console.log(parameters[i]);
