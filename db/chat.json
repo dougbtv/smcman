@@ -132,12 +132,12 @@
 { "_id" : { "$oid" : "53696b204a3647a8c53b4907" }, "fields" : 1, "identifier" : "smc_join_alreadyin", "text" : "%0, you've already said you're in. I've got you covered." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4908" }, "fields" : 1, "identifier" : "smc_join_alreadyin", "text" : "%0 is so eager to SMC, he's joining more than once!" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4909" }, "fields" : 1, "identifier" : "smc_join_alreadyin", "text" : "Easy there, %0. You only have to join the one time." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b490a" }, "fields" : 1, "identifier" : "forfeit", "text" : "%0 quits and goes crying home to mommy." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b490b" }, "fields" : 1, "identifier" : "forfeit", "text" : "%0 is out! Doesn't have the TF." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b490c" }, "fields" : 1, "identifier" : "forfeit", "text" : "%0 has quit. Oh, the shame!" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b490d" }, "fields" : 1, "identifier" : "forfeit", "text" : "%0 is a quitter." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b490e" }, "fields" : 2, "identifier" : "forfeit", "text" : "Give it up for %0! ... No, wait. %0 just gives up." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b490f" }, "fields" : 1, "identifier" : "forfeit", "text" : "I shall heap ridicule and shame upon you and your house, %0, for you have quit the SMC." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b490a" }, "fields" : 1, "identifier" : "smc_forfeit", "text" : "%0 quits and goes crying home to mommy." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b490b" }, "fields" : 1, "identifier" : "smc_forfeit", "text" : "%0 is out! Doesn't have the TF." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b490c" }, "fields" : 1, "identifier" : "smc_forfeit", "text" : "%0 has quit. Oh, the shame!" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b490d" }, "fields" : 1, "identifier" : "smc_forfeit", "text" : "%0 is a quitter." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b490e" }, "fields" : 1, "identifier" : "smc_forfeit", "text" : "Give it up for %0! ... No, wait. %0 just gives up." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b490f" }, "fields" : 1, "identifier" : "smc_forfeit", "text" : "I shall heap ridicule and shame upon you and your house, %0, for you have quit the SMC." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4910" }, "fields" : 1, "identifier" : "smc_cancel", "text" : "%0 has cancelled the SMC! We now return you to your regularly scheduled chat." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4911" }, "fields" : 1, "identifier" : "smc_cancel", "text" : "CANCELLED! I don't know why. Ask %0." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4912" }, "fields" : 1, "identifier" : "smc_no_cancel", "text" : "%0, there's no SMC started yet." }
@@ -174,8 +174,8 @@
 { "_id" : { "$oid" : "53696b204a3647a8c53b4931" }, "fields" : 2, "identifier" : "timeleft", "text" : "%1 minutes, %2 seconds. Tick tock!" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4932" }, "fields" : 2, "identifier" : "timeleft", "text" : "Ahh! Only %1 minutes and %2 seconds left!" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4933" }, "fields" : 2, "identifier" : "timeleft", "text" : "T-minus %1 minutes, %2 seconds until render..." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4934" }, "fields" : 1, "identifier" : "admincancel", "text" : "%0 has canceled the SMC!" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4935" }, "fields" : 1, "identifier" : "admincancel", "text" : "Sometimes it takes an admin to cancel. Thanks %0!" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4934" }, "fields" : 1, "identifier" : "smc_admin_cancel", "text" : "%0 has canceled the SMC! (thanks admin.)" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4935" }, "fields" : 1, "identifier" : "smc_admin_cancel", "text" : "Sometimes it takes an admin to cancel. Thanks %0!" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4936" }, "fields" : 1, "identifier" : "whosleft", "text" : "We're waiting for these slowpokes: %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4937" }, "fields" : 1, "identifier" : "whosleft", "text" : "%0! Hurry up!" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4938" }, "fields" : 1, "identifier" : "whosleft", "text" : "%0, upload already! We're getting impatient." }
@@ -226,10 +226,10 @@
 { "_id" : { "$oid" : "53696b204a3647a8c53b4965" }, "fields" : 0, "identifier" : "isallowed", "text" : "I can't let you do that." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4966" }, "fields" : 1, "identifier" : "lookforseen", "text" : "They were last seen: %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4967" }, "fields" : 1, "identifier" : "poprecord", "text" : "A new population record for the channel! %0 users and growing." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4968" }, "fields" : 1, "identifier" : "forfeit", "text" : "%0 is out of the SMC, and has a browser full of pr0n -- coincidence? I think not." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b4969" }, "fields" : 1, "identifier" : "forfeit", "text" : "%0 has put his tail between his legs, a phallic symbol representing 'I have quit the SMC'" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b496a" }, "fields" : 1, "identifier" : "forfeit", "text" : "%0 thinks greek poetry is more interesting, and therefore, has quit the SMC." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b496b" }, "fields" : 0, "identifier" : "forfeit", "text" : "^^ This dude is out." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4968" }, "fields" : 1, "identifier" : "smc_forfeit", "text" : "%0 is out of the SMC, and has a browser full of pr0n -- coincidence? I think not." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b4969" }, "fields" : 1, "identifier" : "smc_forfeit", "text" : "%0 has put his tail between his legs, a phallic symbol representing 'I have quit the SMC'" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b496a" }, "fields" : 1, "identifier" : "smc_forfeit", "text" : "%0 thinks greek poetry is more interesting, and therefore, has quit the SMC." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b496b" }, "fields" : 1, "identifier" : "smc_forfeit", "text" : "^^ This dude is out." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b496c" }, "fields" : 1, "identifier" : "google", "text" : "The term 'Monster ballads', and 'Mullets' was removed from this google search: %1" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b496d" }, "fields" : 1, "identifier" : "google", "text" : "Google results included a link to your mom's myspace profile: %1" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b496e" }, "fields" : 1, "identifier" : "google", "text" : "Someone said !google cause you should've already googled it ;) Here ya go: %1" }
@@ -343,3 +343,6 @@
 { "_id" : { "$oid" : "536a517bc6886509d5ad015b" }, "fields" : 1, "identifier" : "smc_not_enough", "text" : "%0, welp dude, smc was canceled because we didn't have enough people join." }
 { "_id" : { "$oid" : "536a54b5c6886509d5ad015c" }, "fields" : 1, "identifier" : "smc_join_nosmc", "text" : "%0, damn, there's no SMC right now. So use !smc to create one if you want" }
 { "_id" : { "$oid" : "536a54c6c6886509d5ad015d" }, "fields" : 1, "identifier" : "smc_join_nosmc", "text" : "%0, so yeah, you uhhh... Gotta start an SMC before you can join one." }
+{ "_id" : { "$oid" : "536a6b05c6886509d5ad015e" }, "fields" : 1, "identifier" : "smc_quit_nosmc", "text" : "%0, so yeah, you have to start an SMC before you can quit it (are you that hellbent on quitting?)" }
+{ "_id" : { "$oid" : "536a6b52c6886509d5ad015f" }, "fields" : 1, "identifier" : "smc_quit_nojoin", "text" : "%0, you must be a participant in order to quit. You also must be a total wuss to quit." }
+{ "_id" : { "$oid" : "536a6b74c6886509d5ad0160" }, "fields" : 1, "identifier" : "smc_quit_nojoin", "text" : "%0, in order to leave the SMC you must A: Be a total wuss, and B: You must join first (which you haven't)" }
