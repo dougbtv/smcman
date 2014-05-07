@@ -49,10 +49,33 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 
 	}
 
+	this.tearDownSMC = function() {
+
+		is_running = false;
+
+	}
+
 	this.cancelSMC = function(command,from) {
 
-		
+		if (is_running) {
 
+			if (originator == from) {
+
+				chat.say("smc_cancel",[from]);
+				this.tearDownSMC();
+
+			} else {
+
+				chat.say("smc_cancel_notallowed",[from]);
+
+			}
+
+		} else {
+
+			chat.say("smc_no_cancel",[from]);
+
+		}
+		
 	}
 
 	this.joinSMC = function(command) {
