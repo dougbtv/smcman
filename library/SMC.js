@@ -70,7 +70,7 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 				// If they're not, they're not allowed.
 				bot.say("nickserv", "info " + from);
 
-				chat.say("smc_cancel_notallowed",[from]);
+				chat.say("smc_cancel_notallowed",[originator]);
 
 			}
 
