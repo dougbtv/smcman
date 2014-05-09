@@ -7,19 +7,20 @@
 
 
 // -- Requires
-var irc = require("irc");								// IRC Module (npm installed)
-var constants = require("./library/config_general.js");	// Constants module (w/ general configs)
-var mongoose = require('mongoose');						// Require mongoose.
-sprintf = require('sprintf-js').sprintf;				// Create a global for sprintf.
+var irc = require("irc");									// IRC Module (npm installed)
+var constants = require("./includes/config_general.js");	// Constants module (w/ general configs)
+var mongoose = require('mongoose');							// Require mongoose.
+sprintf = require('sprintf-js').sprintf;					// Create a global for sprintf.
+
 
 // Conditionally include the private constants, with a reminder if you don't copy it to your own private file. (see README.txt)
 try {
-	var privates = require("./library/config_private_mine.js");	// Constants module (w/ "secret" configs, e.g. IRC & authentication info.)
+	var privates = require("./includes/config_private_mine.js");	// Constants module (w/ "secret" configs, e.g. IRC & authentication info.)
 } catch (e) {
 	// Ok, there's no "my privates" so, we want to warn them, and then just include the template.
-	console.log("NOTICE: Oops! Looks like you should copy the file ./library/config_private.js to ./library/config_private_mine.js -- so it's private for you.");
+	console.log("NOTICE: Oops! Looks like you should copy the file ./includes/config_private.js to ./includes/config_private_mine.js -- so it's private for you.");
 	console.log("We'll include the template file for you, but, to avoid committing your private info to the repo, you should copy it (see README.md)");
-	var privates = require("./library/config_private.js");
+	var privates = require("./includes/config_private.js");
 }
 
 

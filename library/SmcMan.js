@@ -11,12 +11,20 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	// We'll want the request module, so we can fetch from a pastebin
 	this.request = require("request");
 
+	// Setup rest, with an instance, and a server instance.
+	var restify = require('restify');
+	var RestServer = require('./restServer.js');
+	var server = restify.createServer();
+	server.use(restify.bodyParser());
+
+
 	// Set our properties from the arguments upon instantiation.
 	this.bot = bot;
 	this.constants = constants;
 	this.privates = privates;
 	this.mongoose = mongoose;
 	this.db = db;
+	this.rest = new RestServer(server,this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 
 	// We'll create our admin schema so we only do it once.
 	// Setup our schemas.
@@ -43,7 +51,11 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	var SMC = require("./SMC.js");       // The object describing an SMC itself.
 	var smc = new SMC(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 	
-	
+	// Start a REST server.
+	if (privates.REST_API_ENABLED) {
+		this.rest.serverStart();
+	}
+
 	// --------------------------------------------------------- Handle command.
 	this.commandHandler = function(text,from) {
 		

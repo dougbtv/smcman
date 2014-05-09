@@ -27,3 +27,7 @@ define("IRC_IDENTPASS",'imnotregistered');
 // -- Debugging
 define("IRC_ENABLED",true);
 define("IRC_DEBUG",true);
+
+define("REST_API_ENABLED",true);
+
+define("URL_SMCSITE","http://smc/");

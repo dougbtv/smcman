@@ -24,6 +24,7 @@
     "moment"   :  "*",
     "node-schedule" : "*",
     "sprintf-js" : "*",
-    "exec-sync"   :  "*"
+    "exec-sync"   :  "*",
+    "restify"   :  "*"
   }
 }
