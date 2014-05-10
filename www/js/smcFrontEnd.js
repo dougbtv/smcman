@@ -45,6 +45,16 @@ function smcMainController($scope, $location, $http) {
 	    	// Only accept hex.
 	    	if (uploadkey.match(/^[0-9a-fA-F]+$/)) {
 	    		console.log("!trace GOOD GOT IT ALL HEX.");
+
+	    		// Make the API request.
+	    		$http.post('/api/verifyUploadKey', {key: uploadkey})
+					.success(function(data) {
+						console.log("!trace key request received data",data);
+					})
+					.error(function(data) {
+						console.log('Error: ',data);
+					});
+
 	    		invalid_request = false;
 	    	}
 

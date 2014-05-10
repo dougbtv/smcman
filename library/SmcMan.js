@@ -50,6 +50,12 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	// We have an object to describe an SMC itself.
 	var SMC = require("./SMC.js");       // The object describing an SMC itself.
 	var smc = new SMC(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+
+	// Our upload module
+	var Upload = require("./Upload.js");       // The object describing an upload
+	// Ok, create a new upload instance.
+	this.upload = new Upload(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+						
 	
 	// Start a REST server.
 	if (privates.REST_API_ENABLED) {
@@ -110,6 +116,15 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 						break;
 
 					case "trace": 		smc.traceIt(from);			break;
+
+					// ---------------------------------------------------------
+					// -- Uploads!
+					// ---------------------------------------------------------
+					
+					case "upload": 	
+						// And we'll create a new upload
+						this.upload.newUpload(from);
+						break;
 
 					// ---------------------------------------------------------
 					// -- Note command(s)

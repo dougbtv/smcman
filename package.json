@@ -25,6 +25,7 @@
     "node-schedule" : "*",
     "sprintf-js" : "*",
     "exec-sync"   :  "*",
+    "MD5"   :  "*",
     "restify"   :  "*"
   }
 }

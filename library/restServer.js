@@ -34,6 +34,18 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 
 	this.verifyUploadKey = function(req, res, next) {
 
+		var input = req.params;
+
+		console.log("!trace verify key: ",input);
+
+		var return_json = {
+			verified: true,
+		};
+
+		// Return a JSON result.
+		res.contentType = 'json';
+		res.send(return_json);
+
 	}
 
 	this.testFunction = function(req, res, next) {
