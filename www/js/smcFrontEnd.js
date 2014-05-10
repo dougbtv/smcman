@@ -18,141 +18,171 @@ function smcMainController($scope, $location, $http, $upload) {
 
 	// Sets the navigation's CSS class, depending on the onPage.
 	$scope.navClass = function (page) {
-    	
-        // Get the route.
-        var currentRoute = $location.path().substring(1) || 'home';
+		
+		// Get the route.
+		var currentRoute = $location.path().substring(1) || 'home';
 
-        // Set the onPage if it's wrong.
-        if (currentRoute != $scope.onPage) {
-        	$scope.onPage = currentRoute;
-        }
+		// Set the onPage if it's wrong.
+		if (currentRoute != $scope.onPage) {
+			$scope.onPage = currentRoute;
+		}
 
-        return page === currentRoute ? 'active' : '';
-    };
+		return page === currentRoute ? 'active' : '';
+	};
 
-    $scope.verifyUploadKey = function() {
+	$scope.verifyUploadKey = function() {
 
 
-    	var params = $location.search();
-    	console.log("!trace verify key params: ",params);
-    	var uploadkey = params.key;
-    	console.log("!trace verify key itself: ",uploadkey);
+		var params = $location.search();
+		console.log("!trace verify key params: ",params);
+		var uploadkey = params.key;
+		console.log("!trace verify key itself: ",uploadkey);
 
-    	var invalid_request = true;
+		var invalid_request = true;
 
-    	if (typeof uploadkey != 'undefined') {
+		if (typeof uploadkey != 'undefined') {
 
-	    	// Only accept hex.
-	    	if (uploadkey.match(/^[0-9a-fA-F]+$/)) {
+			// Only accept hex.
+			if (uploadkey.match(/^[0-9a-fA-F]+$/)) {
 
-	    		// Make the API request.
-	    		$http.post('/api/verifyUploadKey', {key: uploadkey})
+				// Make the API request.
+				$http.post('/api/verifyUploadKey', {key: uploadkey})
 					.success(function(data) {
 						console.log("!trace key request received data",data);
 						// That's a good key, we can move along.
 						$scope.uploadMode = 'upload';
 					})
 					.error(function(data) {
-						console.log('Error: ',data);
+						
+						$scope.setUploadError(data);
+						
 					});
 
-	    		invalid_request = false;
-	    	}
+				invalid_request = false;
+			}
 
-	    }
+		}
 
-	    // Give them the sorry / default page if there's no valid key request.
-	    if (invalid_request) {
-	    	$scope.uploadMode = "sorry";
-	    }
+		// Give them the sorry / default page if there's no valid key request.
+		if (invalid_request) {
+			$scope.uploadMode = "sorry";
+		}
 
-    }
+	}
 
-    // Set which page we're on.
-    $scope.switchPage = function (page,initial_load) {
-    	// Go ahead and create a handler here to do things when the page is changed.
-    	if ($scope.onPage != page || (typeof initial_load != 'undefined')) {
+	$scope.setUploadError = function(err) {
 
-    		// Most importantly, this switches the view angular style.
-	    	$scope.onPage = page;
+		console.log('!upload error: ',err);
+		$scope.uploadMode = 'upload-error';
+		$scope.uploadError = err;
 
-	    	// Now handle it.
-  	    	console.log("!trace switch page to: " + page);
+	}
 
-  	    	switch(page) {
+	// Set which page we're on.
+	$scope.switchPage = function (page,initial_load) {
+		// Go ahead and create a handler here to do things when the page is changed.
+		if ($scope.onPage != page || (typeof initial_load != 'undefined')) {
 
-  	    		case "upload":
-  	    			
-  	    			// If someone is in the middle of a process... we don't wanna restart it.
-  	    			// !bang
+			// Most importantly, this switches the view angular style.
+			$scope.onPage = page;
 
-  	    			if ($scope.uploadMode == 'init') {
-  	    				$scope.uploadMode = 'loading';
-  	    				// The thing we really want to do is verify the upload key.
-  	    				$scope.verifyUploadKey();
-  	    			}
-  	    			break;
+			// Now handle it.
+			console.log("!trace switch page to: " + page);
 
+			switch(page) {
 
+				case "upload":
+					
+					// If someone is in the middle of a process... we don't wanna restart it.
+					// !bang
 
-  	    	}
+					if ($scope.uploadMode == 'init') {
+						$scope.uploadMode = 'loading';
+						// The thing we really want to do is verify the upload key.
+						$scope.verifyUploadKey();
+					}
+					break;
 
-
-    	}
-
-    }
-
-    // We also call this switch page when the page is first loaded.
-    $scope.switchPage($scope.onPage,true);
+			}
 
 
-    // --------------------------------<<<<<<<<<<<<<<<<<< end reference
+		}
+
+	}
+
+	// We also call this switch page when the page is first loaded.
+	$scope.switchPage($scope.onPage,true);
+
+
+	// --------------------------------<<<<<<<<<<<<<<<<<< end reference
 	
 	$scope.onFileSelect = function($files) {
 
 		console.log("!trace GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOD");
 
-	    //$files: an array of files selected, each file has name, size, and type.
-	    for (var i = 0; i < $files.length; i++) {
-	      var file = $files[i];
-	      $scope.upload = $upload.upload({
-	        url: '/api/upload', //upload.php script, node.js route, or servlet url
-	        // method: 'POST' or 'PUT',
-	        // headers: {'header-key': 'header-value'},
-	        // withCredentials: true,
-	        data: {myObj: $scope.myModelObj},
-	        file: file, // or list of files: $files for html5 only
-	        /* set the file formData name ('Content-Desposition'). Default is 'file' */
-	        //fileFormDataName: myFile, //or a list of names for multiple files (html5).
-	        /* customize how data is added to formData. See #40#issuecomment-28612000 for sample code */
-	        //formDataAppender: function(formData, key, val){}
-	      }).progress(function(evt) {
-	        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-	      }).success(function(data, status, headers, config) {
-	        // file is uploaded successfully
-	        console.log(data);
-	      });
-	      //.error(...)
-	      //.then(success, error, progress); 
-	      //.xhr(function(xhr){xhr.upload.addEventListener(...)})// access and attach any event listener to XMLHttpRequest.
-	    }
-	    /* alternative way of uploading, send the file binary with the file's content-type.
-	       Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed. 
-	       It could also be used to monitor the progress of a normal http post/put request with large data*/
-	    // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code.
+		$scope.uploadMode = "upload-in-progress";
+
+		var params = $location.search();
+		var uploadkey = params.key;
+
+		//$files: an array of files selected, each file has name, size, and type.
+		for (var i = 0; i < $files.length; i++) {
+			var file = $files[i];
+			$scope.upload = $upload.upload({
+				url: '/api/upload', //upload.php script, node.js route, or servlet url
+
+				// For other methods, or headers.
+				// method: 'POST' or 'PUT',
+				// headers: {'header-key': 'header-value'},
+				// withCredentials: true,
+
+				// To attach data.
+				data: {key: uploadkey},
+				file: file, // or list of files: $files for html5 only
+
+				/* set the file formData name ('Content-Desposition'). Default is 'file' */
+				//fileFormDataName: myFile, //or a list of names for multiple files (html5).
+				/* customize how data is added to formData. See #40#issuecomment-28612000 for sample code */
+				//formDataAppender: function(formData, key, val){}
+
+			}).progress(function(evt) {
+
+				$scope.upload_percent = parseInt(100.0 * evt.loaded / evt.total);
+				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+
+			}).success(function(data, status, headers, config) {
+
+				// file is uploaded successfully
+				console.log(data);
+
+
+
+
+			}).error(function(err) {
+
+				$scope.setUploadError(err);
+
+			});
+		  //.then(success, error, progress); 
+		  //.xhr(function(xhr){xhr.upload.addEventListener(...)})// access and attach any event listener to XMLHttpRequest.
+		}
+		/* alternative way of uploading, send the file binary with the file's content-type.
+		   Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed. 
+		   It could also be used to monitor the progress of a normal http post/put request with large data*/
+		// $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code.
 	  };
 
 
 	// --------------------------------<<<<<<<<<<<<<<<<<< end reference
 
-    // ---------------------- REFERENCE FUNCTION. !bang
+	// ---------------------- REFERENCE FUNCTION. !bang
 
-    // Go ahead and compile the input.
-    $scope.hitCompile = function() {
+	// Go ahead and compile the input.
+	$scope.hitCompile = function() {
 
-    	console.log("!trace hit compile",$scope.formData);
-    	
-    	$http.post('/api/compile', $scope.formData)
+		console.log("!trace hit compile",$scope.formData);
+		
+		$http.post('/api/compile', $scope.formData)
 			.success(function(data) {
 				$scope.asm = data.asm;
 				$scope.formData.output = data.asm_text;
@@ -163,42 +193,42 @@ function smcMainController($scope, $location, $http, $upload) {
 				console.log('Error: ',data);
 			});
 
-    }
+	}
 
-    // Sets the class of the asm output to represent traced items.
-    // Check out contextual tables here: http://twitterbootstrap.org/twitter-bootstrap-table-example-tutorial/
+	// Sets the class of the asm output to represent traced items.
+	// Check out contextual tables here: http://twitterbootstrap.org/twitter-bootstrap-table-example-tutorial/
 
-    $scope.traceByRegex = function(index) {
+	$scope.traceByRegex = function(index) {
 
-    	if (typeof $scope.formData.traceregex != 'undefined' && $scope.formData.traceregex.length) {
-    	
-	    	var traceregexstring = '' + $scope.formData.traceregex + '';
-	    	
-	    	try {
-	    		var re_trace = new RegExp(traceregexstring,'gi');
-	    	} catch (e) {
-	    		return "";
-	    	}
+		if (typeof $scope.formData.traceregex != 'undefined' && $scope.formData.traceregex.length) {
+		
+			var traceregexstring = '' + $scope.formData.traceregex + '';
+			
+			try {
+				var re_trace = new RegExp(traceregexstring,'gi');
+			} catch (e) {
+				return "";
+			}
 
-	    	var eachasm = $scope.asm[index];
-	    	
-	    	if (eachasm.match(re_trace)) {
-	    		return "info";
-	    	} else {
-	    		return "";
-	    	}
+			var eachasm = $scope.asm[index];
+			
+			if (eachasm.match(re_trace)) {
+				return "info";
+			} else {
+				return "";
+			}
 
-    	} else {
-    		return "";
-    	}
-    	
+		} else {
+			return "";
+		}
+		
 
 
-    }
+	}
 
-    // scope sample
+	// scope sample
 
-    $scope.sample = function() {
+	$scope.sample = function() {
 
 		var sample = 'sample here';
 
@@ -254,7 +284,7 @@ function smcMainController($scope, $location, $http, $upload) {
 
 
 $(document).ready(function(){
-    $("[data-toggle=tooltip]").tooltip({ placement: 'right'});
+	$("[data-toggle=tooltip]").tooltip({ placement: 'right'});
 });
 
 

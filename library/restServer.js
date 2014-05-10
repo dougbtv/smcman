@@ -44,6 +44,13 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 		console.log("!trace verify input: ",input);
 		console.log("!trace verify files: ",files);
 
+		// First things first, verify the key.
+		// !bang
+
+		// Return a JSON result.
+		res.contentType = 'json';
+		res.send({success: true});
+
 
 
 	}	
@@ -53,6 +60,9 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 		var input = req.params;
 
 		console.log("!trace verify key: ",input);
+
+		// Ok, so I'm going to have to talk to the Upload module
+		// likely via the bot.
 
 		var return_json = {
 			verified: true,

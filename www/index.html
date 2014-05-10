@@ -136,19 +136,36 @@
 						Do upload <HR />
 
 						<!-- !bang -->
-						<input type="text" ng-model="myModelObj">
+						
+						<div ng-file-drop="onFileSelect($files)" class="alert alert-success" ng-file-drag-over-class="alert alert-warning"
+							ng-show="dropSupported"><h3>Drop files here!</h3></div>
+						
+						<p>or</p>
+
 						<input type="file" ng-file-select="onFileSelect($files)" >
-						<input type="file" ng-file-select="onFileSelect($files)" multiple>
 						
-						<div ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="optional-css-class"
-							ng-show="dropSupported">drop files here</div>
-						
+
 						<div ng-file-drop-available="dropSupported=true" 
-							ng-show="!dropSupported">HTML5 Drop File is not supported!</div>
+							ng-show="!dropSupported"><!-- HTML5 Drop File is not supported! --></div>
 						
 						<button ng-click="upload.abort()">Cancel Upload</button>
 
 					</div>
+
+					<div class="container" ng-switch-when="upload-in-progress">
+
+						<h2>Uploading now.... {{upload_percent}}%</h2>
+
+					</div>
+
+					<div class="container" ng-switch-when="upload-error">
+					
+						Uh oh! That errored. <div class="well">{{uploadError}}</div>
+
+					</div>
+
+
+			
 
 
 				</div>
@@ -175,6 +192,8 @@
 				<p>Just an about holder....</p>
 				
 			</div>
+
+
 
 			<!--
 
