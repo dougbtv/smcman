@@ -20,9 +20,13 @@
 		<!-- Custom styles for this template -->
 		<link href="/css/sticky-footer-navbar.css" rel="stylesheet">
 
+		<script src="angular-upload/dist/angular-file-upload-shim.min.js"></script>  <!-- - - - - - - - - - file module! this line before loading angular -->
+
 		<!-- Include AngularJS & JQuery  -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+
+		<script src="angular-upload/dist/angular-file-upload.min.js"></script>  <!-- - - - - - - - - - - - - - - - file module! this line after loading angular -->
 
 		<!-- Latest compiled and minified JavaScript -->
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
@@ -39,8 +43,6 @@
 
 		<!-- And it ain't no fun without the smc frontend. -->
 		<script src="/js/smcFrontEnd.js"></script>
-
-
 
 	</head>
 
@@ -129,6 +131,24 @@
 						<p>In order to upload a file, you'll need to visit us on irc.freenode.net and use the<code>!upload</code> function of the bot</p>
 					</div>
 
+
+					<div class="container" ng-switch-when="upload">
+						Do upload <HR />
+
+						<!-- !bang -->
+						<input type="text" ng-model="myModelObj">
+						<input type="file" ng-file-select="onFileSelect($files)" >
+						<input type="file" ng-file-select="onFileSelect($files)" multiple>
+						
+						<div ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="optional-css-class"
+							ng-show="dropSupported">drop files here</div>
+						
+						<div ng-file-drop-available="dropSupported=true" 
+							ng-show="!dropSupported">HTML5 Drop File is not supported!</div>
+						
+						<button ng-click="upload.abort()">Cancel Upload</button>
+
+					</div>
 
 
 				</div>

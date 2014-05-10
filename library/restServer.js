@@ -21,6 +21,10 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 		server.post('/api/verifyUploadKey', this.verifyUploadKey);
 		server.head('/api/verifyUploadKey', this.verifyUploadKey);
 
+		server.get('/api/upload', this.fileUpload);
+		server.post('/api/upload', this.fileUpload);
+		server.head('/api/upload', this.fileUpload);
+
 
 	};
 
@@ -31,6 +35,18 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 		});
 
 	}
+
+	this.fileUpload = function(req, res, next) {
+
+		var input = req.params;
+		var files = req.files;
+
+		console.log("!trace verify input: ",input);
+		console.log("!trace verify files: ",files);
+
+
+
+	}	
 
 	this.verifyUploadKey = function(req, res, next) {
 
