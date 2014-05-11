@@ -102,7 +102,7 @@ function smcMainController($scope, $location, $http, $upload) {
 					// If someone is in the middle of a process... we don't wanna restart it.
 					// !bang
 
-					if ($scope.uploadMode == 'init') {
+					if ($scope.uploadMode == 'init' || $scope.uploadMode == 'upload-error') {
 						$scope.uploadMode = 'loading';
 						// The thing we really want to do is verify the upload key.
 						$scope.verifyUploadKey();
@@ -161,6 +161,7 @@ function smcMainController($scope, $location, $http, $upload) {
 				// file is uploaded successfully
 				console.log(data);
 
+				
 
 
 

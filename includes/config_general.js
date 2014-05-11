@@ -23,7 +23,7 @@ define("ALLOWED_TYPES",[
 
 define("PATH_UPLOAD_STORAGE","/tmp/");
 
-define("UPLOAD_TIME_LIMIT",1); // In minutes.
+define("UPLOAD_TIME_LIMIT",20); // In minutes.
 
 // -----------
 /*

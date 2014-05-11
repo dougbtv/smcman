@@ -22,10 +22,17 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	}, { collection: 'uploads' });
 
 	// The URL to upload to.
-	uploadSchema.virtual('url')
+	uploadSchema.virtual('upload_url')
 		.get(function () {
 			return privates.URL_SMCSITE + "#/upload?key=" + this.secret;
 		});
+
+	// The final URL
+	uploadSchema.virtual('url')
+		.get(function () {
+			return privates.URL_SMCSITE + "/api/view/" + this.secret;
+		});
+
 
 	uploadSchema.virtual('filepath')
 		.get(function () {
@@ -61,7 +68,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 				console.log("!trace new Upload doc: %j",upload);
 
 				// Get an upload URL, and then whisper it to the requestor.
-				chat.whisper(from,"upload_url",[from,upload.url]);
+				chat.whisper(from,"upload_url",[from,upload.upload_url]);
 
 				// Now we can save that.
 				upload.save();
@@ -89,6 +96,8 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	}.bind(this);
 
+	// We expire uploads that don't complete within 20 minutes.
+
 	this.expireUpload = function(key) {
 
 		Upload.find({ secret: key },function (err, uploadset) {
@@ -101,10 +110,11 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 				Upload.remove({ _id: upload._id },function(err){});
 			}
 
-
 		});
 
 	}
+
+	// Move an uploaded item into storage.
 
 	this.storeUpload = function(key,path,type,filename,callback) {
 
@@ -115,16 +125,20 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 			var upload = uploadset[0];
 
 			Upload.findById(upload._id, function (err, upload) {
-				if (err) return new Error("Couldn't find it.");
+				if (err) return new Error("Couldn't find it. !a01d7");
 
+				// Do we accept this type? Check our allowed array.
 				if (constants.ALLOWED_TYPES.indexOf(type) > -1) {
-					console.log("!trace good, we accept that type.");
-
+					
 					fs.rename(path, upload.filepath,function(){
 
 						// Now we can complete this guy.
-						upload.complete = true;
+						upload.complete = true;				// Say it's complete
+						upload.description = filename;		// Set it's filename as the description.
 						upload.save();
+
+						// Let the channel know about it.
+						chat.say("upload_tellchannel",[upload.nick,upload.url]);
 
 						// Callback, no error.
 						callback(false);
@@ -164,8 +178,20 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		// Ok, pull that out of the database.
 		Upload.count({secret: key}, function(err, counted) {
 
+			// If it's there, that's good.
 			if (counted > 0) {
-				callback(true);
+
+				Upload.findOne({ secret: key },function (err, upload) {
+
+					// But it's only verified if it's incomplete
+					if (!upload.complete) {
+						callback(true);
+					} else {
+						callback(false);
+					}
+
+				});
+				
 			} else {
 				callback(false);
 			}
