@@ -277,6 +277,29 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 		
 	};
 	
+	// --------------- utility functions
+
+	// ------------- create a (almost for surely) unique hash -- based on freenode nick (could be any string,though)
+
+	var moment = require('moment');
+
+	var md5 = require('MD5');
+	// And we salt it.
+	var salt = "d000nTRiN<|ket";
+
+	this.createHash = function(from) {
+
+		var unixtime = moment().format("X");
+		var txt = from + unixtime.toString() +  (Math.floor(Math.random() * (2500 - 1 + 1)) + 1).toString() + salt;
+
+		var hash = md5(txt);
+
+		console.log("!trace hash text: ",txt);
+		console.log("!trace hash out: ",hash);
+
+		return hash;
+
+	}
 	
 
 	

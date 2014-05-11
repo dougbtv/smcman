@@ -45,15 +45,40 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 		console.log("!trace verify files: ",files);
 
 		// First things first, verify the key.
-		// !bang
+		this.isVerified(input.key,function(verified){
+			if (verified) {
+				console.log("!trace GREAT, uploaded file, and verified.");
+				// Make a request to store it.
+				smcman.upload.storeUpload(input.key,files.file.path,files.file.type,files.file.name,function(err){
 
-		// Return a JSON result.
-		res.contentType = 'json';
-		res.send({success: true});
+					if (!err) {
+
+						// Ok, good, that's a file we use.
+
+					} else {
+
+						// Let them know it errored out.
+						res.contentType = 'json';
+						res.send({error: err});
+
+					}
+
+				});
+				
+			} else {
+
+				// Return a JSON result.
+				res.contentType = 'json';
+				res.send({error: "Key not verified on file upload"});
+
+			}
+		});
+
+		
 
 
 
-	}	
+	}.bind(this);
 
 	this.verifyUploadKey = function(req, res, next) {
 
@@ -61,18 +86,29 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 
 		console.log("!trace verify key: ",input);
 
+		this.isVerified(input.key,function(verified){
+			// Return a JSON result.
+			res.contentType = 'json';
+			res.send({success: verified});
+		});
+
+	}.bind(this);
+
+	this.isVerified = function(key,callback) {
+
 		// Ok, so I'm going to have to talk to the Upload module
 		// likely via the bot.
+		smcman.upload.isUploadVerified(key,function(verified){
 
-		var return_json = {
-			verified: true,
-		};
+			if (verified) {
+				callback(true);
+			} else {
+				callback(false);
+			}
 
-		// Return a JSON result.
-		res.contentType = 'json';
-		res.send(return_json);
+		});
 
-	}
+	}.bind(this);
 
 	this.testFunction = function(req, res, next) {
 

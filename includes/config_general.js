@@ -11,7 +11,30 @@ function define(name, value) {
 
 define("SERVER_PORT",8001);
 
+define("ALLOWED_TYPES",[
+	'image/gif',
+	'image/jpeg',
+	'image/pjpeg',
+	'image/png',
+	'image/svg+xml',
+	'image/vnd.djvu',
+	'image/example',
+]);
+
+define("PATH_UPLOAD_STORAGE","/tmp/");
+
+define("UPLOAD_TIME_LIMIT",1); // In minutes.
+
 // -----------
 /*
 db.auth("whistler","zerobot!")
+
+'image/gif',
+'image/jpeg',
+'image/pjpeg',
+'image/png',
+'image/svg+xml',
+'image/vnd.djvu',
+'image/example',
+
 */

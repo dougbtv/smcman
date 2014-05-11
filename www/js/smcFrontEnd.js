@@ -50,7 +50,13 @@ function smcMainController($scope, $location, $http, $upload) {
 					.success(function(data) {
 						console.log("!trace key request received data",data);
 						// That's a good key, we can move along.
-						$scope.uploadMode = 'upload';
+						if (data.success) {
+							$scope.uploadMode = 'upload';
+						} else {
+							// Not a good upload key.
+							$scope.setUploadError("Dude, sorry that key is no longer good (or may never have been.)");
+						}
+						
 					})
 					.error(function(data) {
 						

@@ -29,7 +29,9 @@ module.exports = function(bot, mongoose, db, constants, privates) {
     
     
     // Now, let's create a method to "say" something to a channel.
-    this.say = function(identifier,parameters) {
+    this.say = function(identifier,parameters,private_message) {
+
+    	if (typeof private_message == 'undefined') { private_message = false; }
     	
     	// Ok, so let's count the parameters.
     	// console.log(parameters.length);
@@ -63,7 +65,11 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					}
 				
 					// Finally, say it through IRC.
-					this.ircSay(output);
+					if (!private_message) {
+						this.ircSay(output);
+					} else {
+						this.nickSay(private_message,output);
+					}
 					
 				} else {
 					
@@ -76,6 +82,14 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 		}.bind(this));
     	
     };
+
+    // Say something to a nick, as a private message.
+    this.whisper = function(nick,identifier,parameters) {
+
+    	// Tell say it's to a nick.
+    	this.say(identifier,parameters,nick);
+
+    }
     
     // Give me a random number based on the number elements in an array.
     
@@ -88,6 +102,16 @@ module.exports = function(bot, mongoose, db, constants, privates) {
     	// Now just go and get a random number in that range.
     	return Math.floor(Math.random() * (max - min + 1)) + min;
     	
+    };
+
+    this.nickSay = function(nick,message) {
+    	
+    	if (this.privates.IRC_ENABLED) {
+    		this.bot.say(nick, message);
+    	} else {
+    		console.log('bot would have said:',message);
+    	}
+		
     };
     
     this.ircSay = function(message) {
