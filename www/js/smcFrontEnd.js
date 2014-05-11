@@ -102,11 +102,19 @@ function smcMainController($scope, $location, $http, $upload) {
 					// If someone is in the middle of a process... we don't wanna restart it.
 					// !bang
 
-					if ($scope.uploadMode == 'init' || $scope.uploadMode == 'upload-error') {
-						$scope.uploadMode = 'loading';
-						// The thing we really want to do is verify the upload key.
-						$scope.verifyUploadKey();
+					switch ($scope.uploadMode) {
+						// During any of these modes, it's OK to restart.
+						case "init":
+						case "upload-success":
+						case "upload-error":
+							$scope.verifyUploadKey();
+							break;
+
+						default:
+							break;
+
 					}
+
 					break;
 
 			}
@@ -159,10 +167,12 @@ function smcMainController($scope, $location, $http, $upload) {
 			}).success(function(data, status, headers, config) {
 
 				// file is uploaded successfully
-				console.log(data);
+				console.log("!trace upload success data: ",data);
 
-				
+				// It's a success!
+				$scope.uploadMode = 'upload-success';
 
+				$scope.uploadedURL = data.url;
 
 
 			}).error(function(err) {

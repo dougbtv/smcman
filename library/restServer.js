@@ -49,11 +49,14 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 			if (verified) {
 				console.log("!trace GREAT, uploaded file, and verified.");
 				// Make a request to store it.
-				smcman.upload.storeUpload(input.key,files.file.path,files.file.type,files.file.name,function(err){
+				smcman.upload.storeUpload(input.key,files.file.path,files.file.type,files.file.name,function(err,url){
 
 					if (!err) {
 
 						// Ok, good, that's a file we use.
+						// Let them know it errored out.
+						res.contentType = 'json';
+						res.send({success: true, url: url});
 
 					} else {
 

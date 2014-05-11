@@ -141,7 +141,8 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 						chat.say("upload_tellchannel",[upload.nick,upload.url]);
 
 						// Callback, no error.
-						callback(false);
+						// Also include the URL.
+						callback(false,upload.url);
 
 					});
 
