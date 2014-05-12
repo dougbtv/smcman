@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Just clearing out chat...."
-mongo --eval "use smcman; db.chat.remove();"
+mongo --eval "db.chat.remove()" smcman
 
 mongoimport --db smcman --collection chat --file chat.json
 mongoimport --db smcman --collection notes --file notes.json
