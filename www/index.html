@@ -24,7 +24,9 @@
 
 		<!-- Include AngularJS & JQuery  -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script><!-- load angular -->
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.min.js"></script>
+
 
 		<script src="angular-upload/dist/angular-file-upload.min.js"></script>  <!-- - - - - - - - - - - - - - - - file module! this line after loading angular -->
 
@@ -43,6 +45,7 @@
 
 		<!-- And it ain't no fun without the smc frontend. -->
 		<script src="/js/smcFrontEnd.js"></script>
+		<script src="/js/uploadController.js"></script>
 
 	</head>
 
@@ -103,164 +106,9 @@
 
 		<div class="container" ng-switch on="onPage">
 
-			<!-- Begin page content -->
-			<div class="container" ng-switch-when="home">
+			<!-- !bang -->
+			<div ng-view></div>
 
-				<div class="page-header">
-					<h2>SMCMan : Your favorite SMC bot</h2>
-				</div>
-				<p class="lead">Your IRC bot who facilitates making a file <code>!upload</code> and hosting your files, and providing some handy utils.</p>
-				<p>Go ahead and checkout the <code><a href="#/help">!help</a></code>.</p>
-			
-			</div>
-
-			<div class="container" ng-switch-when="upload">
-				
-				<div class="page-header">
-					<h1>Upload</h1>
-				</div>
-
-				<div class="container" ng-switch on="uploadMode">
-
-					<div class="container" ng-switch-when="loading">
-						<p><a href="#upload?key=f00f000">Uploooooad</a></p>
-						<p class="text-center"><img src="images/ajax-loader.gif" /></p>
-					</div>
-
-					<div class="container" ng-switch-when="sorry">
-						<p>In order to upload a file, you'll need to visit us on irc.freenode.net and use the<code>!upload</code> function of the bot</p>
-					</div>
-
-
-					<div class="container" ng-switch-when="upload">
-						Do upload <HR />
-
-						<!-- !bang -->
-						
-						<div ng-file-drop="onFileSelect($files)" class="alert alert-success" ng-file-drag-over-class="alert alert-warning"
-							ng-show="dropSupported"><h3>Drop files here!</h3></div>
-						
-						<p>or</p>
-
-						<input type="file" ng-file-select="onFileSelect($files)" >
-						
-
-						<div ng-file-drop-available="dropSupported=true" 
-							ng-show="!dropSupported"><!-- HTML5 Drop File is not supported! --></div>
-						
-						<button ng-click="upload.abort()">Cancel Upload</button>
-
-					</div>
-
-					<div class="container" ng-switch-when="upload-in-progress">
-
-						<h2>Uploading now.... {{upload_percent}}%</h2>
-
-					</div>
-
-					<div class="container" ng-switch-when="upload-error">
-					
-						<h4>Fudge... That upload errored out</h4>
-						<p><div class="well">{{uploadError}}</div></p>
-
-					</div>
-
-
-					<div class="container" ng-switch-when="upload-success">
-						<h2>Upload success!</h2>
-						<p>You've uploaded: <a href="{{uploadedURL}}">{{uploadedURL}}</a></p>
-					</div>
-			
-
-
-				</div>
-
-
-			</div>
-
-
-			<div class="container" ng-switch-when="help">
-				
-				<div class="page-header">
-					<h1>Help</h1>
-				</div>
-
-				<p>Just a help place holder....</p>
-
-			</div>
-
-			<div class="container" ng-switch-when="about">
-				<div class="page-header">
-					<h1>About</h1>
-				</div>
-
-				<p>Just an about holder....</p>
-				
-			</div>
-
-
-
-			<!--
-
-			<div class="container" ng-switch-when="compiler">
-				<form>
-				<div class="page-header">
-					<h3>Compiler</h3>
-				</div>
-
-				<div class="row">
-					<div class="col-lg-6">
-					  <h4>Input</h4>
-					  <p>
-					  	<textarea class="form-control" rows="12" ng-model="formData.input"></textarea>
-					  </p>
-					  <p>
-						  <button type="button" class="btn btn-primary" ng-click="hitCompile()">Compile</button>
-						  <button type="button" class="btn btn-default" ng-click="sampleFile()">Sample File</button>
-					  </p>
-					  
-					  <h4>Hex Code</h4>
-					  <p>
-					  	<textarea class="form-control" rows="3" ng-model="formData.hexcode" disabled></textarea>
-					  </p>
-					  
-					  <h4>Output</h4>
-					  <p>
-					  	<textarea class="form-control" rows="6" ng-model="formData.output" disabled></textarea>
-					  </p>
-					    
-					</div>
-
-					<div class="col-lg-6">
-
-						<h4>Assembled</h4>
-						
-						<p>
-							<input type="text" class="form-control" placeholder="Trace Via Regex..." ng-model="formData.traceregex">
-						</p>
-
-						nice bootstrap table reference: http://twitterbootstrap.org/twitter-bootstrap-table-example-tutorial/
-						<table class="table table-striped table-bordered table-hover table-condensed">
-							<thead>
-								<th>Counter</th>
-								<th>Instruction</th>
-							</thead>
-							
-							<tr ng-repeat="asmitem in asm" ng-class="traceByRegex($index)">
-								<td>{{$index + 1}}</td>
-								<td>{{asmitem}}</td>
-							</tr>
-
-						</table>
-					
-					</div>
-			  </div>
-
-			</form>
-			</div>
-
-			-->
-			
 
 		</div>
 
