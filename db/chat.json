@@ -346,3 +346,14 @@
 { "_id" : { "$oid" : "536a6b05c6886509d5ad015e" }, "fields" : 1, "identifier" : "smc_quit_nosmc", "text" : "%0, so yeah, you have to start an SMC before you can quit it (are you that hellbent on quitting?)" }
 { "_id" : { "$oid" : "536a6b52c6886509d5ad015f" }, "fields" : 1, "identifier" : "smc_quit_nojoin", "text" : "%0, you must be a participant in order to quit. You also must be a total wuss to quit." }
 { "_id" : { "$oid" : "536a6b74c6886509d5ad0160" }, "fields" : 1, "identifier" : "smc_quit_nojoin", "text" : "%0, in order to leave the SMC you must A: Be a total wuss, and B: You must join first (which you haven't)" }
+{ "_id" : { "$oid" : "536ea231502dce75360cc62c" }, "fields" : 1, "identifier" : "upload_not_registered", "text" : "%1, You need to register (and identify) with services to upload, sorry. Check out: https://freenode.net/faq.shtml#registering" }
+{ "_id" : { "$oid" : "536ea24b502dce75360cc62d" }, "fields" : 1, "identifier" : "upload_not_registered", "text" : "%1, Dude /msg nickserv so you can upload. Check out: https://freenode.net/faq.shtml#registering" }
+{ "_id" : { "$oid" : "536ea25b502dce75360cc62e" }, "fields" : 1, "identifier" : "upload_not_registered", "text" : "Have you checked out: https://freenode.net/faq.shtml#registering ? You need to register / identify to upload" }
+{ "_id" : { "$oid" : "536ea33e502dce75360cc62f" }, "fields" : 2, "identifier" : "upload_url", "text" : "Upload your files @ %2" }
+{ "_id" : { "$oid" : "536ea34f502dce75360cc630" }, "fields" : 2, "identifier" : "upload_url", "text" : "Fire up your browser, %1, and upload to %2" }
+{ "_id" : { "$oid" : "536ea37b502dce75360cc631" }, "fields" : 2, "identifier" : "upload_url", "text" : "If you're going to upload with MSIE, good luck -- upload to: %2" }
+{ "_id" : { "$oid" : "536ea38f502dce75360cc632" }, "fields" : 2, "identifier" : "upload_url", "text" : "You've got twenty minute to upload to: %2" }
+{ "_id" : { "$oid" : "536ef115d6a6fcecc4cf61c6" }, "fields" : 2, "identifier" : "upload_tellchannel", "text" : "Just got a file from %0, they uploaded %1" }
+{ "_id" : { "$oid" : "536ef127d6a6fcecc4cf61c7" }, "fields" : 2, "identifier" : "upload_tellchannel", "text" : "Fresh upload from %0, available at %1" }
+{ "_id" : { "$oid" : "536ef137d6a6fcecc4cf61c8" }, "fields" : 2, "identifier" : "upload_tellchannel", "text" : "%0 just uploaded %1" }
+{ "_id" : { "$oid" : "536ef165d6a6fcecc4cf61c9" }, "fields" : 2, "identifier" : "upload_tellchannel", "text" : "%0 has just uploaded %1 transferred over a 28.8 modem, stored locally on 1.44MB floppy" }
