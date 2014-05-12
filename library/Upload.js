@@ -12,11 +12,13 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		nick: String,			// Who's uploading?
 		secret: String,			// The secret key
 		file: String,			// File pointer.
+		mime_type: String,		// The mime type.
 		indate: Date,			// Date of upload
 		is_smc: Boolean,		// Is this for an SMC?
 		description: String,	// A description.
-		category: String,		// (Unused?) A category. 
+		category: String,		// (Unused?) A category.
 		complete: Boolean, 		// Is the upload complete?
+		tiny_url: Number,		// What's it's tiny url ID?
 		deleted: Boolean,		// Is this removed?
 
 	}, { collection: 'uploads' });
@@ -30,7 +32,13 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	// The final URL
 	uploadSchema.virtual('url')
 		.get(function () {
-			return privates.URL_SMCSITE + "/api/view/" + this.secret;
+			// Our URL consists of:
+			// http://DOMAIN/api/view/SSSXXXX
+			// http://DOMAIN is straight forward
+			// api/view is our path
+			// SSS is the first three characters of our secret.
+			// XXXX is the hex value of the tiny url
+			return privates.URL_SMCSITE + "api/view/" + this.secret.substring(0,3) + this.tiny_url.toString(16);
 		});
 
 
@@ -39,9 +47,15 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 			return constants.PATH_UPLOAD_STORAGE + this.secret;
 		});
 
-
 	// Compile it to a model.
 	var Upload = mongoose.model('Upload', uploadSchema);
+
+	// We also keep an incrementing ID for tiny URLs
+	// so we have a small schema for that.
+	var counterSchema = mongoose.Schema({
+		seq: Number,			
+	}, { collection: 'counters' });
+	var Counter = mongoose.model('Counter', counterSchema);
 
 	this.newUpload = function(from,is_smc) {
 
@@ -96,6 +110,32 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	}.bind(this);
 
+	// Create new incremental tiny URLs using an ID
+	// idea for incrementing ID from mongo docs: http://docs.mongodb.org/manual/tutorial/create-an-auto-incrementing-field/
+	this.newTinyURL = function(callback) {
+
+		var conditions = { for_collection: 'uploads' }
+			, update = { $inc: { seq: 1 }}
+			, options = {  };
+
+		// Find the current sequence.
+		Counter.findOne(conditions,function(err,counter){
+			console.log("!trace counter err: ",err);
+			console.log("!trace counter counter: ",counter);
+
+			// Keep that sequence ID
+			var current_seq = counter.seq;
+
+			// Now update, and increment the value.
+			Counter.update(conditions, update, options, function(){
+				callback(current_seq);
+			});
+
+		});
+
+
+	}
+
 	// We expire uploads that don't complete within 20 minutes.
 
 	this.expireUpload = function(key) {
@@ -129,30 +169,40 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 				// Do we accept this type? Check our allowed array.
 				if (constants.ALLOWED_TYPES.indexOf(type) > -1) {
-					
+
+					// Move the file into place.					
 					fs.rename(path, upload.filepath,function(){
 
-						// Now we can complete this guy.
-						upload.complete = true;				// Say it's complete
-						upload.description = filename;		// Set it's filename as the description.
-						upload.save();
+						// Get a new tinyURL for it.
+						this.newTinyURL(function(tiny_id){
 
-						// Let the channel know about it.
-						chat.say("upload_tellchannel",[upload.nick,upload.url]);
+							// Now we can complete this guy.
+							upload.complete = true;				// Say it's complete
+							upload.tiny_url = tiny_id;			// Give it a "tiny url" increment.
+							upload.description = filename;		// Set it's filename as the description.
+							upload.mime_type = type;			// Save that mime type.
 
-						// Callback, no error.
-						// Also include the URL.
-						callback(false,upload.url);
+							upload.save();
 
-					});
+							// Let the channel know about it.
+							chat.say("upload_tellchannel",[upload.nick,upload.url]);
+
+							// Callback, no error.
+							// Also include the URL.
+							callback(false,upload.url);
+
+						});
+
+
+					}.bind(this));
 
 				} else {
 					callback("File type " + type + " is not an allowed type to upload");
 
 				}
-			});
+			}.bind(this));
 
-		});
+		}.bind(this));
 
 
 		// this.Chat.find({ identifier: identifier, fields: parameters.length},function (err, chat) {
