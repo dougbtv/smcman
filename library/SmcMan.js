@@ -232,17 +232,34 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 		
 		// Trim down the text, first.
 		var text = text.trim();
+
+		var cc = privates.COMMAND_CHARACTER; // cc = command character.
+
+		console.log("Command character: " + cc);
+
+		var re_matchfirst =  new RegExp('^' + cc);
+		var re_matchformat = new RegExp('^' + cc + '\\w+\\s.+$');
+		var re_getcommand =  new RegExp('^' + cc + '(.+?)\\s.+$');
+		var re_getargs = 	 new RegExp('^' + cc + '.+?\\s(.+)$');
+		var re_getbareword = new RegExp('^' + cc + '(.+)?');
+
+		console.log("!trace re_matchfirst",re_matchfirst);
+		console.log("!trace re_matchformat",re_matchformat);
+		console.log("!trace re_getcommand",re_getcommand);
+		console.log("!trace re_getargs",re_getargs);
+		console.log("!trace re_getbareword",re_getbareword);
+
 		
-		if (/^!/.test(text)) {
+		if (re_matchfirst.test(text)) {
 			// Ok this is a command. 
 			// Let's see if it has arguments.
-			if (/^!\w+\s.+$/.test(text)) {
+			if (re_matchformat.test(text)) {
 				// It has arguments. Let's get the parts.
-				command = text.replace(/^!(.+?)\s.+$/,'$1');
-				args = text.replace(/^!.+?\s(.+)$/,'$1');
+				command = text.replace(re_getcommand,'$1');
+				args = text.replace(re_getargs,'$1');
 			} else {
 				// It's a bareword command. Just take the bareword (and leave args empty)
-				command = text.replace(/^!(.+)?/,'$1');
+				command = text.replace(re_getbareword,'$1');
 				args = "";
 			}
 			
