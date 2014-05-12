@@ -1,15 +1,10 @@
 
 function uploadController($scope, $location, $http, $upload) {
 
-	console.log("uploadController instantiated, !trace");
-
 	$scope.verifyUploadKey = function() {
 
-
 		var params = $location.search();
-		console.log("!trace verify key params: ",params);
 		var uploadkey = params.key;
-		console.log("!trace verify key itself: ",uploadkey);
 
 		var invalid_request = true;
 
@@ -21,7 +16,6 @@ function uploadController($scope, $location, $http, $upload) {
 				// Make the API request.
 				$http.post('/api/verifyUploadKey', {key: uploadkey})
 					.success(function(data) {
-						console.log("!trace key request received data",data);
 						// That's a good key, we can move along.
 						if (data.success) {
 							$scope.uploadMode = 'upload';
@@ -65,8 +59,6 @@ function uploadController($scope, $location, $http, $upload) {
 	
 	$scope.onFileSelect = function($files) {
 
-		console.log("!trace GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOD");
-
 		$scope.uploadMode = "upload-in-progress";
 
 		var params = $location.search();
@@ -95,13 +87,10 @@ function uploadController($scope, $location, $http, $upload) {
 			}).progress(function(evt) {
 
 				$scope.upload_percent = parseInt(100.0 * evt.loaded / evt.total);
-				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 
 			}).success(function(data, status, headers, config) {
 
 				// file is uploaded successfully
-				console.log("!trace upload success data: ",data);
-
 				// It's a success!
 				$scope.uploadMode = 'upload-success';
 

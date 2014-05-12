@@ -3,19 +3,17 @@ var smcFrontEnd = angular.module('smcFrontEnd', ['ngRoute','angularFileUpload'])
 
 smcFrontEnd.config(function($routeProvider) {
 
-	console.log("!trace CONFIGURATION????");
-
 		$routeProvider
 
 			// route for the home page
 			.when('/', {
 				templateUrl : 'views/home.html',
-				controller  : 'testController'
+				controller  : 'homeController'
 			})
 
 			.when('/home', {
 				templateUrl : 'views/home.html',
-				controller  : 'testController'
+				controller  : 'homeController'
 			})
 
 			// route for the about page
@@ -38,24 +36,23 @@ smcFrontEnd.config(function($routeProvider) {
 
 	});
 
-function testController($scope, $location, $http, $upload) {
+function homeController($scope, $location, $http, $upload) {
 
-	console.log("!trace ANYTHING HERE???");
-	$scope.message = "quux";
+	// $scope.message = "quux";
 
 }
 
 
 function aboutController($scope, $location, $http, $upload) {
 
-	console.log("aboutController instantiated, !trace");
+	// ..
 
 }
 
 
 function helpController($scope, $location, $http, $upload) {
 
-	console.log("helpController instantiated, !trace");
+	// ..
 
 }
 
