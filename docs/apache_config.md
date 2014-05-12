@@ -8,9 +8,15 @@ Then add to apache:
 
     <VirtualHost *:80>
             ServerName smc
-            DocumentRoot /home/doug/codebase/smcman/www/
-            ProxyPass /api/ http://localhost:8001/api/
-            Options Indexes FollowSymLinks
+            DocumentRoot /home/doug/codebase/smcman/www/4
+        <Location /api>
+            ProxyPass http://localhost:8001/api/
+            ProxyPassReverse http://localhost:8001/api/
+        </Location>
+        <Location /view>
+            ProxyPass http://localhost:8001/view/
+            ProxyPassReverse http://localhost:8001/view/
+        </Location>
     </VirtualHost>
 
     <Directory /home/doug/codebase/smcman/www/>

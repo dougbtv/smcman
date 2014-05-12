@@ -8,6 +8,8 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 	// So you want to interoperate with Apache?
 	// Try a directive like so:
 	// ProxyPass /api/ http://localhost:8000/api/
+
+	var fs = require('fs');
 	
 	this.myConstructor = function() {
 
@@ -25,6 +27,9 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 		server.post('/api/upload', this.fileUpload);
 		server.head('/api/upload', this.fileUpload);
 
+		server.get('/api/view/:tinyURL', this.viewUpload);
+		server.get('/view/:tinyURL', this.viewUpload);
+
 
 	};
 
@@ -35,6 +40,37 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 		});
 
 	}
+
+	this.viewUpload = function(req, res, next) {
+
+		console.log("!trace view -- req params", req.params);
+
+		// Ok, ask the upload model for the file and type.
+		smcman.upload.getUploadByURL(req.params.tinyURL,function(err,path,mimetype){
+
+			// Check for errors.
+			if (!err) {
+
+				console.log("!trace file path: ",path);
+				console.log("!trace file mime: ",mimetype);
+
+				// Send the file along.
+				res.setHeader('Content-type', mimetype);
+				var filestream = fs.createReadStream(path);
+				filestream.pipe(res);
+
+
+			} else {
+
+				res.contentType = 'json';
+				res.send({error: err});
+
+			}
+
+		});
+
+	}
+
 
 	this.fileUpload = function(req, res, next) {
 

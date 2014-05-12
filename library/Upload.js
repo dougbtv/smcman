@@ -120,8 +120,6 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 		// Find the current sequence.
 		Counter.findOne(conditions,function(err,counter){
-			console.log("!trace counter err: ",err);
-			console.log("!trace counter counter: ",counter);
 
 			// Keep that sequence ID
 			var current_seq = counter.seq;
@@ -133,6 +131,34 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 		});
 
+
+	}
+
+	this.getUploadByURL = function(tinyurl,callback) {
+
+		var secretpart = tinyurl.substring(0,3);
+		var tinyid = parseInt(tinyurl.substring(3),16);
+
+		re_secret = new RegExp('^' + secretpart);
+
+		var conditions = { tiny_url: tinyid, secret: re_secret };
+
+		// Now find it.
+		Upload.findOne(conditions,function (err, upload) {
+
+			if (upload) {
+
+				// Great, we can ship back the information we need.
+				callback(null,upload.filepath,upload.mime_type);
+
+			} else {
+
+				// That's an error.
+				callback("No file found");
+
+			}
+
+		});
 
 	}
 
