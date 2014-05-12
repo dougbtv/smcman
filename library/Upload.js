@@ -38,7 +38,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 			// api/view is our path
 			// SSS is the first three characters of our secret.
 			// XXXX is the hex value of the tiny url
-			return privates.URL_SMCSITE + "api/view/" + this.secret.substring(0,3) + this.tiny_url.toString(16);
+			return privates.URL_SMCSITE + "view/" + this.secret.substring(0,3) + this.tiny_url.toString(16);
 		});
 
 
