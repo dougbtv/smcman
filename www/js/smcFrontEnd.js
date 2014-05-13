@@ -1,5 +1,5 @@
 // public/core.js
-var smcFrontEnd = angular.module('smcFrontEnd', ['ngRoute','angularFileUpload']);
+var smcFrontEnd = angular.module('smcFrontEnd', ['ngRoute','ngAnimate','angularFileUpload']);
 
 smcFrontEnd.config(function($routeProvider) {
 
@@ -28,10 +28,16 @@ smcFrontEnd.config(function($routeProvider) {
 				controller  : 'aboutController'
 			})
 
-			// route for the contact page
+			// route for the upload page
 			.when('/upload', {
 				templateUrl : 'views/upload.html',
 				controller  : 'uploadController'
+			})
+
+			// route for the login page
+			.when('/login', {
+				templateUrl : 'views/login.html',
+				controller  : 'loginController'
 			});
 
 	});
@@ -62,6 +68,8 @@ function smcMainController($scope, $location, $http, $upload) {
 	// Defaults!
 	$scope.formData = {};
 	$scope.uploadMode = "init";
+
+	$scope.loginStatus = "loggedout";
 
 	// We want more in the path than JUST the page. So let's get that.
 	// And for that we can pack the URL params into json with:
