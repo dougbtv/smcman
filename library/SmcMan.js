@@ -62,9 +62,9 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	
 	
 	// Start a REST server.
-//	if (privates.REST_API_ENABLED) {
-	//	this.rest.serverStart();
-	//}
+	if (privates.REST_API_ENABLED) {
+		this.rest.serverStart();
+	}
 
 	// --------------------------------------------------------- Handle command.
 	this.commandHandler = function(text,from) {

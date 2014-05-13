@@ -1,16 +1,4 @@
 module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) {
-/*	
-	this.cointoss = function(from) {
-	
-		//var coin = int(2);
-			var coin = Math.floor(Math.random(2));
-		if(coin) { coin = "heads"; } else { coin = "tails"; } 
-		
-		var ars = [from]+[coin];
-		
-		chat.say("cointoss", [ars]);
-	}
-*/
 
 	this.cointoss = function(from) {
 		var coin_string; //we will set this up in the conditional
@@ -19,4 +7,28 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		chat.say("cointoss", [from, coin_string]);
 	}
 	
-	};
+	this.rolldice = function(from) {
+		
+	}
+	
+	this.smokeup = function(from) {
+	
+	}
+	
+	this.fart = function(from) {
+	
+	}
+	
+	this.beer = function(from) {
+	
+	}
+	
+	this.hug = function(from) {
+	
+	}
+	
+	this.slap = function(from) {
+	
+	}
+	
+};
