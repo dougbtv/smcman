@@ -10,7 +10,7 @@ function define(name, value) {
 }
 
 // ---------------------------------- IRC Constants
-define("IRC_CHANNEL",'#ddwagnz');
+define("IRC_CHANNEL",'#smcbot');
 define("IRC_BOTNAME",'zenodebottest');
 define("IRC_IDENTPASS",'imnotregistered');
 define("IRC_SERVER",'irc.freenode.net');
