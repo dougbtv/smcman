@@ -55,12 +55,16 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	var Upload = require("./Upload.js");       // The object describing an upload
 	// Ok, create a new upload instance.
 	this.upload = new Upload(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
-						
+	
+	var Toys = require("./TOYS.js");
+	var toys = new Toys(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+	
+	
 	
 	// Start a REST server.
-	if (privates.REST_API_ENABLED) {
-		this.rest.serverStart();
-	}
+//	if (privates.REST_API_ENABLED) {
+	//	this.rest.serverStart();
+	//}
 
 	// --------------------------------------------------------- Handle command.
 	this.commandHandler = function(text,from) {
@@ -117,6 +121,14 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 
 					case "trace": 		smc.traceIt(from);			break;
 
+					// --
+					// Toy commands
+					// --
+					case "cointoss":
+					case "flipcoin":	toys.cointoss(from);  break;
+						break;
+					
+					
 					// ---------------------------------------------------------
 					// -- Uploads!
 					// ---------------------------------------------------------
