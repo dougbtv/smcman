@@ -31,3 +31,5 @@ define("IRC_DEBUG",true);
 define("REST_API_ENABLED",true);
 
 define("URL_SMCSITE","http://smc/");
+
+define("COMMAND_CHARACTER","!");
