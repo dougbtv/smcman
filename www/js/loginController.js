@@ -8,6 +8,22 @@ function loginModule($http) {
 
 	this.cheese = "cheddar";
 
+	this.submitAttempt = function(loginform,callback) {
+
+		$http.post('/api/login', loginform)	
+			.success(function(data) {
+				// Ok.... callback with the result.
+				console.log("!trace LOGIN AJAX: ",data);
+				callback(data.success);
+			})
+			.error(function(data) {
+			
+							
+
+			});	
+
+	}
+
 	this.foo = function() {
 		console.log("!trace cheese: " + this.cheese);
 
@@ -39,6 +55,21 @@ smcFrontEnd.controller('loginController', ['$scope', '$location', '$http', 'logi
 
 	// $scope.message = "quux";
 	console.log("!trace login controller instantiated.");
+
+	$scope.clickLogin = function() {
+
+		console.log("!trace click login data: ",$scope.loginForm);
+
+		login.submitAttempt($scope.loginForm,function(success){
+
+			if (success) {
+
+			}
+
+		});
+
+
+	}
 
 
 }]);

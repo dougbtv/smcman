@@ -12,6 +12,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		secret: String,			// The secret key
 		indate: Date,			// Created @
 		timezone: String,		// What's their timezone pref?
+		session_id: String,		// After authenticating, we give a (quasi-public) session ID.
 
 	}, { collection: 'users' });
 
@@ -125,10 +126,6 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 		});
 
-
-		
-
-
 	}
 
 	this.updateSecret = function(from,callback) {
@@ -149,7 +146,33 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 			});
 
+		}.bind(this));
+
+	}
+
+	this.createSession = function(nick,callback) {
+
+		var sessionid = smcman.createHash(nick);
+
+		User.findOne({nick: nick},function(err,user){
+
+			console.log("!trace CREATING SESSION userfound? ",user);
+
+			if (user) {
+
+				console.log("!trace CREATING SESSION");
+
+				// Give a new session id.
+				user.session_id = sessionid;
+				user.save();
+
+				// And return it.
+				callback(sessionid);
+
+			}
+
 		});
+
 
 	}
 
@@ -157,17 +180,30 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	this.authenticate = function(nick,password,callback) {
 
 		// Locate the user.
-		User.findOne({nick: from},function(err,user){
+		User.findOne({nick: nick},function(err,user){
 
 			if (user) {
 
 				// Compare it using bcrypt.
-				bcrypt.compare(candidatePassword, user.password, function(err, isMatch) {
-					if (err) return cb(err);
+				bcrypt.compare(password, user.secret, function(err, isMatch) {
+					if (err) callback(err);
 
-					// Return if it's a match.
-					callback(isMatch);
-				});
+					if (isMatch) {
+
+						// Give them a session id.
+						// This way we don't store their password in the cookie.
+						// It will get reset with each authentication.
+
+						this.createSession(nick,function(sessionid){
+							callback(sessionid);
+						});
+
+					} else {
+						// Nope that didn't work.
+						callback(false);
+					}
+
+				}.bind(this));
 
 			} else {
 
@@ -175,7 +211,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 			}
 
-		});
+		}.bind(this));
 
 
 	}
