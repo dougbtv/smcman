@@ -4,54 +4,54 @@
 // As it's used between controllers.
 // --------------------------------------
 
-function loginModule($http) {
+function loginModule($http,$cookies) {
 
-	this.cheese = "cheddar";
+	this.loggedin = false;
+
+	this.foo = function() {
+		console.log("!trace loggedin? ",this.loggedin);
+	}
 
 	this.submitAttempt = function(loginform,callback) {
 
 		$http.post('/api/login', loginform)	
 			.success(function(data) {
+				
 				// Ok.... callback with the result.
 				console.log("!trace LOGIN AJAX: ",data);
-				callback(data.success);
-			})
+
+				if (data.session) {
+					// Ok, that's good, we can set what we need here.
+					// Firstly, we'll set that we're logged in.
+					this.loggedin = true;
+					this.foo();
+					// Now set our session cookie.
+					$cookies.session = data.session;
+
+					console.log("!trace SESSION ID: ",$cookies.session);
+
+					callback(true);
+
+				} else {
+					callback(false);
+				}
+			}.bind(this))
 			.error(function(data) {
 			
-							
+				// Couldn't reach the api, seems.
+				callback(false);	
 
-			});	
-
-	}
-
-	this.foo = function() {
-		console.log("!trace cheese: " + this.cheese);
-
-		$http.post('/api/verifyUploadKey', {key: "123"})
-
-		.success(function(data) {
-			// That's a good key, we can move along.
-			console.log("!trace ajaxit: ",data);
-			
-		})
-		.error(function(data) {
-		
-						
-
-		});
+			}.bind(this));	
 
 	}
 
 }
 
-smcFrontEnd.factory('loginModule', ["$http", function($http) {
-	return new loginModule($http);
+smcFrontEnd.factory('loginModule', ["$http", "$cookies", function($http,$cookies) {
+	return new loginModule($http,$cookies);
 }]);
 
 smcFrontEnd.controller('loginController', ['$scope', '$location', '$http', 'loginModule', function($scope,$location,$http,login) {
-
-	// try that.
-	login.foo();
 
 	// $scope.message = "quux";
 	console.log("!trace login controller instantiated.");
@@ -60,10 +60,15 @@ smcFrontEnd.controller('loginController', ['$scope', '$location', '$http', 'logi
 
 		console.log("!trace click login data: ",$scope.loginForm);
 
-		login.submitAttempt($scope.loginForm,function(success){
+		login.submitAttempt($scope.loginForm,function(sessionid){
 
-			if (success) {
+			if (sessionid) {
+				// Reset any previous errors.
+				$scope.loginfailure = false;
 
+			} else {
+				// Welp. That's a failure.
+				$scope.loginfailure = true;
 			}
 
 		});

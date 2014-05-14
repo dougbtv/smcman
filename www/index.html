@@ -29,6 +29,7 @@
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script><!-- load angular -->
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-animate.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-cookies.min.js"></script>
 
 		<script src="angular-upload/dist/angular-file-upload.min.js"></script>  <!-- - - - - - - - - - - - - - - - file module! this line after loading angular -->
 
@@ -94,26 +95,24 @@
 						</li>
 					</ul>
 
-					<ng-switch on="loginStatus">
 
-						<ul class="nav navbar-nav navbar-right" ng-switch-when="loggedout">
+					<ul class="nav navbar-nav navbar-right" ng-hide="login_status">
 
-								<li class="navbar-right">
-									<a href="#/login">Login</a>
-								</li>
+							<li class="navbar-right">
+								<a href="#/login">Login</a>
+							</li>
 
-						</ul>
+					</ul>
 
-						<ul class="nav navbar-nav navbar-right" ng-switch-when="loggedin">
+					<ul class="nav navbar-nav navbar-right" ng-show="login_status">
 
-								<li class="navbar-right">
-									<a href="#">Log Out</a>
-								</li>
+							<li class="navbar-right">
+								<a href="#">Log Out</a>
+							</li>
 
-						</ul>
+					</ul>
 
-		
-					</ng-switch>
+					<button ng-click="testTrace()">Test</button>
 
 					<!--
 					<form class="navbar-form navbar-right" role="search">

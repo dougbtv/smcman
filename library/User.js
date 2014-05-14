@@ -94,9 +94,9 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	}
 
-	this.exists = function(from,callback) {
+	this.exists = function(nick,callback) {
 
-		User.findOne({nick: from},function(err,user){
+		User.findOne({nick: nick},function(err,user){
 
 			if (user) {
 				callback(true);
@@ -186,7 +186,10 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 				// Compare it using bcrypt.
 				bcrypt.compare(password, user.secret, function(err, isMatch) {
-					if (err) callback(err);
+					if (err) {
+						console.log("!ERROR: bcrypt compare error: ",err);
+						callback(err);
+					}
 
 					if (isMatch) {
 
@@ -199,6 +202,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 						});
 
 					} else {
+						console.log("!Warning: Password auth failed for %s with password: %s",nick,password);
 						// Nope that didn't work.
 						callback(false);
 					}

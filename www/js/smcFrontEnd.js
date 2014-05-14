@@ -1,5 +1,5 @@
 // public/core.js
-smcFrontEnd = angular.module('smcFrontEnd', ['ngRoute','ngAnimate','angularFileUpload']);
+smcFrontEnd = angular.module('smcFrontEnd', ['ngRoute','ngAnimate','ngCookies','angularFileUpload']);
 
 smcFrontEnd.config(function($routeProvider) {
 
@@ -63,13 +63,13 @@ function helpController($scope, $location, $http, $upload) {
 }
 
 
-function smcMainController($scope, $location, $http, $upload) {
+smcFrontEnd.controller('smcMainController', ['$scope', '$location', '$http', 'loginModule', function($scope, $location, $http, login) {
 
 	// Defaults!
 	$scope.formData = {};
 	$scope.uploadMode = "init";
 
-	$scope.loginStatus = "loggedout";
+	$scope.login_status = login.loggedin;
 
 	// We want more in the path than JUST the page. So let's get that.
 	// And for that we can pack the URL params into json with:
@@ -79,6 +79,11 @@ function smcMainController($scope, $location, $http, $upload) {
 	
 	// Stores which page we're currently, specifically on load (as this is the constructor)
 	$scope.onPage = $location.path().substring(1) || 'home';
+
+	$scope.testTrace = function() {
+		console.log("!trace GOT IT: ",login.loggedin);
+		console.log("!trace GOT IT SCOPE: ",$scope.login_status);
+	}
 
 	// Sets the navigation's CSS class, depending on the onPage.
 	$scope.navClass = function (page) {
@@ -142,7 +147,7 @@ function smcMainController($scope, $location, $http, $upload) {
 	// We also call this switch page when the page is first loaded.
 	$scope.switchPage($scope.onPage,true);
 
-}
+}]);
 
 $(document).ready(function(){
 	$("[data-toggle=tooltip]").tooltip({ placement: 'right'});
