@@ -5,6 +5,10 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	var bcrypt = require('bcrypt');
 	var SALT_WORK_FACTOR = 10;
 
+	// We use moment to figure out when their session expires.
+	var moment = require('moment');
+	var SESSION_EXPIRES_DAYS = 7;
+
 	// Setup a schema.
 	var userSchema = mongoose.Schema({
 
@@ -13,6 +17,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		indate: Date,			// Created @
 		timezone: String,		// What's their timezone pref?
 		session_id: String,		// After authenticating, we give a (quasi-public) session ID.
+		session_expires: Date,	// When the session expires.
 
 	}, { collection: 'users' });
 
@@ -26,9 +31,6 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	// Compile it to a model.
 	var User = mongoose.model('User', userSchema);
-
-	console.log("!trace USER INSTANTIATED.");
-
 
 	// This is the !identify command.
 	// It serves the purpose of:
@@ -156,14 +158,16 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 		User.findOne({nick: nick},function(err,user){
 
-			console.log("!trace CREATING SESSION userfound? ",user);
-
 			if (user) {
-
-				console.log("!trace CREATING SESSION");
 
 				// Give a new session id.
 				user.session_id = sessionid;
+
+				// Create a time at which the session expires.
+				var expires = new moment();
+				expires.add('days', SESSION_EXPIRES_DAYS);
+				user.session_expires = expires.toDate();
+
 				user.save();
 
 				// And return it.
@@ -173,6 +177,38 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 		});
 
+
+	}
+
+	this.validateSession = function(nick,sessionid,callback) {
+
+		// Ok, let's look for a result.
+		User.findOne({nick: nick,session_id: sessionid},function(err,user){
+
+			if (user) {
+				// Good, that's found.
+				console.log("!trace SESSION FOUND.");
+
+				var now = new moment();
+
+				// Check if the session is expired.
+				if (now.unix() <= user.session_expires) {
+					// looks good!
+					callback(true);
+
+				} else {
+
+					// Nope, it's expired.
+					callback(false);
+				
+				}
+
+			} else {
+				// Not valid.
+				callback(false);
+			}
+
+		});
 
 	}
 

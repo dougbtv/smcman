@@ -63,13 +63,11 @@ function helpController($scope, $location, $http, $upload) {
 }
 
 
-smcFrontEnd.controller('smcMainController', ['$scope', '$location', '$http', 'loginModule', function($scope, $location, $http, login) {
+smcFrontEnd.controller('smcMainController', ['$scope', '$location', '$http', '$cookies', 'loginModule', function($scope, $location, $http, $cookies, login) {
 
 	// Defaults!
 	$scope.formData = {};
 	$scope.uploadMode = "init";
-
-	$scope.login_status = login.loggedin;
 
 	// We want more in the path than JUST the page. So let's get that.
 	// And for that we can pack the URL params into json with:
@@ -80,10 +78,16 @@ smcFrontEnd.controller('smcMainController', ['$scope', '$location', '$http', 'lo
 	// Stores which page we're currently, specifically on load (as this is the constructor)
 	$scope.onPage = $location.path().substring(1) || 'home';
 
-	$scope.testTrace = function() {
-		console.log("!trace GOT IT: ",login.loggedin);
-		console.log("!trace GOT IT SCOPE: ",$scope.login_status);
-	}
+	// We change the navigation depending on the login status.
+	$scope.$on("loginStatus",function(event,status){
+
+		$scope.login_status = status;
+		$scope.username = login.username;
+
+	}.bind(this));
+
+	// We check their cookies and validate their session if possible.
+	login.validateSession(function(){});
 
 	// Sets the navigation's CSS class, depending on the onPage.
 	$scope.navClass = function (page) {
@@ -98,6 +102,11 @@ smcFrontEnd.controller('smcMainController', ['$scope', '$location', '$http', 'lo
 
 		return page === currentRoute ? 'active' : '';
 	};
+
+	// Log the user out, which is a nav-bar drop-down click.
+	$scope.logOutUser = function() {
+		login.setLoggedOut(function(){});
+	}
 
 	// Set which page we're on.
 	$scope.switchPage = function (page,initial_load) {

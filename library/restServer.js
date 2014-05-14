@@ -31,6 +31,9 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 		server.post('/api/login', this.userLogin);
 		server.head('/api/login', this.userLogin);
 
+		server.get('/api/validateSession', this.validateSession);
+		server.post('/api/validateSession', this.validateSession);
+		server.head('/api/validateSession', this.validateSession);
 
 		server.get('/api/view/:tinyURL', this.viewUpload);
 		server.get('/view/:tinyURL', this.viewUpload);
@@ -43,6 +46,20 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 		server.listen(constants.SERVER_PORT, function() {
 			console.log(server.name + ' listening at ' + server.url);
 		});
+
+	}
+
+	this.validateSession = function(req, res, next) {
+
+		var input = req.params;
+
+		smcman.user.validateSession(input.username,input.session,function(isvalid){
+
+			res.contentType = 'json';
+			res.send({valid: isvalid});
+
+		});
+
 
 	}
 

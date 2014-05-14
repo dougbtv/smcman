@@ -4,13 +4,13 @@
 // As it's used between controllers.
 // --------------------------------------
 
-function loginModule($http,$cookies) {
+function loginModule($rootScope,$http,$cookies) {
 
-	this.loggedin = false;
+	this.username = '';
+	this.session = '';
 
-	this.foo = function() {
-		console.log("!trace loggedin? ",this.loggedin);
-	}
+	// Submit a login attempt to the API
+	// returns false if the attempt failed, true otherwise.
 
 	this.submitAttempt = function(loginform,callback) {
 
@@ -21,34 +21,114 @@ function loginModule($http,$cookies) {
 				console.log("!trace LOGIN AJAX: ",data);
 
 				if (data.session) {
-					// Ok, that's good, we can set what we need here.
-					// Firstly, we'll set that we're logged in.
-					this.loggedin = true;
-					this.foo();
-					// Now set our session cookie.
-					$cookies.session = data.session;
-
-					console.log("!trace SESSION ID: ",$cookies.session);
-
-					callback(true);
+					
+					this.setLoggedIn(loginform.nick,data.session,function(){
+						callback(true);
+					});
 
 				} else {
-					callback(false);
+
+					this.setLoggedOut(function(){
+						callback(false);
+					});
+					
 				}
 			}.bind(this))
 			.error(function(data) {
 			
 				// Couldn't reach the api, seems.
-				callback(false);	
+				this.setLoggedOut(function(){
+					callback(false);
+				});
 
 			}.bind(this));	
 
 	}
 
+	this.validateSession = function(callback) {
+
+		if ($cookies.username) {
+			if ($cookies.session) {
+				console.log("!trace page load cookie check: ",$cookies.username,$cookies.session);
+				
+				// Ok, now call up the API.
+				$http.post('/api/validateSession', { username: $cookies.username, session: $cookies.session })
+					.success(function(data){
+
+						// Nice, are they really verified?
+						if (data.valid) {
+
+							// Great!
+							this.setLoggedIn($cookies.username,$cookies.session,function(){
+								callback(true);
+							});
+
+						} else {
+
+							// Nope, that's no good.
+							this.setLoggedOut(function(){
+								callback(false);
+							});
+							
+						}
+
+					}.bind(this)).error(function(data){
+
+						// That failed.
+						this.setLoggedOut(function(){
+							callback(false);
+						});
+						
+
+					}.bind(this));
+
+			}
+		}
+
+
+	}
+
+	this.setLoggedIn = function(nick,session,callback) {
+
+		// Ok, that's good, we can set what we need here.
+		// Now set our session cookie.
+		$cookies.session = session;
+		$cookies.username = nick;
+
+		// And keep our object properties.
+		this.username = nick;
+		this.session = session;
+
+		// Little console info.
+		console.log("!trace Successful login with session: ",$cookies.session);
+
+		// Send an event.
+		$rootScope.$broadcast('loginStatus',true);
+
+		callback();
+
+	}
+
+	this.setLoggedOut = function(callback) {
+
+
+		// Rest everything.
+		$cookies.session = '';
+		$cookies.username = '';
+		this.username = '';
+		this.session = '';
+
+		$rootScope.$broadcast('loginStatus',false);
+		callback();
+
+	}
+
+
+
 }
 
-smcFrontEnd.factory('loginModule', ["$http", "$cookies", function($http,$cookies) {
-	return new loginModule($http,$cookies);
+smcFrontEnd.factory('loginModule', ["$rootScope", "$http", "$cookies", function($rootScope,$http,$cookies) {
+	return new loginModule($rootScope,$http,$cookies);
 }]);
 
 smcFrontEnd.controller('loginController', ['$scope', '$location', '$http', 'loginModule', function($scope,$location,$http,login) {
