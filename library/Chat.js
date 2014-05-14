@@ -26,15 +26,13 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	}, { collection: 'chat' });
 	this.Chat = this.mongoose.model('Chat', this.chatSchema);
 	
-    
-    
     // Now, let's create a method to "say" something to a channel.
-    this.say = function(identifier,parameters,private_message) {
-
+    this.say = function(identifier,parameters,private_message,chatmethod) {
+		if (typeof chatmethod == 'undefined') { chatmethod = false; }
     	if (typeof private_message == 'undefined') { private_message = false; }
-    	
+		
     	// Ok, so let's count the parameters.
-    	// console.log(parameters.length);
+    	console.log(parameters.length);
     	
     	// Now that we know it's length, let's get an appropriate item from mongo.
 		this.Chat.find({ identifier: identifier, fields: parameters.length},function (err, chat) {
@@ -66,7 +64,11 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 				
 					// Finally, say it through IRC.
 					if (!private_message) {
+						if(!chatmethod) {
 						this.ircSay(output);
+						} else {
+						this.ircAction(output);
+						}
 					} else {
 						this.nickSay(private_message,output);
 					}
@@ -90,6 +92,11 @@ module.exports = function(bot, mongoose, db, constants, privates) {
     	this.say(identifier,parameters,nick);
 
     }
+	
+	//Say something that is an action (the good old, /me smokes protocoldoug up with a bong)
+	this.action = function(identifier,parameters) {
+		this.say(identifier,parameters,false,true);
+	}
     
     // Give me a random number based on the number elements in an array.
     
@@ -113,14 +120,24 @@ module.exports = function(bot, mongoose, db, constants, privates) {
     	}
 		
     };
+	
+	this.ircAction = function(message) {
+		//This really should just be a conditional in this.ircSay() within this.say() 
+		//but for now, we will just use this
+		if (this.privates.IRC_ENABLED) {
+			this.bot.action(this.privates.IRC_CHANNEL, message);
+		} else {
+			console.log('bot would have said:', message);
+		}
+	};
     
     this.ircSay = function(message) {
-    	
     	if (this.privates.IRC_ENABLED) {
-    		this.bot.say(this.privates.IRC_CHANNEL, message);
+			this.bot.say(this.privates.IRC_CHANNEL, message);
     	} else {
     		console.log('bot would have said:',message);
     	}
+	
 		
     };
 	
