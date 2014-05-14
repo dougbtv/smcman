@@ -182,6 +182,8 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					// -- User commands.
 					// ---------------------------------------------------------
 
+					case "register":
+					case "password":
 					case "identify":	this.user.identify(from);  break;
 
 					// ---------------------------------------------------------

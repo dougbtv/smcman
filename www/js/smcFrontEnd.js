@@ -38,6 +38,12 @@ smcFrontEnd.config(function($routeProvider) {
 			.when('/login', {
 				templateUrl : 'views/login.html',
 				controller  : 'loginController'
+			})
+
+			// route for the preferences page
+			.when('/preferences', {
+				templateUrl : 'views/preferences.html',
+				controller  : 'preferencesController'
 			});
 
 	});

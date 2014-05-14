@@ -143,8 +143,11 @@ smcFrontEnd.controller('loginController', ['$scope', '$location', '$http', 'logi
 		login.submitAttempt($scope.loginForm,function(sessionid){
 
 			if (sessionid) {
+				// Successful login!!!
 				// Reset any previous errors.
 				$scope.loginfailure = false;
+
+				$location.path("preferences");
 
 			} else {
 				// Welp. That's a failure.
