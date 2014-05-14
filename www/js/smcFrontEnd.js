@@ -1,5 +1,5 @@
 // public/core.js
-var smcFrontEnd = angular.module('smcFrontEnd', ['ngRoute','ngAnimate','angularFileUpload']);
+smcFrontEnd = angular.module('smcFrontEnd', ['ngRoute','ngAnimate','angularFileUpload']);
 
 smcFrontEnd.config(function($routeProvider) {
 

@@ -1,5 +1,10 @@
 module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) {
 
+	// We use this for password storage and authentication.
+	// reference: http://devsmash.com/blog/password-authentication-with-mongoose-and-bcrypt
+	var bcrypt = require('bcrypt');
+	var SALT_WORK_FACTOR = 10;
+
 	// Setup a schema.
 	var userSchema = mongoose.Schema({
 
@@ -69,6 +74,25 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	}
 
+	this.createPasswordHash = function(password,callback) {
+
+		// generate a salt
+		bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+			if (err) throw "Duuude, gen salt failed.";
+
+			// hash the password along with our new salt
+			bcrypt.hash(password, salt, function(err, hash) {
+				if (err) throw "Duuude, bcrypt hash busted.";
+
+				// override the cleartext password with the hashed one
+				callback(hash);
+
+			});
+
+		});
+
+	}
+
 	this.exists = function(from,callback) {
 
 		User.findOne({nick: from},function(err,user){
@@ -87,31 +111,73 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 		var user = new User();
 
-		var secret = smcman.createHash(from);
+		var password = smcman.createHash(from);
 
-		user.nick = from;
-		user.secret = secret;
-		user.indate = new Date;
-		user.save();
+		// Hash the password.
+		this.createPasswordHash(password,function(hash){
 
-		callback(secret);
+			user.nick = from;
+			user.secret = hash;
+			user.indate = new Date;
+			user.save();
+
+			callback(password);
+
+		});
+
+
+		
 
 
 	}
 
 	this.updateSecret = function(from,callback) {
 
+		// Find the user.
 		User.findOne({nick: from},function(err,user){
 
-			var secret = smcman.createHash(from);
-			user.secret = secret;
-			user.save();
+			// Gen a new password.
+			var password = smcman.createHash(from);
 
-			callback(secret);
+			// Create a new password.
+			this.createPasswordHash(password,function(hash){
+
+				user.secret = hash;
+				user.save();
+
+				callback(password);
+
+			});
 
 		});
 
 	}
 
+
+	this.authenticate = function(nick,password,callback) {
+
+		// Locate the user.
+		User.findOne({nick: from},function(err,user){
+
+			if (user) {
+
+				// Compare it using bcrypt.
+				bcrypt.compare(candidatePassword, user.password, function(err, isMatch) {
+					if (err) return cb(err);
+
+					// Return if it's a match.
+					callback(isMatch);
+				});
+
+			} else {
+
+				callback(false);
+
+			}
+
+		});
+
+
+	}
 
 }
