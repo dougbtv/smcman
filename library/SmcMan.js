@@ -60,6 +60,10 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	var Toys = require("./TOYS.js");
 	var toys = new Toys(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 	
+	//General Purpose commands
+	//var General = require(".General.js");
+	//var general = new general(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+	
 	
 	
 	// Start a REST server.
@@ -122,13 +126,34 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 
 					case "trace": 		smc.traceIt(from);			break;
 
-					// --
+					// ---------------------------------------------------------
 					// Toy commands
-					// --
+					// ---------------------------------------------------------
 					case "cointoss":
 					case "flipcoin":	toys.cointoss(from);  break;
 						break;
+						
+					case "roll":
+					case "rolldice":	toys.rolldice(from); break;
+						break;
+						
+					case "beer":
+					case "give":	toys.beer(from); break;
+						break;
 					
+					case "fart":
+					case "breakwind": toys.fart(from); break;
+						break;
+						
+					case "hug":
+					case "huggles": toys.hug(from); break;
+						break;
+						
+					case "smokeup": toys.smokeup(from); break;
+						break;
+					
+					case "insult": toys.insult(from); break;
+						break;
 					
 					// ---------------------------------------------------------
 					// -- Uploads!

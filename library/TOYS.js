@@ -7,12 +7,12 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		chat.say("cointoss", [from, coin_string]);
 	}
 	
-	this.rolldice = function(from) {
+	this.rolldice = function(from) { //Will come back to this one
 		
 	}
 	
 	this.smokeup = function(from) {
-	
+		chat.action("smokeup",[from]);
 	}
 	
 	this.fart = function(from) {
@@ -28,6 +28,18 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	}
 	
 	this.slap = function(from) {
+	
+	}
+	
+	this.insult = function(from) {
+	
+	}
+	
+	this.chuck = function(from) { //this is throw but since throw is a JavaScript function we better not use it here!
+	
+	}
+	
+	this.kill = function(from) {
 	
 	}
 	
