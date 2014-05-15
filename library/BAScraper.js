@@ -20,6 +20,23 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	// Optionally, as BA supports doing this to your p/w
 	var md5 = require('MD5');
 
+	this.postAnSMC = function() {
+
+		/*
+
+		Example post:
+
+		rh2
+		[IMG]http://speedmodeling.org/smcfiles/rh2_cart.png[/IMG]
+		Teh_Bucket
+		[IMG]http://speedmodeling.org/smcfiles/Teh_Bucket_CLown%20CAR%21.png[/IMG]
+		kngcalvn
+		[IMG]http://speedmodeling.org/smcfiles/kngcalvn_tube_car.png[/IMG]
+
+		*/
+
+	}
+
 	// Login to blender artists
 	this.baLogin = function(callback) {
 
