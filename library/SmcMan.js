@@ -68,6 +68,11 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	// Our User module
 	var User = require("./User.js");
 	this.user = new User(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+
+		// Our User module
+	var BAScraper = require("./BAScraper.js");
+	this.bascraper = new BAScraper(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+	this.bascraper.baLogin();
 	
 	// Toy commands
 	var Toys = require("./TOYS.js");

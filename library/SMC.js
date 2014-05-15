@@ -51,8 +51,6 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	// Now we want an instance of it.
 	var smc = new SMC;
 
-	console.log("!trace the smc document instance: ",smc);
-
 	this.smcScheduler = function() {
 
 		switch (smc.phase) {
