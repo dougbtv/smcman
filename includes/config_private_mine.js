@@ -25,7 +25,7 @@ define("IRC_BOTNAME",'d00dnode');
 define("IRC_DO_IDENTIFY",false);
 define("IRC_IDENTPASS",'imnotregistered');
 // -- Debugging
-define("IRC_ENABLED",true);
+define("IRC_ENABLED",false);
 define("IRC_DEBUG",true);
 
 define("REST_API_ENABLED",true);
@@ -33,3 +33,7 @@ define("REST_API_ENABLED",true);
 define("URL_SMCSITE","http://smc/");
 
 define("COMMAND_CHARACTER","!");
+
+define("BLENDERARTISTS_USERNAME", "protocoldoug");
+define("BLENDERARTISTS_PASSWORD", "thesmcbot");
+define("VBULLETIN_POST_ENABLED",false);

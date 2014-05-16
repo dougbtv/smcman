@@ -8,7 +8,6 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	var BASE_URL = 'http://blenderartists.org/forum/';
 
-
 	// Setup our request & cookie jar.
 	var request = require('request');
 	var cookiejar = request.jar();
@@ -21,84 +20,122 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	// Optionally, as BA supports doing this to your p/w
 	var md5 = require('MD5');
 
-	this.testPoll = function(callback) {
+	this.postPoll = function(message,html,callback) {
 
-		// Get the file contents (later, the URL)
-		fs.readFile("/home/doug/codebase/smcman/forward.txt", "utf8", function(err,html){
+		// console.log("!trace the html: ",html);
 
-			// console.log("!trace the html: ",html);
+		var $ = cheerio.load(html);
 
-			var $ = cheerio.load(html);
+		var formtag = $('meta').each(function(idx,metatag){
+			
+			// console.log("\n\n!trace show each metatag:",metatag);
 
-			var formtag = $('meta').each(function(idx,metatag){
-				
-				console.log("\n\n!trace show each metatag:",metatag);
-				var url = metatag.attribs.content;
-				url = url.replace(/^.+URL\=(.+)$/,'$1');
-				console.log("!trace url: ",url);
+			// Get the metatag that counts.
+			if (metatag.attribs.content.match(/http.+polloptions/)) {
+
+				// Clean up that URL.
+				var forward_url = metatag.attribs.content;
+				forward_url = forward_url.replace(/^.+URL\=(.+)$/,'$1');
+				// console.log("!trace forward_url: ",forward_url);
 
 				// Ok, now we can go to the poll options url.
+				var options = {
+					method: 'GET',
+		    		uri: forward_url,
+				};
+
+				// We request the new post page.
+				request(options, function(error, response, html){
+					if (!error) {
+
+						var $ = cheerio.load(html);
+
+						var newpostform = $('.vbform');
+						// console.log("!trace newpostform: ",newpostform);
+						var url_submit = BASE_URL + newpostform['0'].attribs.action;
+						// console.log("!trace url to post for poll: ",url_submit);
+
+						var formtag = $('.vbform').find('input');
+
+						var count = formtag.length;
+
+						// Initialize our form.
+						var form = {
+
+						};
+
+						formtag.each(function(idx,inputtag){
+							// console.log("\n\n!trace show each inputtag: %s :",inputtag.name,inputtag.attribs);
+
+							// We collect default hidden & text fields.
+							// Ok, now we just want select fields from this.
+							switch(inputtag.attribs.type) {
+								case "text":
+								case "hidden":
+									form[inputtag.attribs.name] = inputtag.attribs.value; 
+									break;
+
+								default:
+									break;
+							}
+
+							// Continue after you hit the last element.
+							if (!--count) {
+
+									// fill out your form! submit it!
+									// what you're looking for: 
+									//  name: 'options[8]',
+
+									// Set the topic.
+									form.question = "Winner of " + message.subject;
+
+									// Cycle through SMCers
+									for (var sidx = 0; sidx < message.smcers.length; sidx++) {
+
+										// Whozzat dude?
+										var dude = message.smcers[sidx];
+
+										// Figure out the name of the form field.
+										var field = "options[" + (sidx+1).toString() + "]";
+
+										// Assign each field as a dude.
+										form[field] = dude;
+
+									}
+
+									// console.log("!trace filled form: ",form);
+
+									var postoptions = {
+										method: 'POST',
+							    		uri: url_submit,
+							    		form: form,
+									};
+
+									request(postoptions, function(error, response, html){
+
+										if (!error) {
+
+											// Great! That's exactly what we're looking for, a success.
+											// For now send back a raw URL.
+											callback(url_submit);
+
+										} else {
+											console.log("ERROR: That was an error POSTing the poll options.");
+										}
+
+									});
+
+							}
+
+						});
+
+					} else {
+						console.log("ERROR: That's an issuing trying to GET the poll options page.");
+					}
+				});
 				fs.readFile("/home/doug/codebase/smcman/poll.txt", "utf8", function(err,html){
 
-					console.log("!trace the html: ",html);
-
-					var $ = cheerio.load(html);
-
-
-					// ----------------------------------------------------------
-
-					var newpostform = $('.vbform');
-					// console.log("!trace newpostform: ",newpostform);
-					var url_submit = BASE_URL + newpostform['0'].attribs.action;
-					console.log("!trace url to post for new post: ",url_submit);
-
-					var formtag = $('.vbform').find('input');
-
-					var count = formtag.length;
-
-					// Initialize our form.
-					var form = {
-
-					};
-
-					formtag.each(function(idx,inputtag){
-						// console.log("\n\n!trace show each inputtag: %s :",inputtag.name,inputtag.attribs);
-
-						// We collect default hidden & text fields.
-						// Ok, now we just want select fields from this.
-						switch(inputtag.attribs.type) {
-							case "text":
-							case "hidden":
-								form[inputtag.attribs.name] = inputtag.attribs.value; 
-								break;
-
-							default:
-								break;
-						}
-
-						// Continue after you hit the last element.
-						if (!--count) {
-
-								// fill out your form! submit it!
-								// what you're looking for: 
-								//  name: 'options[8]',
-
-								// !bang i left off here.
-								/*
-
-								!trace show each inputtag: input : { type: 'text',
-									  class: 'primary textbox',
-									  id: 'opt8',
-									  name: 'options[8]',
-									  tabindex: '1',
-									  value: '' }
-
-
-								*/
-
-						}
-
-					});
+					
 
 
 					// -------------------------------------------------------
@@ -106,20 +143,16 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 				});
 
-
-			});
+			}
 
 		});
 
 	}
 
-	this.baPost = function(message,callback) {
+	// Create a new post.
+	// Returns the resulting HTML after the new post is POSTed.
 
-		var message = {
-			subject: "You'll see a few of these [we're porting the bot] (please delete, mods)",
-			body: "[IMG]http://speedmodeling.org/smcfiles/rh2_cart.png[/IMG]",
-			number_options: 8,
-		};
+	this.baNewPost = function(message,callback) {
 
 		var options = {
 			method: 'GET',
@@ -135,7 +168,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 				var newpostform = $('.vbform');
 				// console.log("!trace newpostform: ",newpostform);
 				var url_submit = BASE_URL + newpostform['0'].attribs.action;
-				console.log("!trace url to post for new post: ",url_submit);
+				// console.log("!trace url to post for new post: ",url_submit);
 
 				var formtag = $('.vbform').find('input');
 
@@ -164,15 +197,14 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 					// Continue after you hit the last element.
 					if (!--count) {
 
-
+						// Set the rest of the properties of the form.
 						// Add our custom info about the SMC.
 						form.subject = message.subject;
 						form.message = message.body;
 						form.postpoll = "yes";
 						form.polloptions = message.number_options;
 
-						// Set the rest of the properties of the form.
-						console.log("!trace HERE'S THE NEW FORM: ",form);
+						// console.log("!trace HERE'S THE NEW FORM: ",form);
 
 						// Now we're going to want to post it.
 						// This gets harier for testing, because now you'll actually make a new thread.
@@ -186,41 +218,27 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 						request(postoptions, function(error, response, html){
 
-							console.log("!trace the html: ",html);
+							if(!error){
+		
+								// Just callback with the HTML.
+								callback(html);
 
-							var $ = cheerio.load(html);
+							} else {
 
-							var formtag = $('form').each(function(idx,el){
-								console.log("\n\n!trace show each el: %s :",el);
-							});
+								console.log("ERROR: We failed while trying to post the new thread.");
 
+							}
+		
 						});
 
 					}
 
 				});
 
-
-				// console.log("!trace FORM FILTER: ",$('.vbform').find('input'));
-
-			/*	$('input').filter(function(idx,el){
-
-					var attribs = $(el)[0].attribs;
-
-					console.log("\n\n!trace EACH EL: ",attribs);
-
-				});
-		*/
-				
-				/*
-				for (i in newpostform['0'].children) {
-					var child = newpostform['0'].children[i];
-					console.log("!trace each child: ",child);
-				}*/
-
 			} else {
 				console.log("ERROR: We couldn't get the page which has the post-new-thread form on it.");
 			}
+
 		});
 
 

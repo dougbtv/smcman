@@ -33,3 +33,7 @@ define("REST_API_ENABLED",true);
 define("URL_SMCSITE","http://smc/");
 
 define("COMMAND_CHARACTER","!");
+
+define("BLENDERARTISTS_USERNAME", "protocoldoug");
+define("BLENDERARTISTS_PASSWORD", "thesmcbot");
+define("VBULLETIN_POST_ENABLED",false);
