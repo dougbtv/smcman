@@ -134,25 +134,25 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 						break;
 						
 					case "roll":
-					case "rolldice":	toys.rolldice(from); break;
+					case "rolldice":	toys.rolldice(from, command); break;
 						break;
 						
 					case "beer":
-					case "give":	toys.beer(from); break;
+					case "give":	toys.beer(command); break;
 						break;
 					
 					case "fart":
-					case "breakwind": toys.fart(from); break;
+					case "breakwind": toys.fart(command,from); break;
 						break;
 						
 					case "hug":
-					case "huggles": toys.hug(from); break;
+					case "huggles": toys.hug(command); break;
 						break;
 						
-					case "smokeup": toys.smokeup(from); break;
+					case "smokeup": toys.smokeup(command); break;
 						break;
 					
-					case "insult": toys.insult(from); break;
+					case "insult": toys.insult(command); break;
 						break;
 					
 					// ---------------------------------------------------------

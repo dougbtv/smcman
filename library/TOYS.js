@@ -11,35 +11,39 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		
 	}
 	
-	this.smokeup = function(from) {
-		chat.action("smokeup",[from]);
+	//WIP still need to work on the others and get null arg's going
+	this.smokeup = function(command) {
+	//	var arg1 = command.arglist[0];
+	//	var arg2 = command.arglist[1];
+		chat.action("smokeup", [command.arglist[0], command.arglist[1]]);
 	}
 	
-	this.fart = function(from) {
-	
+	this.fart = function(command, from) {
+		var arg1 = command.arglist[0];
+		chat.action("fart", [arg1]);
 	}
 	
-	this.beer = function(from) {
-	
-	}
-	
-	this.hug = function(from) {
-	
-	}
-	
-	this.slap = function(from) {
+	this.beer = function() {
 	
 	}
 	
-	this.insult = function(from) {
+	this.hug = function() {
 	
 	}
 	
-	this.chuck = function(from) { //this is throw but since throw is a JavaScript function we better not use it here!
+	this.slap = function() {
 	
 	}
 	
-	this.kill = function(from) {
+	this.insult = function() {
+	
+	}
+	
+	this.chuck = function() { //this is throw but since throw is a JavaScript function we better not use it here!
+	
+	}
+	
+	this.kill = function() {
 	
 	}
 	
