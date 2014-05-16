@@ -72,7 +72,20 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 		// Our User module
 	var BAScraper = require("./BAScraper.js");
 	this.bascraper = new BAScraper(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
-	this.bascraper.baLogin();
+
+/*	
+	this.bascraper.baLogin(function(){
+		this.bascraper.baPost("foooo",function(){
+
+		});
+	}.bind(this));
+*/
+
+	
+	this.bascraper.testPoll(function(){
+
+	});
+
 	
 	// Toy commands
 	var Toys = require("./TOYS.js");
