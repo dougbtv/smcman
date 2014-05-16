@@ -27,6 +27,14 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 		server.post('/api/upload', this.fileUpload);
 		server.head('/api/upload', this.fileUpload);
 
+		server.get('/api/login', this.userLogin);
+		server.post('/api/login', this.userLogin);
+		server.head('/api/login', this.userLogin);
+
+		server.get('/api/validateSession', this.validateSession);
+		server.post('/api/validateSession', this.validateSession);
+		server.head('/api/validateSession', this.validateSession);
+
 		server.get('/api/view/:tinyURL', this.viewUpload);
 		server.get('/view/:tinyURL', this.viewUpload);
 
@@ -37,6 +45,36 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 
 		server.listen(constants.SERVER_PORT, function() {
 			console.log(server.name + ' listening at ' + server.url);
+		});
+
+	}
+
+	this.validateSession = function(req, res, next) {
+
+		var input = req.params;
+
+		smcman.user.validateSession(input.username,input.session,function(isvalid){
+
+			res.contentType = 'json';
+			res.send({valid: isvalid});
+
+		});
+
+
+	}
+
+	this.userLogin = function(req, res, next) {
+
+		var input = req.params;
+
+		console.log("!trace user login params: ",input);
+
+		// Now check it with the user module.
+		smcman.user.authenticate(input.nick,input.password,function(success){
+
+			res.contentType = 'json';
+			res.send({session: success});
+
 		});
 
 	}

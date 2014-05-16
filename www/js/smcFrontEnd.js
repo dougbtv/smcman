@@ -1,5 +1,5 @@
 // public/core.js
-var smcFrontEnd = angular.module('smcFrontEnd', ['ngRoute','angularFileUpload']);
+smcFrontEnd = angular.module('smcFrontEnd', ['ngRoute','ngAnimate','ngCookies','angularFileUpload']);
 
 smcFrontEnd.config(function($routeProvider) {
 
@@ -28,10 +28,22 @@ smcFrontEnd.config(function($routeProvider) {
 				controller  : 'aboutController'
 			})
 
-			// route for the contact page
+			// route for the upload page
 			.when('/upload', {
 				templateUrl : 'views/upload.html',
 				controller  : 'uploadController'
+			})
+
+			// route for the login page
+			.when('/login', {
+				templateUrl : 'views/login.html',
+				controller  : 'loginController'
+			})
+
+			// route for the preferences page
+			.when('/preferences', {
+				templateUrl : 'views/preferences.html',
+				controller  : 'preferencesController'
 			});
 
 	});
@@ -57,7 +69,7 @@ function helpController($scope, $location, $http, $upload) {
 }
 
 
-function smcMainController($scope, $location, $http, $upload) {
+smcFrontEnd.controller('smcMainController', ['$scope', '$location', '$http', '$cookies', 'loginModule', function($scope, $location, $http, $cookies, login) {
 
 	// Defaults!
 	$scope.formData = {};
@@ -72,6 +84,17 @@ function smcMainController($scope, $location, $http, $upload) {
 	// Stores which page we're currently, specifically on load (as this is the constructor)
 	$scope.onPage = $location.path().substring(1) || 'home';
 
+	// We change the navigation depending on the login status.
+	$scope.$on("loginStatus",function(event,status){
+
+		$scope.login_status = status;
+		$scope.username = login.username;
+
+	}.bind(this));
+
+	// We check their cookies and validate their session if possible.
+	login.validateSession(function(){});
+
 	// Sets the navigation's CSS class, depending on the onPage.
 	$scope.navClass = function (page) {
 		
@@ -85,6 +108,11 @@ function smcMainController($scope, $location, $http, $upload) {
 
 		return page === currentRoute ? 'active' : '';
 	};
+
+	// Log the user out, which is a nav-bar drop-down click.
+	$scope.logOutUser = function() {
+		login.setLoggedOut(function(){});
+	}
 
 	// Set which page we're on.
 	$scope.switchPage = function (page,initial_load) {
@@ -134,7 +162,7 @@ function smcMainController($scope, $location, $http, $upload) {
 	// We also call this switch page when the page is first loaded.
 	$scope.switchPage($scope.onPage,true);
 
-}
+}]);
 
 $(document).ready(function(){
 	$("[data-toggle=tooltip]").tooltip({ placement: 'right'});

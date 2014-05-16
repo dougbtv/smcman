@@ -26,6 +26,9 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	this.db = db;
 	this.rest = new RestServer(server,this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 
+	// -- We have a nested schema here.
+	// -- ...Consider refactoring / moving this out of here.
+
 	// We'll create our admin schema so we only do it once.
 	// Setup our schemas.
 	var adminSchema = this.mongoose.Schema({
@@ -36,6 +39,16 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	// Compile it to a model.
 	var Admin = this.mongoose.model('Admin', adminSchema);
 	
+	// Here's a dispatcher for notices. We're using it for a nick & a callback.
+	this.isRegisteredCallback = null;
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// - ------------------------------------------- Dependant modules!! 
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// The first modules listed use less dependencies, while later modules have mode.
+	// ...That's the general idea.
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 	// We have a "Chat" object which uses mongo to make for a data-driven "chat" from this bot.
 	Chat = require("./Chat.js");
 	this.chat = new Chat(this.bot,this.mongoose,this.db,this.constants,this.privates);
@@ -44,27 +57,28 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	Note = require("./Note.js");
 	this.note = new Note(this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 	
-	// Here's a dispatcher for notices. We're using it for a nick & a callback.
-	this.isRegisteredCallback = null;
-
 	// We have an object to describe an SMC itself.
 	var SMC = require("./SMC.js");       // The object describing an SMC itself.
 	var smc = new SMC(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 
-	// Our upload module
-	var Upload = require("./Upload.js");       // The object describing an upload
-	// Ok, create a new upload instance.
+	// Our upload module describes an upload / file we host.
+	var Upload = require("./Upload.js");
 	this.upload = new Upload(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 	
-	//Toy commands
+	// Our User module
+	var User = require("./User.js");
+	this.user = new User(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+
+	// Toy commands
 	var Toys = require("./TOYS.js");
 	var toys = new Toys(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
-	
+
 	//General Purpose commands
 	//var General = require(".General.js");
 	//var general = new general(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 	
-	
+	// --------------------------------------------- end Dependant modules!! 
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	// Start a REST server.
 	if (privates.REST_API_ENABLED) {
@@ -163,6 +177,14 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 						// And we'll create a new upload
 						this.upload.newUpload(from);
 						break;
+
+					// ---------------------------------------------------------
+					// -- User commands.
+					// ---------------------------------------------------------
+
+					case "register":
+					case "password":
+					case "identify":	this.user.identify(from);  break;
 
 					// ---------------------------------------------------------
 					// -- Note command(s)

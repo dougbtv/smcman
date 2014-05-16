@@ -19,8 +19,8 @@ function define(name, value) {
 define("MONGO_CONNECT_STRING",'mongodb://localhost/smcman');
 
 define("IRC_SERVER",'irc.freenode.net');
-define("IRC_CHANNEL",'#ddwagnz');
-define("IRC_BOTNAME",'ddnode');
+define("IRC_CHANNEL",'#dougbtv');
+define("IRC_BOTNAME",'d00dnode');
 // -- Identification
 define("IRC_DO_IDENTIFY",false);
 define("IRC_IDENTPASS",'imnotregistered');
@@ -33,3 +33,7 @@ define("REST_API_ENABLED",false);
 define("URL_SMCSITE","http://smc/");
 
 define("COMMAND_CHARACTER","!");
+
+define("BLENDERARTISTS_USERNAME", "protocoldoug");
+define("BLENDERARTISTS_PASSWORD", "thesmcbot");
+define("VBULLETIN_POST_ENABLED",false);

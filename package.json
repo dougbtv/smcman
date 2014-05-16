@@ -26,6 +26,8 @@
     "sprintf-js" : "*",
     "exec-sync"   :  "*",
     "MD5"   :  "*",
+    "bcrypt" : "*",
+    "cheerio" : "*",
     "restify"   :  "*"
   }
 }

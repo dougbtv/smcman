@@ -18,6 +18,8 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	// We set it null, but, we'll use it later.
 	this.job = null;
 
+	var BAScraper = require("./BAScraper.js");
+	bascraper = new BAScraper(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 
 	// Setup a schema.
 	var smcSchema = mongoose.Schema({
@@ -51,7 +53,31 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	// Now we want an instance of it.
 	var smc = new SMC;
 
-	console.log("!trace the smc document instance: ",smc);
+	this.postSMC = function() {
+
+		var message = {
+			subject: "[SMC] Zany test, please vote!",
+			body: "Who is the real robot?",
+			number_options: 4,
+			smcers: ["doug","smcman","ddwagnz","random"],
+		};
+
+		if (privates.VBULLETIN_POST_ENABLED) {
+
+			bascraper.baLogin(function(){
+				bascraper.baNewPost(message,function(html){
+					// Finally, add the poll.
+					bascraper.postPoll(message,html,function(resulting_url){
+						// that's probably complete.
+						console.log("SUCCESS! Looks like I posted a new SMC @ ",resulting_url);
+					});
+				}.bind(this));
+			}.bind(this));
+
+		}
+
+
+	}
 
 	this.smcScheduler = function() {
 

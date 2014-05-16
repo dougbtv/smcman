@@ -40,6 +40,7 @@ You'll want to import the mongo db's (you can find the original json files in th
     mongoimport --db smcman --collection admins --file admins.json
     mongoimport --db smcman --collection counters --file counters.json
     mongoimport --db smcman --collection uploads --file uploads.json
+    mongoimport --db smcman --collection users --file users.json
 
 To export the mongo db's
 
@@ -48,6 +49,7 @@ To export the mongo db's
     mongoexport --db smcman --collection admins --out admins.json 
     mongoexport --db smcman --collection counters --out counters.json
     mongoexport --db smcman --collection uploads --out uploads.json
+    mongoexport --db smcman --collection users --out users.json
 
 ---
 **Basic Usage**

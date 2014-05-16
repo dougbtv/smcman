@@ -357,3 +357,10 @@
 { "_id" : { "$oid" : "536ef127d6a6fcecc4cf61c7" }, "fields" : 2, "identifier" : "upload_tellchannel", "text" : "Fresh upload from %0, available at %1" }
 { "_id" : { "$oid" : "536ef137d6a6fcecc4cf61c8" }, "fields" : 2, "identifier" : "upload_tellchannel", "text" : "%0 just uploaded %1" }
 { "_id" : { "$oid" : "536ef165d6a6fcecc4cf61c9" }, "fields" : 2, "identifier" : "upload_tellchannel", "text" : "%0 has just uploaded %1 transferred over a 28.8 modem, stored locally on 1.44MB floppy" }
+{ "_id" : { "$oid" : "53729f969a24ffaaf0685eca" }, "fields" : 1, "identifier" : "identify_notregistered", "text" : "%0 so, you've gotta identify with nickserv in order to identify." }
+{ "_id" : { "$oid" : "53729fa79a24ffaaf0685ecb" }, "fields" : 1, "identifier" : "identify_notregistered", "text" : "%0 -- remember to identify with nickserv, then you can identify with me." }
+{ "_id" : { "$oid" : "53729fb59a24ffaaf0685ecc" }, "fields" : 1, "identifier" : "identify_notregistered", "text" : "%0 -- just identify with nickserv, then with me" }
+{ "_id" : { "$oid" : "5372a2e19a24ffaaf0685ed0" }, "fields" : 2, "identifier" : "identify_created", "text" : "%0 THIS IS YOUR SECRET (don't give it out) you log into the site with password: %1" }
+{ "_id" : { "$oid" : "5372a2f29a24ffaaf0685ed1" }, "fields" : 2, "identifier" : "identify_created", "text" : "%0 Keep this is a secret! It's your website login: %1" }
+{ "_id" : { "$oid" : "5372a3129a24ffaaf0685ed2" }, "fields" : 2, "identifier" : "identify_updated", "text" : "%0 your new website login is: %1" }
+{ "_id" : { "$oid" : "5372a31d9a24ffaaf0685ed3" }, "fields" : 2, "identifier" : "identify_updated", "text" : "%0 your new password for website login is: %1" }
