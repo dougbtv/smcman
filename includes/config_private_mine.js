@@ -25,7 +25,7 @@ define("IRC_BOTNAME",'d00dnode');
 define("IRC_DO_IDENTIFY",false);
 define("IRC_IDENTPASS",'imnotregistered');
 // -- Debugging
-define("IRC_ENABLED",false);
+define("IRC_ENABLED",true);
 define("IRC_DEBUG",true);
 
 define("REST_API_ENABLED",true);
