@@ -74,6 +74,10 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 				}.bind(this));
 			}.bind(this));
 
+		} else {
+
+			console.log("WARNING: Posting to BlenderArtists IS DISABLED.");
+
 		}
 
 

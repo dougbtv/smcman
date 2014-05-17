@@ -1,3 +1,25 @@
+.clock-minutes {
+  border-top-left-radius: 6px 6px;
+  border-bottom-left-radius: 6px 6px;
+  /* background-color: #428bca; */
+  background-image: linear-gradient(to bottom,#428bca 0,#3278b3 100%);
+  color: white;
+  font-size: 45px;
+  text-align:center;
+  font-weight:500;
+}
+
+.clock-seconds {
+  border-top-right-radius: 6px 6px;
+  border-bottom-right-radius: 6px 6px;
+  /* background-color: #428bca; */
+  background-image: linear-gradient(to bottom,#d9edf7 0,#b9def0 100%);
+  color: #3278b3;
+  font-size: 45px;
+  text-align:center;
+  font-weight:500;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
