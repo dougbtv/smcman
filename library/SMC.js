@@ -27,6 +27,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		topic: String,					// What's the topic?
 		originator: String,				// Who started it?
 		startsat: Date,					// When does it start?
+		endsat: Date,
 		duration: Number,				// Who long does it run?
 		smcers: [{						// Who's in?
 			nick: String,				// ... their name.
@@ -94,21 +95,53 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 					// That's good, we can start!
 					chat.say("smc_starting_now",[smc.nicklist]);
 
+					// Next we want to schedule a half-way warning.
 
+					var wholeduration = smc.duration;					// In minutes.
+					var halfduration = Math.floor((smc.duration*60)/2);	// In seconds.
+
+					// So let's figure out when that is.
+					var halftime = new moment(smc.startsat);
+					halftime = halftime.add('seconds',halfduration);
+
+					// Also set where it ends.
+					var wholetime = new moment(smc.startsat);
+					wholetime = wholetime.add('minutes',wholeduration);
+					smc.endsat = wholetime.toDate();
+
+					console.log("!trace SMC facets: ",smc);
+
+					// Increment the phase
+					smc.phase += 1;
+
+					// Now schedule half time.
+					this.job = schedule.scheduleJob(halftime.toDate(), this.smcScheduler);
+					
 				} else {
 					// There's not enough people to start.
 					chat.say("smc_not_enough",[smc.originator]);
+					this.tearDownSMC();
 				}
 				break;
 
 			case PHASE_RUNNING:
+				// Increment the phase
+				smc.phase += 1;
+
+				// Now schedule the upload.
+				this.job = schedule.scheduleJob(smc.endsat, this.smcScheduler);
+				
+				// Give the reminder.
+				console.log("!trace IT'S HALF TIME <<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>");
+
 				break;
 
 			case PHASE_UPLOAD:
+				console.log("!trace SMC IS OVER <<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>");
 				break;
 		}
 
-	}
+	}.bind(this);
 
 	this.tearDownSMC = function() {
 

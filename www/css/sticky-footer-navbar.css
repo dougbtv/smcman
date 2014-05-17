@@ -20,6 +20,26 @@
   font-weight:500;
 }
 
+.clock-label {
+  background-color: #282828; 
+  color: #CACACA; 
+  font-size: 35px;
+}
+
+.clock-time {
+  background-color: #1C1C1C; 
+  color: #00FF00; 
+  font-size: 35px;
+  text-align:center;
+}
+
+.clock-container {
+  padding-left: 0px;
+  padding-bottom: 15px;
+
+}
+
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
