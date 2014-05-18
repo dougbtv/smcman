@@ -148,26 +148,20 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 						break;
 						
 					case "roll":
-					case "rolldice":	toys.rolldice(from, command); break;
+					case "rolldice":	toys.rolldice(from,command); break;
 						break;
-						
+					
+					//See Toys.js to see why this is like this
 					case "beer":
-					case "give":	toys.beer(command); break;
-						break;
-					
+					case "give":
 					case "fart":
-					case "breakwind": toys.fart(command,from); break;
-						break;
-						
+					case "breakwind":
 					case "hug":
-					case "huggles": toys.hug(command); break;
-						break;
-						
-					case "smokeup": toys.smokeup(command); break;
-						break;
-					
-					case "insult": toys.insult(command); break;
-						break;
+					case "huggles":
+					case "smokeup":
+					case "throw":
+					case "insult":	toys.funcommands(command); break;
+					break;
 					
 					// ---------------------------------------------------------
 					// -- Uploads!

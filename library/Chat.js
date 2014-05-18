@@ -28,7 +28,6 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	
     // Now, let's create a method to "say" something to a channel.
     this.say = function(identifier,parameters,private_message,chatmethod) {
-		//Set some sort of default for the last two parameters especially if someone doesn't set them
 		if (typeof chatmethod == 'undefined') { chatmethod = false; }
     	if (typeof private_message == 'undefined') { private_message = false; }
 		
@@ -96,8 +95,7 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	
 	//Say something that is an action (the good old, /me smokes protocoldoug up with a bong)
 	this.action = function(identifier,parameters) {
-			//this.say(identifier,parameters,private_message,chatmethod) 
-			//private_message is set to
+	
 		this.say(identifier,parameters,false,true);
 	}
     
@@ -125,7 +123,8 @@ module.exports = function(bot, mongoose, db, constants, privates) {
     };
 	
 	this.ircAction = function(message) {
-		// Mission is to move this, and possibly this.nickSay into this.ircSay and move the associated action and whisper into this.say
+		//This really should just be a conditional in this.ircSay() within this.say() 
+		//but for now, we will just use this
 		if (this.privates.IRC_ENABLED) {
 			this.bot.action(this.privates.IRC_CHANNEL, message);
 		} else {
