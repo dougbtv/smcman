@@ -59,7 +59,7 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	
 	// We have an object to describe an SMC itself.
 	var SMC = require("./SMC.js");       // The object describing an SMC itself.
-	var smc = new SMC(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+	this.smc = new SMC(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 
 	// Our upload module describes an upload / file we host.
 	var Upload = require("./Upload.js");
@@ -124,21 +124,21 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					// -- SMC commands.
 					// ---------------------------------------------------------
 					
-					case "smc": 		smc.startSMC(command,from); break;
+					case "smc": 		this.smc.startSMC(command,from); break;
 					
 					case "in":
 					case "join":
-					case "imin":        smc.joinSMC(from);  		break;
+					case "imin":        this.smc.joinSMC(from);  		break;
 					
 					case "cancel":
-					case "admincancel": smc.cancelSMC(from); 		break;
+					case "admincancel": this.smc.cancelSMC(from); 		break;
 
 					case "out":
 					case "imout":
-					case "forfeit": 	smc.forfeitSMC(from); 		break;
+					case "forfeit": 	this.smc.forfeitSMC(from); 		break;
 						break;
 
-					case "trace": 		smc.traceIt(from);			break;
+					case "trace": 		this.smc.traceIt(from);			break;
 
 					// ---------------------------------------------------------
 					// Toy commands

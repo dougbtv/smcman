@@ -3,36 +3,36 @@
 	</div>
 
 	<div class="row featurette">
-        <div class="col-md-7">
-          <h2 class="featurette-heading">SMC in progress: <span class="text-muted">The Topic</span></h2>
-          <h3 class="featurette-heading">Runs for <span class="digifont">YY</span> minutes<span class="text-muted"> Starting @ <span class="digifont">*:YY</span></span></h2>
-          	<!-- 
-          		<p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-      		-->
-      		<p class="lead">
 
-            <div class="col-md-8 digifont clock-container" style="">
-                <div class="col-md-7 clock-label">Starts in:</div>
-                <div class="col-md-5 clock-time">MM : SS</div>
+		<!-- - - - - - - - - - - - - SMC info & timer panel  -->
 
-              
-            </div>
+		<div class="col-md-7">
+		  <h2 class="featurette-heading">SMC in progress: <span class="text-muted">{{smc.topic}}</span></h2>
+		  <h3 class="featurette-heading">Runs for <span class="digifont">{{smc.duration}}</span> minutes<span class="text-muted"> Starting @ <span class="digifont">*:YY</span></span></h2>
+		  
+		  <p class="lead">
 
-<!--        		<div class="col-md-3 container">
-          			<div class="col-md-6 clock-minutes digifont">15</div>
-          			<div class="col-md-6 clock-seconds digifont">16</div>
-          		</div>
-          	</p>
-          -->
-        </div>
-        <div class="col-md-5">
-	          <ul class="list-group">
-	            <li class="list-group-item active"><span style="color: white;"><strong>!whosin</strong></span></li>
-	            <li class="list-group-item">Dude.</li>
-	            <li class="list-group-item">Guy</li>
-	            <li class="list-group-item">Someone</li>
-	            <li class="list-group-item">Vestibulum at eros</li>
-	          </ul>
-        </div>
-      </div>
+			<div class="col-md-8 digifont clock-container" style="">
+				<div class="col-md-7 clock-label">Starts in:</div>
+				<div class="col-md-5 clock-time">MM : SS</div>
+			</div>
+
+		</div>
+
+		<!-- - - - - - - - - - - - - Who's in panel.  -->
+
+		<div class="col-md-5">
+			<ul class="list-group">
+				<li class="list-group-item active">
+					<span style="color: white;"><strong>!whosin</strong></span>
+				</li>
+
+				<li class="list-group-item" ng-repeat="dude in smc.smcers">
+					{{dude.nick}} <span ng-show="dude.uploaded" class="glyphicon glyphicon-ok"></span>
+				</li>
+
+			</ul>
+		</div>
+
+	</div>
 	

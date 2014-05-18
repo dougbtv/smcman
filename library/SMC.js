@@ -54,6 +54,10 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	// Now we want an instance of it.
 	var smc = new SMC;
 
+	this.getSMC = function() {
+		return smc;
+	}
+
 	this.postSMC = function() {
 
 		var message = {
