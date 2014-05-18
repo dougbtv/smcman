@@ -4,6 +4,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	var PHASE_INTIALIZED = 1;
 	var PHASE_RUNNING = 2;
 	var PHASE_UPLOAD = 3;
+	var PHASE_RENDER = 4;
 
 	// Our static properties
 	var MAX_SMCERS = 10;
@@ -27,7 +28,8 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		topic: String,					// What's the topic?
 		originator: String,				// Who started it?
 		startsat: Date,					// When does it start?
-		endsat: Date,
+		endsat: Date,					// Time the SMC ends.
+		uploadby: Date,					// Time the render is done by.
 		duration: Number,				// Who long does it run?
 		smcers: [{						// Who's in?
 			nick: String,				// ... their name.
@@ -136,12 +138,19 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 				this.job = schedule.scheduleJob(smc.endsat, this.smcScheduler);
 				
 				// Give the reminder.
+				chat.say("smc_halftime",[smc.nicklist]);
 				console.log("!trace IT'S HALF TIME <<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>");
 
 				break;
 
 			case PHASE_UPLOAD:
+				// Alright, we give them the upload links.
+				
 				console.log("!trace SMC IS OVER <<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>");
+				break;
+
+			case PHASE_RENDER:
+				console.log("!trace SMC IS DONE WITH RENDERING <<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>");
 				break;
 		}
 

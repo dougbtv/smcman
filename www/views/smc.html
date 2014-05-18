@@ -4,17 +4,21 @@
 
 	<div class="row featurette">
 
+    <div class="alert alert-warning" ng-show="smc_ended">
+        <strong>Heads up!</strong> So, the SMC ended.
+      </div>
+
 		<!-- - - - - - - - - - - - - SMC info & timer panel  -->
 
 		<div class="col-md-7">
 		  <h2 class="featurette-heading">SMC in progress: <span class="text-muted">{{smc.topic}}</span></h2>
-		  <h3 class="featurette-heading">Runs for <span class="digifont">{{smc.duration}}</span> minutes<span class="text-muted"> Starting @ <span class="digifont">*:YY</span></span></h2>
+		  <h3 class="featurette-heading">Runs for <span class="digifont">{{smc.duration}}</span> minutes<span class="text-muted"> Starting @ <span class="digifont">**:{{smc.startminute}}</span></span></h2>
 		  
 		  <p class="lead">
 
 			<div class="col-md-8 digifont clock-container" style="">
-				<div class="col-md-7 clock-label">Starts in:</div>
-				<div class="col-md-5 clock-time">MM : SS</div>
+				<div class="col-md-7 clock-label">{{time_message}}</div>
+				<div class="col-md-5 clock-time">{{clock_minutes}} : {{clock_seconds}}</div>
 			</div>
 
 		</div>
