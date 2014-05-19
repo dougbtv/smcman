@@ -30,7 +30,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		startsat: Date,					// When does it start?
 		endsat: Date,					// Time the SMC ends.
 		uploadby: Date,					// Time the render is done by.
-		duration: Number,				// Who long does it run?
+		duration: Number,				// How long does it run?
 		smcers: [{						// Who's in?
 			nick: String,				// ... their name.
 			uploaded: Boolean,			// ... did they upload?
@@ -93,6 +93,9 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	this.smcScheduler = function() {
 
 		switch (smc.phase) {
+
+			// --------------------------------- START THE SMC.
+
 			// Our first scheduled item when we're initialized, is to begin the SMC!
 			case PHASE_INTIALIZED:
 				console.log("!trace the smc doc now: ",smc);
@@ -130,6 +133,8 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 				}
 				break;
 
+			// --------------------------------- HALF WAY WARNING
+
 			case PHASE_RUNNING:
 				// Increment the phase
 				smc.phase += 1;
@@ -143,11 +148,24 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 				break;
 
+			// --------------------------------- UPLOAD - Send along the links.
+
 			case PHASE_UPLOAD:
 				// Alright, we give them the upload links.
+				for (var dudeidx = 0; dudeidx < smc.smcers.length; dudeidx++) {
+
+					dude = smc.smcers[dudeidx];
+					
+					console.log("!trace dude name: ",dude.nick);
+
+					// Create a new upload for each dude.
+					// smcman.upload.newUpload(dude.nick,true);
+				}
 				
 				console.log("!trace SMC IS OVER <<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>");
 				break;
+
+			// --------------------------------- RENDER FINISHED - The end of the line.
 
 			case PHASE_RENDER:
 				console.log("!trace SMC IS DONE WITH RENDERING <<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>");
