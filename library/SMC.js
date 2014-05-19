@@ -152,13 +152,25 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 			case PHASE_UPLOAD:
 				// Alright, we give them the upload links.
+				// However, we want to feather this out. 
+				// Let's just do it once a second.
+				var uploadtime = new moment();
+				
 				for (var dudeidx = 0; dudeidx < smc.smcers.length; dudeidx++) {
 
 					dude = smc.smcers[dudeidx];
 					
-					console.log("!trace dude name: ",dude.nick);
+					// console.log("!trace dude name: ",dude.nick);
 
 					// Create a new upload for each dude.
+
+					schedule.scheduleJob(uploadtime.toDate(), function(){
+						smcman.upload.newUpload(dude.nick,true);
+					});
+
+					// Increment the schedule time by a second.
+					uploadtime.add('seconds',1);
+
 					// smcman.upload.newUpload(dude.nick,true);
 				}
 				
