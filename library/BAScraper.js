@@ -41,7 +41,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 				// Ok, now we can go to the poll options url.
 				var options = {
 					method: 'GET',
-		    		uri: forward_url,
+					uri: forward_url,
 				};
 
 				// We request the new post page.

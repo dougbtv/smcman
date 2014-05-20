@@ -59,54 +59,49 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	this.newUpload = function(from,is_smc) {
 
+		// REMOVED.
+		// Might be nice in the future, but, it's spammy during an SMC.
 		// check if they're registered.
-		smcman.isRegistered(from,function(status){
+		// smcman.isRegistered(from,function(status){}.bind(this));
+		// // Let them know they have to register, in that case.
+		// // chat.say("upload_not_registered",[from]);
 
-			if (status) {
-				// Good we can upload.
-				// By default, it's not from an SMC.
-				if (typeof is_smc == 'undefined') { is_smc = false;	}
 
-				// Now we want an instance of it.
-				var upload = new Upload;
+		// Good we can upload.
+		// By default, it's not from an SMC.
+		if (typeof is_smc == 'undefined') { is_smc = false;	}
 
-				// Create a secret key.
-				var key = smcman.createHash(from);
+		// Now we want an instance of it.
+		var upload = new Upload;
 
-				// Now assign the data to the doc.
-				upload.nick = from;
-				upload.secret = key;
-				upload.indate = new Date();
-				upload.is_smc = is_smc;
+		// Create a secret key.
+		var key = smcman.createHash(from);
 
-				console.log("!trace new Upload doc: %j",upload);
+		// Now assign the data to the doc.
+		upload.nick = from;
+		upload.secret = key;
+		upload.indate = new Date();
+		upload.is_smc = is_smc;
 
-				// Get an upload URL, and then whisper it to the requestor.
-				chat.whisper(from,"upload_url",[from,upload.upload_url]);
+		console.log("!trace new Upload doc: %j",upload);
 
-				// Now we can save that.
-				upload.save();
+		// Get an upload URL, and then whisper it to the requestor.
+		chat.whisper(from,"upload_url",[from,upload.upload_url]);
 
-				var starting_moment = new moment();
-				starting_moment.add('minutes',constants.UPLOAD_TIME_LIMIT);
-				
-				// Now create a job to check this in 20 minutes.
-				schedule.scheduleJob(starting_moment.toDate(), function(){
+		// Now we can save that.
+		upload.save();
 
-					this.expireUpload(key);
+		var starting_moment = new moment();
+		starting_moment.add('minutes',constants.UPLOAD_TIME_LIMIT);
+		
+		// Now create a job to check this in 20 minutes.
+		schedule.scheduleJob(starting_moment.toDate(), function(){
 
-				}.bind(this));
-
-				console.log("!trace scheduled job.");
-
-			} else {
-
-				// Let them know they have to register.
-				chat.say("upload_not_registered",[from]);
-
-			}
+			this.expireUpload(key);
 
 		}.bind(this));
+
+		console.log("!trace scheduled job.");
 
 	}.bind(this);
 
@@ -212,6 +207,11 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 							// Let the channel know about it.
 							chat.say("upload_tellchannel",[upload.nick,upload.url]);
+
+							// Let the SMC module know about it, if it's for an SMC.
+							if (upload.is_smc) {
+								smcman.smc.userUploadEvent(upload.nick,upload.url);
+							}
 
 							// Callback, no error.
 							// Also include the URL.
