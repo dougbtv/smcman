@@ -168,7 +168,12 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					// -- General Purpose Commands
 					// ---------------------------------------------------------
 					
-					case "google": general.google(command, from); break;
+					// Same with some of the Toy commands, use one code block
+					// and just tailor the block in case of each identifier
+					case "image":
+					case "googleurl":
+					case "imageurl":
+					case "google": general.googlesearch(command, from); break;
 					break;
 					
 					// ---------------------------------------------------------
