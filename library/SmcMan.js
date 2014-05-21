@@ -74,8 +74,8 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	var toys = new Toys(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 
 	//General Purpose commands
-	//var General = require(".General.js");
-	//var general = new general(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+	var General = require("./General.js");
+	var general = new General(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 	
 	// --------------------------------------------- end Dependant modules!! 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -148,26 +148,33 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 						break;
 						
 					case "roll":
-					case "rolldice":	toys.rolldice(from, command); break;
+					case "rolldice":	toys.rolldice(from,command); break;
 						break;
-						
+					
+					//See Toys.js to see why this is like this
 					case "beer":
-					case "give":	toys.beer(command); break;
-						break;
-					
+					case "give":
 					case "fart":
-					case "breakwind": toys.fart(command,from); break;
-						break;
-						
+					case "breakwind":
 					case "hug":
-					case "huggles": toys.hug(command); break;
-						break;
-						
-					case "smokeup": toys.smokeup(command); break;
-						break;
+					case "huggles":
+					case "smokeup":
+					case "throw":
+					case "insult":	toys.funcommands(command); break;
+					break;
 					
-					case "insult": toys.insult(command); break;
-						break;
+					
+					// ---------------------------------------------------------
+					// -- General Purpose Commands
+					// ---------------------------------------------------------
+					
+					// Same with some of the Toy commands, use one code block
+					// and just tailor the block in case of each identifier
+					case "image":
+					case "googleurl":
+					case "imageurl":
+					case "google": general.googlesearch(command, from); break;
+					break;
 					
 					// ---------------------------------------------------------
 					// -- Uploads!
