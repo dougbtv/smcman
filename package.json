@@ -28,6 +28,7 @@
     "MD5"   :  "*",
     "bcrypt" : "*",
     "cheerio" : "*",
-    "restify"   :  "*"
+    "restify"   :  "*",
+    "google"	: "*"
   }
 }

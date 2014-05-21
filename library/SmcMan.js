@@ -74,8 +74,8 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	var toys = new Toys(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 
 	//General Purpose commands
-	//var General = require(".General.js");
-	//var general = new general(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+	var General = require("./General.js");
+	var general = new General(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 	
 	// --------------------------------------------- end Dependant modules!! 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -161,6 +161,14 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					case "smokeup":
 					case "throw":
 					case "insult":	toys.funcommands(command); break;
+					break;
+					
+					
+					// ---------------------------------------------------------
+					// -- General Purpose Commands
+					// ---------------------------------------------------------
+					
+					case "google": general.google(command, from); break;
 					break;
 					
 					// ---------------------------------------------------------

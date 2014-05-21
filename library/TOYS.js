@@ -7,7 +7,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		chat.say("cointoss", [from, coin_string]);
 	}
 	
-	this.rolldice = function(from) { //Will come back to this one
+	this.rolldice = function(command, from) { //Will come back to this one
 		
 	}
 	
@@ -27,6 +27,9 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		if(command.command == 'huggles') { givencommand = 'hug'; }
 		if(command.command == 'give') { givencommand = 'beer'; }
 		
+		
+		
+		
 		// At this stage the max number of arg's is two, so setting this up hard coded to only
 		// accept a max of two is fine
 		if(!command.arglist) {
@@ -38,9 +41,18 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		} else {
 			//Two arg's given
 			chat.action(givencommand, [command.arglist[0],command.arglist[1]]);
-		}		
+		}
 		
 		
+	}
+	
+	this.population = function() {
+	
+	
+	}
+	
+	this.lastseen = function(command, from) {
+	
 	}
 	
 };
