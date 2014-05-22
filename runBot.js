@@ -23,7 +23,6 @@ try {
 	var privates = require("./includes/config_private.js");
 }
 
-
 var SmcMan = require("./library/SmcMan.js"); // The SmcMan object, the meat of our dealings.
 
 // -- Connect to mongo.

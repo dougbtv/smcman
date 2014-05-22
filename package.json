@@ -29,6 +29,7 @@
     "bcrypt" : "*",
     "cheerio" : "*",
     "restify"   :  "*",
+    "mv"   :  "*",
     "google"	: "*"
   }
 }
