@@ -40,10 +40,10 @@ db.once('open', function callback () {
 // ----------------------------- Create the irc bot object.
 var bot = new irc.Client(privates.IRC_SERVER, privates.IRC_BOTNAME, {
     userName: privates.IRC_BOTNAME,
-    realName: 'nodeJS IRC client',
+    realName: privates.IRC_REALNAME,
     port: 7000,
     debug: privates.IRC_DEBUG,
-    showErrors: false,
+    showErrors: true,
     autoRejoin: true,
     autoConnect: false,
     channels: [privates.IRC_CHANNEL],
