@@ -2,11 +2,11 @@
 		<h1>SMC</h1>
 	</div>
 
-	<div class="row featurette">
+	<div class="alert alert-warning" ng-show="smc_ended">
+		<strong>Heads up!</strong> So, the SMC ended.
+	</div>
 
-    <div class="alert alert-warning" ng-show="smc_ended">
-        <strong>Heads up!</strong> So, the SMC ended.
-      </div>
+	<div class="row featurette" ng-show="smc">
 
 		<!-- - - - - - - - - - - - - SMC info & timer panel  -->
 
@@ -38,5 +38,9 @@
 			</ul>
 		</div>
 
+	</div>
+
+	<div class="row featurette" ng-hide="smc">
+		[No SMC in progress, right now]
 	</div>
 	

@@ -111,6 +111,9 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 				console.log("!trace GOT SMC INFO:",smcdata);
 				if (smcdata.phase) {
 
+					// It can't be ended, right?
+					$scope.smc_ended = false;
+
 					// Slice n' dice the data.
 					$scope.setSMC(smcdata);
 
@@ -126,10 +129,15 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 				
 				} else {
 
+					$scope.smc = false;
+
 					// There's no SMC. So, if there WAS one, it's ended, somehow.
 					if (inprogress) {
 						$scope.stopSMC();
 					}
+
+					// And we'll schedule it again.
+					promise_poll = $timeout($scope.pollSMC,COLD_POLL_INTERVAL);
 
 				}
 			
@@ -137,6 +145,9 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 			.error(function(smcdata) {
 
 				console.log("ERROR: Ooops. Couldn't get the smc info via API");
+
+				// And we'll schedule it again.
+				promise_poll = $timeout($scope.pollSMC,COLD_POLL_INTERVAL);
 
 			});
 
