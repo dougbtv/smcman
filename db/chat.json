@@ -214,8 +214,8 @@
 { "_id" : { "$oid" : "53696b204a3647a8c53b4959" }, "fields" : 0, "identifier" : "smctimer", "text" : "CANCELED! More than one person needs to participate. This is a competition, not practice. ;)" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b495a" }, "fields" : 1, "identifier" : "smctimer", "text" : "%0 HALF THE TIME IS OVER! Don't forget to save." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b495b" }, "fields" : 1, "identifier" : "smctimer", "text" : "%0 HALFWAY WARNING! I hope you've started by now." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b495c" }, "fields" : 1, "identifier" : "smctimer", "text" : "%0 BZZZZZZT! The SMC is over! Check your /msgs for a private upload link." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b495d" }, "fields" : 1, "identifier" : "smctimer", "text" : "%0 the SMC is over! Check your /msgs for an upload link." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b495c" }, "fields" : 1, "identifier" : "smc_timesup", "text" : "%0 BZZZZZZT! The SMC is over! Check your /msgs for a private upload link." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b495d" }, "fields" : 1, "identifier" : "smc_timesup", "text" : "%0 the SMC is over! Check your /msgs for an upload link." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b495e" }, "fields" : 2, "identifier" : "uploadinsertion", "text" : "%0, use this link to upload your final render: %1 ... you have 20 minutes to upload." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b495f" }, "fields" : 2, "identifier" : "uploadinsertion", "text" : "%0, upload your render here: %1 ... you have 20 minutes to upload before you're disqualified." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b4960" }, "fields" : 1, "identifier" : "isdev", "text" : "Sorry %0, you have to be an administrator to use this command." }
@@ -364,3 +364,6 @@
 { "_id" : { "$oid" : "5372a2f29a24ffaaf0685ed1" }, "fields" : 2, "identifier" : "identify_created", "text" : "%0 Keep this is a secret! It's your website login: %1" }
 { "_id" : { "$oid" : "5372a3129a24ffaaf0685ed2" }, "fields" : 2, "identifier" : "identify_updated", "text" : "%0 your new website login is: %1" }
 { "_id" : { "$oid" : "5372a31d9a24ffaaf0685ed3" }, "fields" : 2, "identifier" : "identify_updated", "text" : "%0 your new password for website login is: %1" }
+{ "_id" : { "$oid" : "537e3dbe3cf6ea756238c98e" }, "fields" : 1, "identifier" : "smc_not_enoughuploaders", "text" : "%0 -- smc cancelled, not enough people uploaded (SLACKERS!!)" }
+{ "_id" : { "$oid" : "537e3dd03cf6ea756238c98f" }, "fields" : 1, "identifier" : "smc_not_enoughuploaders", "text" : "%0 -- guys really, no one uploaded or something? or one person? slackers dude! smc is cancelled." }
+{ "_id" : { "$oid" : "537e3dec3cf6ea756238c990" }, "fields" : 1, "identifier" : "smc_not_enoughuploaders", "text" : "Yep, had to do it again. Cancel because no one uploaded in time. Pr0n is bad, mmm'kay?" }

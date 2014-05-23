@@ -11,7 +11,7 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 	var PHASE_INTIALIZED = 1;
 	var PHASE_RUNNING = 2;
 	var PHASE_UPLOAD = 3;
-	var PHASE_RENDER = 3;
+	var PHASE_RENDER = 4;
 
 	// Defaults
 	
@@ -65,6 +65,10 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 					// console.log("!trace duraction: ",difference);
 
 					// Now we know what's left on the clock.
+					$scope.clock_hours = "";
+					if (difference.hours()) {
+						$scope.clock_hours = ("00" + (difference.hours()).toString()).slice(-2) + " : ";
+					}
 					$scope.clock_minutes = ("00" + (difference.minutes()).toString()).slice(-2);
 					$scope.clock_seconds = ("00" + (difference.seconds()).toString()).slice(-2);
 

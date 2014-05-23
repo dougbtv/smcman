@@ -187,6 +187,10 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 				this.job = schedule.scheduleJob(rendertime.toDate(), this.smcScheduler);
 
+				// Ok, let em know it's over.
+
+				chat.say("smc_timesup",[smc.nicklist]);
+				
 				console.log("!trace SMC IS OVER, TIME TO UPLOAD <<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>");
 				break;
 
@@ -215,7 +219,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 					this.smcComplete();
 				} else {
 					console.log("NOTICE: SMC cancelled as there weren't enough uploaders.");
-					chat.say("smc_not_enoughuploaders",[smc.smcers]); // !bang
+					chat.say("smc_not_enoughuploaders",[smc.nicklist]); // !bang
 					this.tearDownSMC();
 				}
 
