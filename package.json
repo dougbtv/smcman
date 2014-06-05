@@ -29,6 +29,7 @@
     "bcrypt" : "*",
     "cheerio" : "*",
     "restify"   :  "*",
+    "socket.io"   :  "<1.0.0",
     "mv"   :  "*",
     "google"	: "*"
   }
