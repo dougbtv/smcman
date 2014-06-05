@@ -1,4 +1,4 @@
-smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeout', '$interval', 'loginModule', function($scope,$location,$http,$timeout,$interval,login) {
+smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeout', '$interval', 'smcSocketService', function($scope,$location,$http,$timeout,$interval,socketservice) {
 
 	// SMC in progress? 
 	var inprogress = false;
@@ -17,6 +17,9 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 	
 	// $scope.message = "quux";
 	console.log("!trace smc controller reporting in:",moment().format('MMMM Do YYYY, h:mm:ss a'));
+
+	// We'll wanna make a request, hum.
+	socketservice.manuallyGetSMC();
 
 	// The promises from our updating.
 	var promise_clock;
@@ -56,12 +59,6 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 					var seconds_left = endmoment.diff(nowmoment, 'seconds');
 					var difference = moment.duration(seconds_left,'seconds');
 
-					// If the difference is close or zero, we poll specially for this.
-					if (seconds_left == 0) {
-						$timeout.cancel(promise_poll);
-						$scope.pollSMC();
-					}
-
 					// console.log("!trace duraction: ",difference);
 
 					// Now we know what's left on the clock.
@@ -82,6 +79,7 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 	};
 
+	// Basically just stops the clock.
 	$scope.stopSMC = function() {
 		if (inprogress) {
 			inprogress = false;
@@ -97,8 +95,36 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 	$scope.$on('$destroy', function() {
 	  // Make sure that the interval is destroyed too
 	  $scope.stopSMC();
-	  // And also the polling.
-	  $timeout.cancel(promise_poll);
+	});
+
+	$scope.$on("smcUpdate",function(event,smcdata){
+
+		console.log("!trace GOT SMC UPDATE INFO:",smcdata);
+		if (smcdata.phase) {
+
+			// It can't be ended, right?
+			$scope.smc_ended = false;
+
+			// Slice n' dice the data.
+			$scope.setSMC(smcdata);
+
+			// Say it's in process if it wasn't before.
+			if (!inprogress) {
+				inprogress = true; 
+				// Start the clock.
+				$scope.smcClockUpdate();
+			}
+
+		} else {
+
+			$scope.smc = false;
+
+			// There's no SMC. So, if there WAS one, it's ended, somehow.
+			if (inprogress) {
+				$scope.stopSMC();
+			}
+
+		}
 
 	});
 
@@ -153,9 +179,6 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 	}
 
-	// Poll immediately, and let it take care of further polling if need be.
-	promise_poll = $scope.pollSMC();
-
 	$scope.setSMC = function(smc) {
 
 		// Ok, now we can set our scopes as we need.
@@ -186,5 +209,15 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 		}
 
 	}
+
+	// Poll immediately, and let it take care of further polling if need be.
+	/*
+
+	// DEPRECATED. DS
+
+		promise_poll = $scope.pollSMC();
+
+		
+	*/
 
 }]);

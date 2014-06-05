@@ -17,6 +17,8 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	var server = restify.createServer();
 	server.use(restify.bodyParser());
 
+	// Ready up our socket server
+	var SocketServer = require('./socketServer.js');
 
 	// Set our properties from the arguments upon instantiation.
 	this.bot = bot;
@@ -25,6 +27,8 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	this.mongoose = mongoose;
 	this.db = db;
 	this.rest = new RestServer(server,this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+	this.socketserver = new SocketServer(server,this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+
 
 	// -- We have a nested schema here.
 	// -- ...Consider refactoring / moving this out of here.
@@ -59,7 +63,7 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	
 	// We have an object to describe an SMC itself.
 	var SMC = require("./SMC.js");       // The object describing an SMC itself.
-	this.smc = new SMC(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+	this.smc = new SMC(this,this.bot,this.chat,this.mongoose,this.db,this.socketserver,this.constants,this.privates);
 
 	// Our upload module describes an upload / file we host.
 	var Upload = require("./Upload.js");

@@ -58,5 +58,3 @@ To export the mongo db's
 
 This is where the bulk of your setup will happen. 
 
----
-**Asterisk Setup**

@@ -1,4 +1,4 @@
-module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) {
+module.exports = function(smcman, bot, chat, mongoose, db, socketserver, constants, privates) {
 
 	// Our static phases.
 	var PHASE_INITIALIZED = 1;
@@ -228,6 +228,9 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 				break;
 		}
 
+		// With each scheduled item... go and push it to the clients via websocket.
+		socketserver.smcUpdate();
+
 	}.bind(this);
 
 	// -- Set that an upload is complete from a user, and also the URL where that upload is, too.
@@ -272,13 +275,12 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 				this.smcComplete();
 			}
 
+			// Update via the socket, letting 'em know about the upload
+			socketserver.smcUpdate();
 
 		} else {
 			console.log("ERROR: There's a userUploadEvent in the smc module, but, no SMC active?? (could be a late render.)");
 		}
-
-		// 
-
 
 	}
 
@@ -317,6 +319,8 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 		});
 
+		// And we'll tear it down.
+		this.tearDownSMC();
 
 	}
 
@@ -380,6 +384,9 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 			this.job.cancel();
 		}
 
+		// Push it out to the clients.
+		socketserver.smcUpdate();
+
 	}
 
 	// Is this person a particpant?
@@ -442,7 +449,9 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 				console.log("!trace the starting_moment: ",starting_moment.format("dddd, MMMM Do YYYY, h:mm:ss a"));
 
 				chat.say("smcstart",[smc.topic,length,sprintf("%0d",startsat)]);
-				smc.phase = true;
+				
+				// We'll emit that through the websocket, to let everyone know.
+				socketserver.smcUpdate();
 
 			} else {
 
@@ -523,6 +532,9 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 					// Add them to the SMCers.
 					smc.smcers.push({nick: from, uploaded: false, url: ""});
 
+					// Update via the socket, so we know there's a new guy in.
+					socketserver.smcUpdate();
+
 				} else {
 					chat.say("smc_join_alreadyin",[from]);
 				}
@@ -560,6 +572,10 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 				// Let 'em know they're leaving
 				chat.say("smc_forfeit",[from]);
+
+				// Update via the socket, so we know someone left.
+				socketserver.smcUpdate();
+
 			
 			} else {
 				chat.say("smc_quit_nojoin",[from]);

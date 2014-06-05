@@ -22,7 +22,6 @@ smcFrontEnd.config(function($routeProvider) {
 				controller  : 'smcController'
 			})
 
-
 			// route for the about page
 			.when('/about', {
 				templateUrl : 'views/about.html',

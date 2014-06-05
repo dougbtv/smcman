@@ -13,6 +13,11 @@ Then add to apache:
             ProxyPass http://localhost:8001/api/
             ProxyPassReverse http://localhost:8001/api/
         </Location>
+        <Location /socket.io>
+            # Make sure you leave off the trailing slash.
+            ProxyPass http://localhost:8001/socket.io
+            ProxyPassReverse http://localhost:8001/socket.io
+        </Location>
         <Location /view>
             ProxyPass http://localhost:8001/view/
             ProxyPassReverse http://localhost:8001/view/
