@@ -1,5 +1,5 @@
 
-module.exports = function(server,smcman, bot, chat, mongoose, db, constants, privates) {
+module.exports = function(server, smcman, bot, chat, mongoose, db, constants, privates) {
 
 	// --------------------------------------------------------------------
 	// -- myConstructor : Throws the constructor into a method.
@@ -10,6 +10,24 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 	// ProxyPass /api/ http://localhost:8000/api/
 
 	var fs = require('fs');
+
+	// TODO: I want to do this, but, it's bigger bite than I want to chew right now, -Doug
+	socketio = require('socket.io');
+
+	var io = socketio.listen(server);
+
+	io.sockets.on('connection', function (socket) {
+
+		console.log("Cool, got connection....");
+	
+		socket.emit('news', { hello: 'world' });
+	
+		socket.on('my other event', function (data) {
+			console.log(data);
+		});
+	
+	});
+
 	
 	this.myConstructor = function() {
 
@@ -47,6 +65,9 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 
 	this.serverStart = function() {
 
+
+
+		// And then fire up the server.
 		server.listen(constants.SERVER_PORT, function() {
 			console.log(server.name + ' listening at ' + server.url);
 		});
