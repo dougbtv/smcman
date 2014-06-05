@@ -1,1 +1,2 @@
 { "indate" : { "$date" : 1400022052983 }, "secret" : "d713cc16a1014d44ca60a88da9bf1de1", "nick" : "protocoldoug", "_id" : { "$oid" : "5372a4242734129915e1baaa" }, "__v" : 0 }
+{ "__v" : 0, "_id" : { "$oid" : "53736c42072bb9bf269c69e7" }, "indate" : { "$date" : 1400073282652 }, "nick" : "protocoldoug", "secret" : "$2a$10$8eMlXzXafIyc2SQ8/ict7eJ3sJdDnrx/AaYZjCMPoSs70Lx7uBlKK", "session_expires" : { "$date" : 1400700371635 }, "session_id" : "f39fe0974e73bbe62859d73b87af182d" }

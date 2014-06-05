@@ -1,5 +1,5 @@
 
-module.exports = function(server,smcman, bot, chat, mongoose, db, constants, privates) {
+module.exports = function(server, smcman, bot, chat, mongoose, db, constants, privates) {
 
 	// --------------------------------------------------------------------
 	// -- myConstructor : Throws the constructor into a method.
@@ -35,6 +35,10 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 		server.post('/api/validateSession', this.validateSession);
 		server.head('/api/validateSession', this.validateSession);
 
+		server.get('/api/livesmc', this.liveSMCInfo);
+		server.post('/api/livesmc', this.liveSMCInfo);
+		server.head('/api/livesmc', this.liveSMCInfo);
+
 		server.get('/api/view/:tinyURL', this.viewUpload);
 		server.get('/view/:tinyURL', this.viewUpload);
 
@@ -43,9 +47,26 @@ module.exports = function(server,smcman, bot, chat, mongoose, db, constants, pri
 
 	this.serverStart = function() {
 
+		// And then fire up the server.
 		server.listen(constants.SERVER_PORT, function() {
 			console.log(server.name + ' listening at ' + server.url);
 		});
+
+	}
+
+
+	this.liveSMCInfo = function(req, res, next) {
+
+		var return_json = false;
+
+		var smc = smcman.smc.getSMC();
+
+		if (smc.phase) {
+			return_json = smc;
+		}
+
+		res.contentType = 'json';
+		res.send(return_json);
 
 	}
 

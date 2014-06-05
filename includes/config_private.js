@@ -37,3 +37,6 @@ define("COMMAND_CHARACTER","!");
 define("BLENDERARTISTS_USERNAME", "protocoldoug");
 define("BLENDERARTISTS_PASSWORD", "thesmcbot");
 define("VBULLETIN_POST_ENABLED",false);
+
+// This is the place where we put symlinks to the actual files.
+define("PATH_UPLOAD_WEBDIR","/home/doug/codebase/smcman/www/files/");

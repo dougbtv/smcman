@@ -1,0 +1,81 @@
+.clock-minutes {
+  border-top-left-radius: 6px 6px;
+  border-bottom-left-radius: 6px 6px;
+  /* background-color: #428bca; */
+  background-image: linear-gradient(to bottom,#428bca 0,#3278b3 100%);
+  color: white;
+  font-size: 45px;
+  text-align:center;
+  font-weight:500;
+}
+
+.clock-seconds {
+  border-top-right-radius: 6px 6px;
+  border-bottom-right-radius: 6px 6px;
+  /* background-color: #428bca; */
+  background-image: linear-gradient(to bottom,#d9edf7 0,#b9def0 100%);
+  color: #3278b3;
+  font-size: 45px;
+  text-align:center;
+  font-weight:500;
+}
+
+.clock-label {
+  background-color: #282828; 
+  color: #CACACA; 
+  font-size: 35px;
+}
+
+.clock-time {
+  background-color: #1C1C1C; 
+  color: #00FF00; 
+  font-size: 35px;
+  text-align:center;
+}
+
+.clock-container {
+  padding-left: 0px;
+  padding-bottom: 15px;
+
+}
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+  padding: 60px 15px 0;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+#footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}

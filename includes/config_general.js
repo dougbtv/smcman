@@ -21,7 +21,14 @@ define("ALLOWED_TYPES",[
 	'image/example',
 ]);
 
-define("PATH_UPLOAD_STORAGE","/tmp/");
+// Private location of file storage.
+define("PATH_UPLOAD_STORAGE","/var/smcstore/");
+
+// URL location where files are accessed from.
+// e.g. http://smc/FOO/
+// where foo is the path under www/
+define("PATH_URL_FILESTORAGE","files");
+
 
 define("UPLOAD_TIME_LIMIT",20); // In minutes.
 
