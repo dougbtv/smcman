@@ -18,9 +18,10 @@
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 
 		<!-- Custom styles for this template -->
-		<link href="/css/sticky-footer-navbar.css" rel="stylesheet">
+		<link href="/css/style.css" rel="stylesheet">
 		<link href="/css/login-form.css" rel="stylesheet">
 		<link href="/css/animate.css" rel="stylesheet">
+		<link href="/css/font.css" rel="stylesheet">
 
 		<script src="angular-upload/dist/angular-file-upload-shim.min.js"></script>  <!-- - - - - - - - - - file module! this line before loading angular -->
 
@@ -40,17 +41,25 @@
 		<link href='//fonts.googleapis.com/css?family=Cutive+Mono' rel='stylesheet' type='text/css'>
 		<link href='//fonts.googleapis.com/css?family=Days+One' rel='stylesheet' type='text/css'>
 
+		<!-- socket.io -->
+		<script src="/socket.io/socket.io.js"></script>
+
 		<!-- font customizations -->
 		<style type="text/css">
 			textarea { font-family: 'Cutive Mono'; }
 			/* h2,h3,h4 { font-family: 'Days One', sans-serif; } */
 		</style>
 
+		<!-- How about our libraries? -->
+		<script src="/js/libs/moment-2.6.0-min.js"></script><!-- It's so nice we use it twice! (on front, and back end.) -->
+
 		<!-- And it ain't no fun without the smc frontend. -->
 		<script src="/js/smcFrontEnd.js"></script>
 		<script src="/js/uploadController.js"></script>
 		<script src="/js/loginController.js"></script>
 		<script src="/js/preferencesController.js"></script>
+		<script src="/js/smcSocketService.js"></script>
+		<script src="/js/smcController.js"></script>
 
 		<style type="text/css">
 		</style>
@@ -78,6 +87,7 @@
 						<!-- nice example for showing selected page: http://jsfiddle.net/creatifyme/YCw99/ -->
 						
 						<li ng-class="navClass('home')" 	ng-click="switchPage('home')"><a href="#/home">Home</a></li>
+						<li ng-class="navClass('smc')" 		ng-click="switchPage('smc')"><a href="#/smc">SMC!</a></li>
 						<li ng-class="navClass('upload')" 	ng-click="switchPage('upload')"><a href="#/upload">Upload</a></li>
 						<li ng-class="navClass('help')" 	ng-click="switchPage('help')"><a href="#/help">Help</a></li>
 						<li ng-class="navClass('about')" 	ng-click="switchPage('about')"><a href="#/about">About</a></li>

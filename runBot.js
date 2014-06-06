@@ -23,7 +23,6 @@ try {
 	var privates = require("./includes/config_private.js");
 }
 
-
 var SmcMan = require("./library/SmcMan.js"); // The SmcMan object, the meat of our dealings.
 
 // -- Connect to mongo.
@@ -31,7 +30,7 @@ var SmcMan = require("./library/SmcMan.js"); // The SmcMan object, the meat of o
 mongoose.connect(privates.MONGO_CONNECT_STRING);
 
 var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
+db.on('error', console.error.bind(console, 'MONGO connection error:'));
 db.once('open', function callback () {
 	// We're connected to mongo, now.
 	console.log("Mongo connection successful.");

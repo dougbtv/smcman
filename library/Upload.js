@@ -5,6 +5,9 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	var moment = require('moment');
 	// We move files into place when uploaded.
 	var fs = require("fs");
+	// We use the move module, because it can do things cross device
+	// ...just a pointer rename on the same partition is kind of annoying (with purely fs)
+	var mv = require('mv');
 
 	// Setup a schema.
 	var uploadSchema = mongoose.Schema({
@@ -38,13 +41,25 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 			// api/view is our path
 			// SSS is the first three characters of our secret.
 			// XXXX is the hex value of the tiny url
-			return privates.URL_SMCSITE + "view/" + this.secret.substring(0,3) + this.tiny_url.toString(16);
+			return privates.URL_SMCSITE + constants.PATH_URL_FILESTORAGE + "/" + this.symlinkname;
+		});
+
+		// 
+
+	uploadSchema.virtual('symlinkname')
+		.get(function () {
+			return this.secret.substring(0,3) + this.tiny_url.toString(16);
+		});
+
+	uploadSchema.virtual('file_directory')
+		.get(function () {
+			return constants.PATH_UPLOAD_STORAGE + this.secret.substring(0,2) + "/";
 		});
 
 
-	uploadSchema.virtual('filepath')
+	uploadSchema.virtual('file_full_path')
 		.get(function () {
-			return constants.PATH_UPLOAD_STORAGE + this.secret;
+			return this.file_directory + this.secret;
 		});
 
 	// Compile it to a model.
@@ -59,54 +74,49 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	this.newUpload = function(from,is_smc) {
 
+		// REMOVED.
+		// Might be nice in the future, but, it's spammy during an SMC.
 		// check if they're registered.
-		smcman.isRegistered(from,function(status){
+		// smcman.isRegistered(from,function(status){}.bind(this));
+		// // Let them know they have to register, in that case.
+		// // chat.say("upload_not_registered",[from]);
 
-			if (status) {
-				// Good we can upload.
-				// By default, it's not from an SMC.
-				if (typeof is_smc == 'undefined') { is_smc = false;	}
 
-				// Now we want an instance of it.
-				var upload = new Upload;
+		// Good we can upload.
+		// By default, it's not from an SMC.
+		if (typeof is_smc == 'undefined') { is_smc = false;	}
 
-				// Create a secret key.
-				var key = smcman.createHash(from);
+		// Now we want an instance of it.
+		var upload = new Upload;
 
-				// Now assign the data to the doc.
-				upload.nick = from;
-				upload.secret = key;
-				upload.indate = new Date();
-				upload.is_smc = is_smc;
+		// Create a secret key.
+		var key = smcman.createHash(from);
 
-				console.log("!trace new Upload doc: %j",upload);
+		// Now assign the data to the doc.
+		upload.nick = from;
+		upload.secret = key;
+		upload.indate = new Date();
+		upload.is_smc = is_smc;
 
-				// Get an upload URL, and then whisper it to the requestor.
-				chat.whisper(from,"upload_url",[from,upload.upload_url]);
+		console.log("!trace new Upload doc: %j",upload);
 
-				// Now we can save that.
-				upload.save();
+		// Get an upload URL, and then whisper it to the requestor.
+		chat.whisper(from,"upload_url",[from,upload.upload_url]);
 
-				var starting_moment = new moment();
-				starting_moment.add('minutes',constants.UPLOAD_TIME_LIMIT);
-				
-				// Now create a job to check this in 20 minutes.
-				schedule.scheduleJob(starting_moment.toDate(), function(){
+		// Now we can save that.
+		upload.save();
 
-					this.expireUpload(key);
+		var starting_moment = new moment();
+		starting_moment.add('minutes',constants.UPLOAD_TIME_LIMIT);
+		
+		// Now create a job to check this in 20 minutes.
+		schedule.scheduleJob(starting_moment.toDate(), function(){
 
-				}.bind(this));
-
-				console.log("!trace scheduled job.");
-
-			} else {
-
-				// Let them know they have to register.
-				chat.say("upload_not_registered",[from]);
-
-			}
+			this.expireUpload(key);
 
 		}.bind(this));
+
+		console.log("!trace scheduled job.");
 
 	}.bind(this);
 
@@ -149,7 +159,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 			if (upload) {
 
 				// Great, we can ship back the information we need.
-				callback(null,upload.filepath,upload.mime_type);
+				callback(null,upload.file_full_path,upload.mime_type);
 
 			} else {
 
@@ -196,29 +206,62 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 				// Do we accept this type? Check our allowed array.
 				if (constants.ALLOWED_TYPES.indexOf(type) > -1) {
 
-					// Move the file into place.					
-					fs.rename(path, upload.filepath,function(){
+					// Check out if the path exists.
+					// file_directory
+					fs.exists(upload.file_directory, function(exists) {
 
-						// Get a new tinyURL for it.
-						this.newTinyURL(function(tiny_id){
+						// If it doesn't exist, make the directory.
+						// It's a hack to do this synchronously. But, for now.
+						// todo.
+						if (!exists) {
+							fs.mkdirSync(upload.file_directory);
+							console.log("INFO: Created directory: ",upload.file_directory);
+						}
 
-							// Now we can complete this guy.
-							upload.complete = true;				// Say it's complete
-							upload.tiny_url = tiny_id;			// Give it a "tiny url" increment.
-							upload.description = filename;		// Set it's filename as the description.
-							upload.mime_type = type;			// Save that mime type.
+						// Move the file into place.
+						console.log("!trace moving orig: ",path);				
+						console.log("!trace moving dest: ",upload.file_full_path);				
+						mv(path, upload.file_full_path,function(err){
 
-							upload.save();
+							if (err) {
+								console.log("ERROR: Move file error: ",err);
+							}
 
-							// Let the channel know about it.
-							chat.say("upload_tellchannel",[upload.nick,upload.url]);
+							// Get a new tinyURL for it.
+							this.newTinyURL(function(tiny_id){
 
-							// Callback, no error.
-							// Also include the URL.
-							callback(false,upload.url);
+								// Set that right away.
+								upload.tiny_url = tiny_id;			// Give it a "tiny url" increment.									
 
-						});
+								// We want apache to handle delivering this file.
+								// So we make a symlink to it, in an apache accessible dir.
+								// Make a symlink to it in the webdir.
+								fs.symlink(upload.file_full_path, privates.PATH_UPLOAD_WEBDIR + upload.symlinkname, function(){
 
+									// Now we can complete this guy.
+									upload.complete = true;				// Say it's complete
+									upload.description = filename;		// Set it's filename as the description.
+									upload.mime_type = type;			// Save that mime type.
+
+									upload.save();
+
+									// Let the channel know about it.
+									chat.say("upload_tellchannel",[upload.nick,upload.url]);
+
+									// Let the SMC module know about it, if it's for an SMC.
+									if (upload.is_smc) {
+										smcman.smc.userUploadEvent(upload.nick,upload.url);
+									}
+
+									// Callback, no error.
+									// Also include the URL.
+									callback(false,upload.url);
+
+								}.bind(this));
+
+							}.bind(this));
+
+						}.bind(this));
 
 					}.bind(this));
 
