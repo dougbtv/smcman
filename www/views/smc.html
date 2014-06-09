@@ -57,3 +57,21 @@
 
 	</div>
 	
+	<div class="page-header">
+		<h2>Previous SMCs</h2>
+	</div>
+
+	<div class="smcpane" ng-repeat="eachsmc in smc_list">
+		{{eachsmc.topic}}
+	</div>
+
+	<ul class="pagination">
+		<li><a href="#/smc?page=1">&laquo;</a></li>
+		<li><a href="#/smc?page=bar">1</a></li>
+		<li class="active"><a href="#/smc?page=bar">2</a></li>
+		<li><a href="#/smc?page=bar">3</a></li>
+		<li><a href="#/smc?page=bar">4</a></li>
+		<li><a href="#/smc?page=bar">5</a></li>
+		<li><a href="#/smc?page=bar">&raquo;</a></li>
+	</ul>
+

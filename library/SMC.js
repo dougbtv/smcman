@@ -516,6 +516,23 @@ module.exports = function(smcman, bot, chat, mongoose, db, socketserver, constan
 		
 	}
 
+	this.smcPage = function(page,limit,callback) {
+
+		// We're going to want a total count of documents in the collection.
+		SMC.count({},function(err,counted){
+
+			// Ok, let's get some SMCs.
+			var result = SMC.find({}).sort({startsat: -1}).skip(limit * (page-1)).limit(limit).exec(function(err,smclist){
+
+				// Return what we've got.
+				callback({total: counted, smcs: smclist});
+
+			});
+
+		});
+
+	}
+
 
 	// The !join handler.
 

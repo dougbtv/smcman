@@ -46,6 +46,11 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.post('/api/joinOrLeaveSMC', this.joinOrLeaveSMC);
 		server.head('/api/joinOrLeaveSMC', this.joinOrLeaveSMC);
 
+		server.get('/api/getSMCList', this.getSMCList);
+		server.post('/api/getSMCList', this.getSMCList);
+		server.head('/api/getSMCList', this.getSMCList);
+
+
 	};
 
 	this.serverStart = function() {
@@ -56,6 +61,24 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		});
 
 	}
+
+	this.getSMCList = function(req, res, next) {
+
+		var input = req.params;
+
+		// Ok, we'll want to query for a number of smcs....
+		// limit ____________v
+		// page ___________v
+		smcman.smc.smcPage(input.page,input.limit,function(smclist){
+
+			res.contentType = 'json';
+			res.send(smclist);
+
+		});
+
+
+	}
+
 
 	this.joinOrLeaveSMC = function(req, res, next) {
 
@@ -71,6 +94,9 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 				} else {
 					smcman.smc.forfeitSMC(input.username);
 				}
+
+				res.contentType = 'json';
+				res.send({});
 
 			}
 

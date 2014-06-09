@@ -13,6 +13,9 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 	var PHASE_UPLOAD = 3;
 	var PHASE_RENDER = 4;
 
+	// Limits per page
+	var MAX_PER_PAGE = 5;
+
 	// Defaults
 	
 	// $scope.message = "quux";
@@ -24,6 +27,14 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 	// The promises from our updating.
 	var promise_clock;
 	var promise_poll;
+
+	// Here's our URL params.
+	$scope.smc_pageon = $location.search().page;
+	if (typeof $scope.smc_pageon == 'undefined') {
+		// Set that it's the first page.
+		$scope.smc_pageon = 1;
+	}
+	console.log("What's the page param? ",$scope.smc_pageon);
 
 	$scope.smcClockUpdate = function() {
 
@@ -79,6 +90,37 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 	};
 
+	$scope.getSMCPage = function(page) {
+
+		// Ok, get those SMCs.
+		console.log("Yoooooooooooooooo !trace I'm getting the smc page....");
+
+		$http.post('/api/getSMCList', { page: page, limit: MAX_PER_PAGE })
+			.success(function(data){
+
+				// Alright, this is good.
+				// Set which page we're on.
+				$scope.smc_pageon = page;
+				$scope.smc_list = data.smcs;
+				$scope.smc_total = data.total;
+				$scope.smc_totalpages = Math.ceil(data.total/MAX_PER_PAGE);
+
+				console.log("!trace here's the list of smcs",$scope.smc_list);
+
+
+			}.bind(this)).error(function(data){
+
+				console.log("ERROR: Can't quite get a page worth of SMCs");
+
+			}.bind(this));
+
+	}
+
+	// Make a call to get the page in the URL (or the default if it's not specified)....
+	$scope.getSMCPage($scope.smc_pageon);
+
+
+
 	$scope.joinOrLeaveSMC = function(joinit) {
 
 		// Ok, now call up the API.
@@ -92,7 +134,6 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 				console.log("ERROR: Can't quite leave or join an SMC.");
 
 			}.bind(this));
-
 
 	}
 
