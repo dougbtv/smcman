@@ -1,4 +1,4 @@
-smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeout', '$interval', 'smcSocketService', function($scope,$location,$http,$timeout,$interval,socketservice) {
+smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeout', '$interval', '$cookies', 'smcSocketService', function($scope,$location,$http,$timeout,$interval,$cookies,socketservice) {
 
 	// SMC in progress? 
 	var inprogress = false;
@@ -79,6 +79,23 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 	};
 
+	$scope.joinOrLeaveSMC = function(joinit) {
+
+		// Ok, now call up the API.
+		$http.post('/api/joinOrLeaveSMC', { username: $cookies.username, session: $cookies.session, isjoining: joinit })
+			.success(function(data){
+
+				// awesome, we don't have to do anything, really, right?
+
+			}.bind(this)).error(function(data){
+
+				console.log("ERROR: Can't quite leave or join an SMC.");
+
+			}.bind(this));
+
+
+	}
+
 	// Basically just stops the clock.
 	$scope.stopSMC = function() {
 		if (inprogress) {
@@ -107,6 +124,25 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 			// Slice n' dice the data.
 			$scope.setSMC(smcdata);
+
+			// Figure out if the logged in user is in the SMC.
+			if ($scope.login_status) {
+
+				// Ok, see if their nick is in there.
+				var foundem = false;
+				for (var j = 0; j < smcdata.smcers.length; j++) {
+					var smcer = smcdata.smcers[j];
+					if (smcer.nick == $scope.username) {
+						foundem = true;
+						break;
+					}
+				}
+
+				$scope.in_smc = foundem;
+
+			} else {
+				$scope.in_smc = false;
+			}
 
 			// Say it's in process if it wasn't before.
 			if (!inprogress) {

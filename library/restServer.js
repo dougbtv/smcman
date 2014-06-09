@@ -42,6 +42,9 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.get('/api/view/:tinyURL', this.viewUpload);
 		server.get('/view/:tinyURL', this.viewUpload);
 
+		server.get('/api/joinOrLeaveSMC', this.joinOrLeaveSMC);
+		server.post('/api/joinOrLeaveSMC', this.joinOrLeaveSMC);
+		server.head('/api/joinOrLeaveSMC', this.joinOrLeaveSMC);
 
 	};
 
@@ -54,6 +57,26 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 
 	}
 
+	this.joinOrLeaveSMC = function(req, res, next) {
+
+		var input = req.params;
+
+		smcman.user.validateSession(input.username,input.session,function(isvalid){
+
+			if (isvalid) {
+
+				// Great, now, see if they're joining or leaving.
+				if (input.isjoining) {
+					smcman.smc.joinSMC(input.username);
+				} else {
+					smcman.smc.forfeitSMC(input.username);
+				}
+
+			}
+
+		});
+
+	}
 
 	this.liveSMCInfo = function(req, res, next) {
 

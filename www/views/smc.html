@@ -30,8 +30,17 @@
 
 		<div class="col-md-5">
 			<ul class="list-group">
+
 				<li class="list-group-item active">
-					<span style="color: white;"><strong>!whosin</strong></span>
+					<!-- !TODO: freaking vertical centering is not making me happy, DS. Decided to leave it be. -->
+					<div class="pull-left">
+						<span style="color: white;"><strong>!whosin</strong></span>
+					</div>
+					<div class="pull-right" ng-show="login_status">
+						<button type="button" ng-hide="in_smc" class="btn btn-sm btn-success pull-right" ng-click="joinOrLeaveSMC(true)">Join!</button>
+						<button type="button" ng-show="in_smc" class="btn btn-sm btn-danger pull-right" ng-click="joinOrLeaveSMC(false)">Quit!</button>
+					</div>
+					<div class='clearfix'></div>
 				</li>
 
 				<li class="list-group-item" ng-repeat="dude in smc.smcers">
