@@ -15,6 +15,7 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 	// Limits per page
 	var MAX_PER_PAGE = 5;
+	var MAX_IN_PAGINATOR = 5;
 
 	// Defaults
 	
@@ -90,10 +91,68 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 	};
 
+	$scope.buildPaginator = function(pageon,total) {
+
+		// Ahh maybe strings being passed through the URL.
+		total = parseInt(total);
+		pageon = parseInt(pageon);
+
+		// Ok, we need to figure out max
+		var totalpages = Math.ceil(total/MAX_PER_PAGE);
+
+		// Then, given the pageon, which items do we show in the paginator?
+		// Only show up to MAX_IN_PAGINATOR entries.
+		var paginator = [];
+
+		// We a boundary given the max in paginator... which is /2 and floor it.
+		// So, for example if we show a max of 5, we show 2 on either side. 5/2 = 2.5 = 2
+		var boundary = Math.floor(MAX_IN_PAGINATOR / 2);
+
+		// Given that boundary, how close are we to the edge?
+		var begin = pageon - boundary;
+		if (begin < 1) { begin = 1; }
+
+		var end = pageon + boundary;
+
+		// Push out the end if it's too short.
+
+			if (end > totalpages) { 
+				// This is the boundary at the end of the range.
+				end = totalpages;
+				begin = (totalpages - MAX_IN_PAGINATOR) + 1;
+			} else {
+				// This is the boundary at the beginning of the range.
+				if ((end - begin) < MAX_IN_PAGINATOR-1) {
+					end = MAX_IN_PAGINATOR;
+				}
+			}
+
+		for (var i = begin; i <= end; i++) {
+
+			var myclass = "";
+			if (i == pageon) {
+				myclass = "active";
+			}
+
+			paginator.push({
+				page: i,
+				class: myclass
+			});
+		}
+
+		console.log("!trace paginator: ",paginator);
+
+		$scope.paginator = paginator;
+		$scope.paginator_lastpage = totalpages;
+
+
+
+	}
+
 	$scope.getSMCPage = function(page) {
 
 		// Ok, get those SMCs.
-		console.log("Yoooooooooooooooo !trace I'm getting the smc page....");
+		console.log("Yoooooooooooooooo !trace I'm getting the smc page.... i'm on page: ",page);
 
 		$http.post('/api/getSMCList', { page: page, limit: MAX_PER_PAGE })
 			.success(function(data){
@@ -102,8 +161,10 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 				// Set which page we're on.
 				$scope.smc_pageon = page;
 				$scope.smc_list = data.smcs;
-				$scope.smc_total = data.total;
-				$scope.smc_totalpages = Math.ceil(data.total/MAX_PER_PAGE);
+
+				console.log("!trace SENDING PAGE: ",page);
+
+				$scope.buildPaginator(page,data.total);
 
 				console.log("!trace here's the list of smcs",$scope.smc_list);
 
