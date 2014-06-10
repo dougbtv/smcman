@@ -61,8 +61,32 @@
 		<h2>Previous SMCs</h2>
 	</div>
 
+	<div class="alert alert-info" ng-hide="login_status">
+		<h5>Did you know that you can vote on these if you're logged in? <a href="#/login">Login!</a></h5>
+	</div>
+
 	<div class="smcpane" ng-repeat="eachsmc in smc_list">
-		{{eachsmc.topic}}
+		<h4>{{eachsmc.topic}}</h4>
+		<p>Went for {{eachsmc.duration}} Minutes @ {{eachsmc.startsat}}<p>
+		<div class="smcentry" ng-repeat="entry in eachsmc.smcers">
+			
+			<div class="smcentryhead">
+				{{entry.votes}} Votes - {{entry.nick}}
+			</div>
+			
+			<div class="entryimagecontainer">
+		
+				<span ng-show="$parent.login_status">
+				
+					<span class="glyphicon glyphicon-unchecked entryglyphACTIVE" ng-click="submitVote(eachsmc._id,entry.nick)" ng-hide="entry.user_voted"></span>
+					<span class="glyphicon glyphicon-check entryglyphSELECTED" ng-show="entry.user_voted"></span>
+				
+				</span>
+				
+				<img src="{{entry.url}}" width="325">
+			</div>
+			
+		</div>
 	</div>
 
 	<ul class="pagination">

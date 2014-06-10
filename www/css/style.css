@@ -1,13 +1,4 @@
-.clock-minutes {
-  border-top-left-radius: 6px 6px;
-  border-bottom-left-radius: 6px 6px;
-  /* background-color: #428bca; */
-  background-image: linear-gradient(to bottom,#428bca 0,#3278b3 100%);
-  color: white;
-  font-size: 45px;
-  text-align:center;
-  font-weight:500;
-}
+/* ------------------------------------------------------------------ SMC List Styles */
 
 .smcpane {
 
@@ -22,6 +13,72 @@
   margin-top: 8px;
   margin-bottom: 8px;
 
+}
+
+.smcentry {
+  border-top-right-radius: 6px 6px;
+  border-top-left-radius: 6px 6px;
+  border-bottom-right-radius: 6px 6px;
+  border-bottom-left-radius: 6px 6px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border: 1px solid;
+  border-color: #2aabd2;
+
+}
+
+.smcentryhead {
+
+  font-weight: bold;
+  background-image: linear-gradient(to bottom,#d9edf7 0,#b9def0 100%);
+  margin-bottom: 5px;
+
+}
+
+.entryglyphACTIVE {
+
+  cursor: pointer;
+  font-size:24px;
+  color: #0EB100;
+  margin-right: 10px;
+
+}
+
+.entryglyphINACTIVE {
+
+  cursor: pointer;
+  font-size:24px;
+  color: #949494;
+  margin-right: 10px;
+
+}
+
+.entryglyphSELECTED {
+
+  font-size:24px;
+  color: #0EB100;
+  margin-right: 10px;
+
+}
+
+.entryimagecontainer {
+
+  margin-bottom: 5px;
+  margin-left: 15px;
+
+}
+
+/* ------------------------------------------------------------------ SMC Clock Styles */
+
+.clock-minutes {
+  border-top-left-radius: 6px 6px;
+  border-bottom-left-radius: 6px 6px;
+  /* background-color: #428bca; */
+  background-image: linear-gradient(to bottom,#428bca 0,#3278b3 100%);
+  color: white;
+  font-size: 45px;
+  text-align:center;
+  font-weight:500;
 }
 
 .clock-seconds {

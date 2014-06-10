@@ -38,8 +38,10 @@ module.exports = function(smcman, bot, chat, mongoose, db, socketserver, constan
 			nick: String,				// ... their name.
 			uploaded: Boolean,			// ... did they upload?
 			url: String,				// ... what URL did they upload to?
+			votes: Number,				// Number of votes 
+			voters: [],					// Who voted.
 		}],
-
+	
 	}, { collection: 'smcs' });
 
 	// A comma delimited list of smcers.
@@ -219,7 +221,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, socketserver, constan
 					this.smcComplete();
 				} else {
 					console.log("NOTICE: SMC cancelled as there weren't enough uploaders.");
-					chat.say("smc_not_enoughuploaders",[smc.nicklist]); // !bang
+					chat.say("smc_not_enoughuploaders",[smc.nicklist]);
 					this.tearDownSMC();
 				}
 
@@ -529,6 +531,58 @@ module.exports = function(smcman, bot, chat, mongoose, db, socketserver, constan
 
 			});
 
+		});
+
+	}
+
+	// Here we can handle the submission of votes.
+	this.submitVote = function(id,votefornick,votefromnick,callback) {
+
+		console.log("!trace INTO SUBMIT VOTE: %s / %s",id,votefornick);
+
+		// Ok let's pull up that smc.
+		// !bang
+		SMC.findOne({_id: id}, function(err,thesmc) { 
+			if (!err) {
+				
+				// Ok, now that looks good, we can go ahead and:
+				// remove old vote
+				// cycle through all entries.
+				for (var i = 0; i < thesmc.smcers.length; i++) {
+					var entry = thesmc.smcers[i];
+					if (typeof entry.voters != 'undefined') {
+						if (entry.voters.indexOf(votefromnick) > -1) {
+							thesmc.smcers[i].voters.remove(votefromnick);
+							thesmc.smcers[i].votes--;
+						}
+					}
+				}
+
+				// add new vote
+				for (var i = 0; i < thesmc.smcers.length; i++) {
+					if (thesmc.smcers[i].nick == votefornick) {
+						// Great, add this vote.
+						thesmc.smcers[i].voters.push(votefromnick);
+						if (typeof thesmc.smcers[i].votes) {
+							thesmc.smcers[i].votes = 1;
+						} else {
+							thesmc.smcers[i].votes++;
+						}
+
+						break;
+					}
+				}
+
+				// save the document.
+				thesmc.save();
+
+				// Now call it back.
+				callback(false);
+
+
+			} else {
+				console.log("ERROR: I couldn't find the smc when I was trying to submit a vote. Dang.");
+			}
 		});
 
 	}

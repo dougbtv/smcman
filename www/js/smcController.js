@@ -35,8 +35,7 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 		// Set that it's the first page.
 		$scope.smc_pageon = 1;
 	}
-	console.log("What's the page param? ",$scope.smc_pageon);
-
+	
 	$scope.smcClockUpdate = function() {
 
 		if (inprogress) {
@@ -140,11 +139,29 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 			});
 		}
 
-		console.log("!trace paginator: ",paginator);
-
 		$scope.paginator = paginator;
 		$scope.paginator_lastpage = totalpages;
 
+	}
+
+	$scope.submitVote = function(id,nick) {
+
+		console.log("Vote on: ",id);
+		console.log("Vote for: ",nick);
+
+
+		// Ok, now call up the API.
+		$http.post('/api/voteForSMC', { username: $cookies.username, session: $cookies.session, voteon: id, votefor: nick })
+			.success(function(data){
+
+				// OK, we can now go ahead and pull up this page again, showing the new votes.
+				$scope.getSMCPage($scope.smc_pageon);
+
+			}.bind(this)).error(function(data){
+
+				console.log("ERROR: Sooo, had trouble submitting that vote. sucks.");
+
+			}.bind(this));
 
 
 	}
@@ -152,7 +169,6 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 	$scope.getSMCPage = function(page) {
 
 		// Ok, get those SMCs.
-		console.log("Yoooooooooooooooo !trace I'm getting the smc page.... i'm on page: ",page);
 
 		$http.post('/api/getSMCList', { page: page, limit: MAX_PER_PAGE })
 			.success(function(data){
@@ -160,13 +176,46 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 				// Alright, this is good.
 				// Set which page we're on.
 				$scope.smc_pageon = page;
+
+				// So, we're going to cycle the list.
+				// We'll find out if we've voted.
+				// If we're logged in, that is.
+				if ($scope.login_status) {
+
+					for (var i = 0; i < data.smcs.length; i++) {
+						var eachsmc = data.smcs[i];
+
+						// Cycle through the entries.
+						for (var j = 0; j < eachsmc.smcers.length; j++) {
+
+							var voters = eachsmc.smcers[j].voters;
+							var votes = eachsmc.smcers[j].votes;
+
+							if (typeof votes == 'undefined') {
+								eachsmc.smcers[j].votes = 0;
+							}
+
+							if (typeof voters != 'undefined') {
+
+								// Did I vote for this?
+								if (voters.indexOf($cookies.username) > -1) {
+									// Yes, I voted for this.
+									data.smcs[i].smcers[j].user_voted = true;
+									data.smcs[i].voted = true;
+									break;
+								}
+
+							}
+
+						}
+
+					}
+
+				}
+
 				$scope.smc_list = data.smcs;
 
-				console.log("!trace SENDING PAGE: ",page);
-
 				$scope.buildPaginator(page,data.total);
-
-				console.log("!trace here's the list of smcs",$scope.smc_list);
 
 
 			}.bind(this)).error(function(data){
@@ -179,8 +228,6 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 	// Make a call to get the page in the URL (or the default if it's not specified)....
 	$scope.getSMCPage($scope.smc_pageon);
-
-
 
 	$scope.joinOrLeaveSMC = function(joinit) {
 

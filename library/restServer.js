@@ -50,6 +50,9 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.post('/api/getSMCList', this.getSMCList);
 		server.head('/api/getSMCList', this.getSMCList);
 
+		server.get('/api/voteForSMC', this.voteForSMC);
+		server.post('/api/voteForSMC', this.voteForSMC);
+		server.head('/api/voteForSMC', this.voteForSMC);
 
 	};
 
@@ -58,6 +61,34 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		// And then fire up the server.
 		server.listen(constants.SERVER_PORT, function() {
 			console.log(server.name + ' listening at ' + server.url);
+		});
+
+	}
+
+	this.voteForSMC = function(req, res, next) {
+
+		var input = req.params;
+
+		smcman.user.validateSession(input.username,input.session,function(isvalid){
+
+			if (isvalid) {
+
+				// Ok, good, this user session is valid. We can submit a vote.
+				smcman.smc.submitVote(input.voteon,input.votefor,input.username,function(){
+
+					res.contentType = 'json';
+					res.send({});
+
+
+				});
+
+
+			} else {
+
+				console.log("ERROR: Issue validing user session while submitting vote.");
+
+			}
+
 		});
 
 	}
