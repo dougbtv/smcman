@@ -100,7 +100,7 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 
     }
 	
-	//Say something that is an action (the good old, /me smokes protocoldoug up with a bong)
+	//Say something that is an action (the good old, /me does things)
 	this.action = function(identifier,parameters) {
 	
 		this.say(identifier, parameters, 'action');

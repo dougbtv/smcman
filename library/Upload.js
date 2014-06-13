@@ -72,7 +72,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	}, { collection: 'counters' });
 	var Counter = mongoose.model('Counter', counterSchema);
 
-	this.newUpload = function(from,is_smc) {
+	this.newUpload = function(from,is_smc,from_webapp,callback) {
 
 		// REMOVED.
 		// Might be nice in the future, but, it's spammy during an SMC.
@@ -85,6 +85,9 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		// Good we can upload.
 		// By default, it's not from an SMC.
 		if (typeof is_smc == 'undefined') { is_smc = false;	}
+
+		// Is this a call from the webapp?
+		if (typeof from_webapp == 'undefined') { from_webapp = false;	}
 
 		// Now we want an instance of it.
 		var upload = new Upload;
@@ -101,7 +104,10 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		console.log("!trace new Upload doc: %j",upload);
 
 		// Get an upload URL, and then whisper it to the requestor.
-		chat.whisper(from,"upload_url",[from,upload.upload_url]);
+		// Only when it's not from the web app..
+		if (!from_webapp) {
+			chat.whisper(from,"upload_url",[from,upload.upload_url]);
+		}
 
 		// Now we can save that.
 		upload.save();
@@ -116,7 +122,11 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 		}.bind(this));
 
-		console.log("!trace scheduled job.");
+		// Ok, if it's from the webapp, we return a local url for uploading.
+		if (from_webapp) {
+			callback(key);
+		}
+
 
 	}.bind(this);
 

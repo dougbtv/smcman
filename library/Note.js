@@ -32,25 +32,28 @@ module.exports = function(bot, chat, mongoose, db, constants, privates) {
 	// Here's the note handler.
 	// When someone speaks, we check if we have any notes for them.
 	this.handler = function(speaker) {
-		// console.log('note handler',speaker);
-		
+
 		this.Note.find({to: speaker},function (err, notes) {
 			
-			for (i in notes) {
-				// Ok, given each note for this person... Send them a mesasge.
-				// How long ago was that?
-				ago = this.moment.unix(notes[i].sent).fromNow();
-				
-				// Now, let's send that note to the person it's intended for.
-				this.chat.say("note_send",[speaker,notes[i].from,ago,notes[i].note]);
-				
-				// Now you can delete that from mongo.
-				this.Note.findOne({ _id: notes[i]._id }).remove(function(err){
-					if (err) {
-						throw new Error("Couldn't delete that.");
-					}
-				}); 
-				
+			if (notes.length) {
+		
+				for (i = 0; i < notes.length; i++) {
+					// Ok, given each note for this person... Send them a mesasge.
+					// How long ago was that?
+					ago = this.moment.unix(notes[i].sent).fromNow();
+					
+					// Now, let's send that note to the person it's intended for.
+					this.chat.say("note_send",[speaker,notes[i].from,ago,notes[i].note]);
+					
+					// Now you can delete that from mongo.
+					this.Note.findOne({ _id: notes[i]._id }).remove(function(err){
+						if (err) {
+							throw new Error("Couldn't delete that.");
+						}
+					}); 
+					
+				}
+
 			}
 			
 		}.bind(this));

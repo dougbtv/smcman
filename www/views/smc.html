@@ -30,8 +30,17 @@
 
 		<div class="col-md-5">
 			<ul class="list-group">
+
 				<li class="list-group-item active">
-					<span style="color: white;"><strong>!whosin</strong></span>
+					<!-- !TODO: freaking vertical centering is not making me happy, DS. Decided to leave it be. -->
+					<div class="pull-left">
+						<span style="color: white;"><strong>!whosin</strong></span>
+					</div>
+					<div class="pull-right" ng-show="login_status">
+						<button type="button" ng-hide="in_smc" class="btn btn-sm btn-success pull-right" ng-click="joinOrLeaveSMC(true)">Join!</button>
+						<button type="button" ng-show="in_smc" class="btn btn-sm btn-danger pull-right" ng-click="joinOrLeaveSMC(false)">Quit!</button>
+					</div>
+					<div class='clearfix'></div>
 				</li>
 
 				<li class="list-group-item" ng-repeat="dude in smc.smcers">
@@ -48,3 +57,45 @@
 
 	</div>
 	
+	<div class="page-header">
+		<h2>Previous SMCs</h2>
+	</div>
+
+	<div class="alert alert-info" ng-hide="login_status">
+		<h5>Did you know that you can vote on these if you're logged in? <a href="#/login">Login!</a></h5>
+	</div>
+
+	<div class="smcpane" ng-repeat="eachsmc in smc_list">
+		<h4>{{eachsmc.topic}}</h4>
+		<p>Went for {{eachsmc.duration}} Minutes @ {{eachsmc.startsat}}<p>
+		<div class="smcentry" ng-repeat="entry in eachsmc.smcers">
+			
+			<div class="smcentryhead">
+				{{entry.votes}} Votes - {{entry.nick}}
+			</div>
+			
+			<div class="entryimagecontainer">
+		
+				<span ng-show="$parent.login_status">
+				
+					<span class="glyphicon glyphicon-unchecked entryglyphACTIVE" ng-click="submitVote(eachsmc._id,entry.nick)" ng-hide="entry.user_voted"></span>
+					<span class="glyphicon glyphicon-check entryglyphSELECTED" ng-show="entry.user_voted"></span>
+				
+				</span>
+				
+				<img src="{{entry.url}}" width="325">
+			</div>
+			
+		</div>
+	</div>
+
+	<ul class="pagination">
+		<li><a href="#/smc?page=1">&laquo;</a></li>
+
+		<li ng-repeat="page in paginator" class="{{page.class}}">
+			<a href="#/smc?page={{page.page}}">{{page.page}}</a>
+		</li>
+
+		<li><a href="#/smc?page={{paginator_lastpage}}">&raquo;</a></li>
+	</ul>
+

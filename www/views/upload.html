@@ -13,6 +13,10 @@
 			<p>In order to upload a file, you'll need to visit us on irc.freenode.net and use the<code>!upload</code> function of the bot</p>
 		</div>
 
+		<div class="container" ng-switch-when="loggedin">
+			<img src="/images/ajax-loader.gif" style="padding-right: 15px;" />Cool, you're logged in, hold on a sec, and we'll have you upload a file.
+		</div>
+
 
 		<div class="container" ng-switch-when="upload">
 			Do upload <HR />

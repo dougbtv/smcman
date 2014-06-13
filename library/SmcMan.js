@@ -308,7 +308,7 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 
 		var cc = privates.COMMAND_CHARACTER; // cc = command character.
 
-		console.log("Command character: " + cc);
+		// console.log("!trace - Command character: " + cc);
 
 		var re_matchfirst =  new RegExp('^' + cc);
 		var re_matchformat = new RegExp('^' + cc + '\\w+\\s.+$');
@@ -316,11 +316,13 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 		var re_getargs = 	 new RegExp('^' + cc + '.+?\\s(.+)$');
 		var re_getbareword = new RegExp('^' + cc + '(.+)?');
 
-		console.log("!trace re_matchfirst",re_matchfirst);
-		console.log("!trace re_matchformat",re_matchformat);
-		console.log("!trace re_getcommand",re_getcommand);
-		console.log("!trace re_getargs",re_getargs);
-		console.log("!trace re_getbareword",re_getbareword);
+		/*
+			console.log("!trace re_matchfirst",re_matchfirst);
+			console.log("!trace re_matchformat",re_matchformat);
+			console.log("!trace re_getcommand",re_getcommand);
+			console.log("!trace re_getargs",re_getargs);
+			console.log("!trace re_getbareword",re_getbareword);
+		*/
 
 		
 		if (re_matchfirst.test(text)) {

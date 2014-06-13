@@ -1,4 +1,4 @@
-smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeout', '$interval', 'smcSocketService', function($scope,$location,$http,$timeout,$interval,socketservice) {
+smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeout', '$interval', '$cookies', 'smcSocketService', function($scope,$location,$http,$timeout,$interval,$cookies,socketservice) {
 
 	// SMC in progress? 
 	var inprogress = false;
@@ -13,6 +13,10 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 	var PHASE_UPLOAD = 3;
 	var PHASE_RENDER = 4;
 
+	// Limits per page
+	var MAX_PER_PAGE = 5;
+	var MAX_IN_PAGINATOR = 5;
+
 	// Defaults
 	
 	// $scope.message = "quux";
@@ -25,6 +29,13 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 	var promise_clock;
 	var promise_poll;
 
+	// Here's our URL params.
+	$scope.smc_pageon = $location.search().page;
+	if (typeof $scope.smc_pageon == 'undefined') {
+		// Set that it's the first page.
+		$scope.smc_pageon = 1;
+	}
+	
 	$scope.smcClockUpdate = function() {
 
 		if (inprogress) {
@@ -79,6 +90,161 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 	};
 
+	$scope.buildPaginator = function(pageon,total) {
+
+		// Ahh maybe strings being passed through the URL.
+		total = parseInt(total);
+		pageon = parseInt(pageon);
+
+		// Ok, we need to figure out max
+		var totalpages = Math.ceil(total/MAX_PER_PAGE);
+
+		// Then, given the pageon, which items do we show in the paginator?
+		// Only show up to MAX_IN_PAGINATOR entries.
+		var paginator = [];
+
+		// We a boundary given the max in paginator... which is /2 and floor it.
+		// So, for example if we show a max of 5, we show 2 on either side. 5/2 = 2.5 = 2
+		var boundary = Math.floor(MAX_IN_PAGINATOR / 2);
+
+		// Given that boundary, how close are we to the edge?
+		var begin = pageon - boundary;
+		if (begin < 1) { begin = 1; }
+
+		var end = pageon + boundary;
+
+		// Push out the end if it's too short.
+
+			if (end > totalpages) { 
+				// This is the boundary at the end of the range.
+				end = totalpages;
+				begin = (totalpages - MAX_IN_PAGINATOR) + 1;
+			} else {
+				// This is the boundary at the beginning of the range.
+				if ((end - begin) < MAX_IN_PAGINATOR-1) {
+					end = MAX_IN_PAGINATOR;
+				}
+			}
+
+		for (var i = begin; i <= end; i++) {
+
+			var myclass = "";
+			if (i == pageon) {
+				myclass = "active";
+			}
+
+			paginator.push({
+				page: i,
+				class: myclass
+			});
+		}
+
+		$scope.paginator = paginator;
+		$scope.paginator_lastpage = totalpages;
+
+	}
+
+	$scope.submitVote = function(id,nick) {
+
+		console.log("Vote on: ",id);
+		console.log("Vote for: ",nick);
+
+
+		// Ok, now call up the API.
+		$http.post('/api/voteForSMC', { username: $cookies.username, session: $cookies.session, voteon: id, votefor: nick })
+			.success(function(data){
+
+				// OK, we can now go ahead and pull up this page again, showing the new votes.
+				$scope.getSMCPage($scope.smc_pageon);
+
+			}.bind(this)).error(function(data){
+
+				console.log("ERROR: Sooo, had trouble submitting that vote. sucks.");
+
+			}.bind(this));
+
+
+	}
+
+	$scope.getSMCPage = function(page) {
+
+		// Ok, get those SMCs.
+
+		$http.post('/api/getSMCList', { page: page, limit: MAX_PER_PAGE })
+			.success(function(data){
+
+				// Alright, this is good.
+				// Set which page we're on.
+				$scope.smc_pageon = page;
+
+				// So, we're going to cycle the list.
+				// We'll find out if we've voted.
+				// If we're logged in, that is.
+				if ($scope.login_status) {
+
+					for (var i = 0; i < data.smcs.length; i++) {
+						var eachsmc = data.smcs[i];
+
+						// Cycle through the entries.
+						for (var j = 0; j < eachsmc.smcers.length; j++) {
+
+							var voters = eachsmc.smcers[j].voters;
+							var votes = eachsmc.smcers[j].votes;
+
+							if (typeof votes == 'undefined') {
+								eachsmc.smcers[j].votes = 0;
+							}
+
+							if (typeof voters != 'undefined') {
+
+								// Did I vote for this?
+								if (voters.indexOf($cookies.username) > -1) {
+									// Yes, I voted for this.
+									data.smcs[i].smcers[j].user_voted = true;
+									data.smcs[i].voted = true;
+									break;
+								}
+
+							}
+
+						}
+
+					}
+
+				}
+
+				$scope.smc_list = data.smcs;
+
+				$scope.buildPaginator(page,data.total);
+
+
+			}.bind(this)).error(function(data){
+
+				console.log("ERROR: Can't quite get a page worth of SMCs");
+
+			}.bind(this));
+
+	}
+
+	// Make a call to get the page in the URL (or the default if it's not specified)....
+	$scope.getSMCPage($scope.smc_pageon);
+
+	$scope.joinOrLeaveSMC = function(joinit) {
+
+		// Ok, now call up the API.
+		$http.post('/api/joinOrLeaveSMC', { username: $cookies.username, session: $cookies.session, isjoining: joinit })
+			.success(function(data){
+
+				// awesome, we don't have to do anything, really, right?
+
+			}.bind(this)).error(function(data){
+
+				console.log("ERROR: Can't quite leave or join an SMC.");
+
+			}.bind(this));
+
+	}
+
 	// Basically just stops the clock.
 	$scope.stopSMC = function() {
 		if (inprogress) {
@@ -107,6 +273,25 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 			// Slice n' dice the data.
 			$scope.setSMC(smcdata);
+
+			// Figure out if the logged in user is in the SMC.
+			if ($scope.login_status) {
+
+				// Ok, see if their nick is in there.
+				var foundem = false;
+				for (var j = 0; j < smcdata.smcers.length; j++) {
+					var smcer = smcdata.smcers[j];
+					if (smcer.nick == $scope.username) {
+						foundem = true;
+						break;
+					}
+				}
+
+				$scope.in_smc = foundem;
+
+			} else {
+				$scope.in_smc = false;
+			}
 
 			// Say it's in process if it wasn't before.
 			if (!inprogress) {
