@@ -167,6 +167,10 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					case "insult":	toys.funcommands(command); break;
 					break;
 					
+					case "seen":
+					case "lastseen": toys.lastseen(command, from); break;
+					break;
+					
 					
 					// ---------------------------------------------------------
 					// -- General Purpose Commands
@@ -174,9 +178,7 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					
 					// Same with some of the Toy commands, use one code block
 					// and just tailor the block in case of each identifier
-					case "image":
 					case "googleurl":
-					case "imageurl":
 					case "google": general.googlesearch(command, from); break;
 					break;
 					

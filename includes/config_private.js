@@ -21,6 +21,7 @@ define("MONGO_CONNECT_STRING",'mongodb://localhost/smcman');
 define("IRC_SERVER",'irc.freenode.net');
 define("IRC_CHANNEL",'#smcbot');
 define("IRC_BOTNAME",'zenodebottest');
+define("IRC_REALNAME", 'nodeJS IRC client');
 // -- Identification
 define("IRC_DO_IDENTIFY",false);
 define("IRC_IDENTPASS",'imnotregistered');

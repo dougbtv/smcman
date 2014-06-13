@@ -27,7 +27,7 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	this.Chat = this.mongoose.model('Chat', this.chatSchema);
 	
     // Now, let's create a method to "say" something to a channel.
-    this.say = function(identifier,parameters,private_message,chatmethod) {
+    this.say = function(identifier,parameters,chatmethod,private_message) {
 		if (typeof chatmethod == 'undefined') { chatmethod = false; }
     	if (typeof private_message == 'undefined') { private_message = false; }
 		
@@ -62,15 +62,22 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 						output = output.replace(re,parameters[i]);
 					}
 				
-					// Finally, say it through IRC.
-					if (!private_message) {
-						if(!chatmethod) {
+				// Instead of using a if and else statement we can just use switching!
+				// this makes adding in new types of chat messaging easier and cleaner
+					switch(chatmethod) {
+						case "whisper": this.nickSay(private_message,output); break;
+						break;
+						
+						case "action": this.ircAction(output); break;
+						break;
+						
+						case "whois": this.ircWhois(output); break;
+						break;
+						
+						//By default it will be outputted to the channel
+						default: 
 						this.ircSay(output);
-						} else {
-						this.ircAction(output);
-						}
-					} else {
-						this.nickSay(private_message,output);
+						break;
 					}
 					
 				} else {
@@ -89,14 +96,19 @@ module.exports = function(bot, mongoose, db, constants, privates) {
     this.whisper = function(nick,identifier,parameters) {
 
     	// Tell say it's to a nick.
-    	this.say(identifier,parameters,nick);
+    	this.say(identifier, parameters, 'whisper', nick);
 
     }
 	
 	//Say something that is an action (the good old, /me smokes protocoldoug up with a bong)
 	this.action = function(identifier,parameters) {
 	
-		this.say(identifier,parameters,false,true);
+		this.say(identifier, parameters, 'action');
+	}
+	
+	//IRC whois
+	this.whois = function(identifier,parameters) {
+		this.say(identifier, parameters, 'whois');
 	}
     
     // Give me a random number based on the number elements in an array.
@@ -132,6 +144,15 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 		}
 	};
     
+	this.ircWhois = function(message) {
+		//fetch whois data
+		if(this.privates.IRC_ENABLED) {
+		this.bot.whois(message, callback);
+		} else { 
+			console.log('bot would have outputte:', message); 
+		} 
+	}
+	
     this.ircSay = function(message) {
     	if (this.privates.IRC_ENABLED) {
 			this.bot.say(this.privates.IRC_CHANNEL, message);

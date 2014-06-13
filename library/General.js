@@ -10,22 +10,27 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		// Also to note, we could dynamically set this based on google.resultsPerPage
 		// but for #smc, you wont need any higher
 		var i = Math.floor(Math.random()*4);
-		
-		google(command.args, function(err, next, links) {
-			if (err) console.error(err);
-			// This is for Debugging!	 
-			/*	console.log("Google Result: ", links[i].title + ' :: ' + links[i].link);
-				console.log("Rand Number: ", i); */
-		
-		// NOTE: Some results -will- come up with a null link and so we count that as
-		// no results to show, this isn't a flaw in the code, so much as the module is only
-		// scrapping the results page, Its not a huge issue, since this isnt a api module	
-			if(!links[i].link) {
-				chat.say("google_no_results", [from, command.args]);
-			} else {
-				chat.say("google", [command.args, links[i].link]);
-			}
-		});
+			
+		var url = 'http://www.google.com/search?hl=en&q='+command.args+'&ie=UTF-8&oe=UTF-8';
+		//console.log("googleurl: ", url);
+		if(command.command == "google") {
+			google(command.args, function(err, next, links) {
+		// NOTE: Some results -will- come up with a null/invalid link and so we count that as
+		// no results to show, this isn't a flaw in our code, so much as the module is only a 
+		// scrapper, not a api (api's are strongly not recommended due to auth and so many
+		// queries per day or month (stuff can be open for abuse))
+				if(!command.args) {
+					chat.say("google_query_empty", []);
+				} else {
+					if(!links[i].link) {
+						chat.say("google_no_valid_link", [command.args, url]);
+					} else {
+						chat.say("google", [command.args, links[i].link]);
+					}
+				}
+			});
+		} else if(command.command == "googleurl") {
+			chat.say("googleurl", [command.args, url]);
+		}
 	}
-
 };
