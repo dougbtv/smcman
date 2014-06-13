@@ -23,6 +23,10 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.post('/api/verifyUploadKey', this.verifyUploadKey);
 		server.head('/api/verifyUploadKey', this.verifyUploadKey);
 
+		server.get('/api/generateUploadKey', this.generateUploadKey);
+		server.post('/api/generateUploadKey', this.generateUploadKey);
+		server.head('/api/generateUploadKey', this.generateUploadKey);
+
 		server.get('/api/upload', this.fileUpload);
 		server.post('/api/upload', this.fileUpload);
 		server.head('/api/upload', this.fileUpload);
@@ -53,6 +57,8 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.get('/api/voteForSMC', this.voteForSMC);
 		server.post('/api/voteForSMC', this.voteForSMC);
 		server.head('/api/voteForSMC', this.voteForSMC);
+
+		
 
 	};
 
@@ -252,9 +258,31 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 			}
 		});
 
-		
+	}.bind(this);
 
+	this.generateUploadKey = function(req, res, next) {
 
+		var input = req.params;
+
+		smcman.user.validateSession(input.username,input.session,function(isvalid){
+
+			if (isvalid) {
+
+				// Great, go and create a new upload for that guy.
+				// newUpload = function(from,is_smc,from_webapp,callback) {
+				smcman.upload.newUpload(input.username,false,true,function(key){
+					// Great, send that key back.
+					res.contentType = 'json';
+					res.send({key: key});
+				});
+
+			} else {
+
+				console.log("ERROR: Damn, tried to validate a user, but, didn't quite work out, user: ",input.username);
+
+			}
+
+		}.bind(this));
 
 	}.bind(this);
 

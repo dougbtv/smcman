@@ -1,5 +1,5 @@
 
-function uploadController($scope, $location, $http, $upload) {
+function uploadController($scope, $location, $http, $cookies, $upload) {
 
 	$scope.verifyUploadKey = function() {
 
@@ -7,6 +7,7 @@ function uploadController($scope, $location, $http, $upload) {
 		var uploadkey = params.key;
 
 		var invalid_request = true;
+		var logged_in_nokey = false;
 
 		if (typeof uploadkey != 'undefined') {
 
@@ -34,10 +35,34 @@ function uploadController($scope, $location, $http, $upload) {
 				invalid_request = false;
 			}
 
+		} else {
+			// Ok, if they're logged in, we can gen a new key for them.
+			if ($scope.login_status) {
+				// If they're logged in, we'll give 'em the option to upload one.
+				logged_in_nokey = true;
+				$scope.uploadMode = "loggedin";
+
+				// Alright, we can ask the API to gen us a key now.
+				// Then, we'll just forward to the page with that key.
+				// ...I think that's best for now.
+
+				// Make the API request.
+				$http.post('/api/generateUploadKey', { username: $cookies.username, session: $cookies.session })
+					.success(function(data) {
+						// Alright, we got the key back, sooo.... we're good to go to move the user along.
+						$location.search('key',data.key);
+					})
+					.error(function(data) {
+						
+						console.log("ERROR: I had trouble generating an upload key.");
+						
+					});
+
+			}
 		}
 
 		// Give them the sorry / default page if there's no valid key request.
-		if (invalid_request) {
+		if (invalid_request && !logged_in_nokey) {
 			$scope.uploadMode = "sorry";
 		}
 
