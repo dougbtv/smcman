@@ -167,6 +167,10 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 					case "insult":	toys.funcommands(command); break;
 					break;
 					
+					case "seen":
+					case "lastseen": toys.lastseen(command, from); break;
+					break;
+					
 					
 					// ---------------------------------------------------------
 					// -- General Purpose Commands

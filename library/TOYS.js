@@ -27,9 +27,6 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		if(command.command == 'huggles') { givencommand = 'hug'; }
 		if(command.command == 'give') { givencommand = 'beer'; }
 		
-		
-		
-		
 		// At this stage the max number of arg's is two, so setting this up hard coded to only
 		// accept a max of two is fine
 		if(!command.arglist) {
@@ -52,7 +49,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 	}
 	
 	this.lastseen = function(command, from) {
-	
+
 	}
 	
 };
