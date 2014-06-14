@@ -23,7 +23,12 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		complete: Boolean, 		// Is the upload complete?
 		tiny_url: Number,		// What's it's tiny url ID?
 		deleted: Boolean,		// Is this removed?
-
+		legacy: {				// Exists for legacy items, only.
+			recnum: Number,		// Record number from mysql.
+			secret: String,		// Old secret.
+			file: String,		// The file path (probably most important.)
+			category: String,	// Category from filemanage, likely obsolete.
+		},
 	}, { collection: 'uploads' });
 
 	// The URL to upload to.
