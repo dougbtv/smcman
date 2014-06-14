@@ -115,16 +115,18 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 		// Push out the end if it's too short.
 
-			if (end > totalpages) { 
-				// This is the boundary at the end of the range.
-				end = totalpages;
-				begin = (totalpages - MAX_IN_PAGINATOR) + 1;
-			} else {
-				// This is the boundary at the beginning of the range.
-				if ((end - begin) < MAX_IN_PAGINATOR-1) {
-					end = MAX_IN_PAGINATOR;
-				}
+		if (end > totalpages) { 
+			// This is the boundary at the end of the range.
+			end = totalpages;
+			begin = (totalpages - MAX_IN_PAGINATOR) + 1;
+			if (begin < 1) { begin = 1;}
+
+		} else {
+			// This is the boundary at the beginning of the range.
+			if ((end - begin) < MAX_IN_PAGINATOR-1) {
+				end = MAX_IN_PAGINATOR;
 			}
+		}
 
 		for (var i = begin; i <= end; i++) {
 
