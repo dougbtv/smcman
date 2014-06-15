@@ -40,6 +40,12 @@ smcFrontEnd.config(function($routeProvider) {
 				controller  : 'uploadController'
 			})
 
+			// route for the files page
+			.when('/files', {
+				templateUrl : 'views/files.html',
+				controller  : 'filesController'
+			})
+
 			// route for the login page
 			.when('/login', {
 				templateUrl : 'views/login.html',

@@ -27,7 +27,6 @@
 				description: 
 				   category: Other SMC's
 
-
 			*/
 
 			// print_r($hosting);

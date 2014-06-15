@@ -1,0 +1,50 @@
+	<div class="row featurette" ng-hide="filesuser">
+		<div class="page-header">
+			<h1>Find Files</h1>
+		</div>
+
+		<div class="form-group">
+			<label for="searchnick" class="col-sm-2 control-label">Search by user</label>
+				<div class="col-sm-10">
+				<input type="text" class="form-control" placeholder="Search by username (regex accepted.)" ng-model="searchnick" ng-change="searchByNick()">
+			</div>
+		</div>
+		<div class="clearfix"></div>
+
+		<div ng-switch="search_status" style="padding-top: 15px;">
+
+			<div ng-switch-when="tooshort" class="alert alert-warning" >
+				<strong>Try this...</strong> Search by two characters or more.
+			</div>
+
+			<div ng-switch-when="emptysearch" class="alert alert-info" >
+				<strong>Search for a user</strong> Enter a username, and we'll search for them, to show you their files.
+			</div>
+
+			<div ng-switch-when="noresults" class="alert alert-warning" >
+				<strong>Try this...</strong> Search by two characters or more.
+			</div>
+
+			<div ng-switch-when="results">
+			
+				<div class="col-sm-4">
+				<div class="list-group">
+					<a ng-repeat="nick in search_result" href="#/files?user={{nick}}" class="list-group-item">{{nick}}</a>
+				</div>
+				</div><!-- /.col-sm-4 -->
+
+			</div>
+
+
+		</div>
+
+	</div>
+
+	<div class="row featurette" ng-show="filesuser">
+
+		<div class="page-header">
+			<h1>Files for {{filesuser}}</h1>
+		</div>
+
+		We have a user!
+	</div>

@@ -58,6 +58,9 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.post('/api/voteForSMC', this.voteForSMC);
 		server.head('/api/voteForSMC', this.voteForSMC);
 
+		server.get('/api/searchForFilesNick', this.searchForFilesNick);
+		server.post('/api/searchForFilesNick', this.searchForFilesNick);
+		server.head('/api/searchForFilesNick', this.searchForFilesNick);
 		
 
 	};
@@ -68,6 +71,23 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.listen(constants.SERVER_PORT, function() {
 			console.log(server.name + ' listening at ' + server.url);
 		});
+
+	}
+
+	this.searchForFilesNick = function(req, res, next) {
+
+		// Make a new regex from what they search by.
+		var nick = req.params.nick;
+		var re_search = new RegExp(nick,"i");
+
+		// Now let's search through users.
+		smcman.user.searchForUsers(re_search,function(nicks){
+
+			res.contentType = 'json';
+			res.send({nicks: nicks});
+
+		});
+
 
 	}
 
