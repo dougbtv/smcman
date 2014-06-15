@@ -1,12 +1,43 @@
 smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$cookies', 'smcSocketService', function($scope,$location,$http,$cookies,socketservice) {
 
+	var DEFAULT_LABEL = "{All Labels}";
+
 	// Constructor at the bottom, so I can define the methods....
 
+	// Set the label to filter by.
+	$scope.setLabel = function() {
+
+		// Hey, we can get the files given this guy.
+		$scope.getFiles();
+
+	}
+
+	$scope.getFiles = function(nick,label) {
+
+		
+
+	}
+
 	// List files for a particular user.
-	$scope.getFilesForUser = function() {
+	$scope.getLabelsForUser = function() {
+
+		$http.post('/api/getLabels', { nick: $scope.filesuser })
+			.success(function(data){
+
+				// Add the default at the beginning.
+				data.unshift({label: DEFAULT_LABEL});
+	
+				$scope.labellist = data;
+
+				console.log("!trace label list: ",data);
 
 
+			}.bind(this)).error(function(data){
 
+				// Log an error with our API request.
+				console.log("ERROR: Fudge, unable to get list of labels for user.");
+
+			}.bind(this));
 
 
 	}
@@ -54,9 +85,9 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 
 	}
 
-	// Constructor type actions....
-	console.log("!trace YO, IT'S THE FILES CONTROLLER.");
+	$scope.filterlabel = DEFAULT_LABEL;
 
+	// Constructor type actions....
 	$scope.search_status = "emptysearch";
 
 	// Here's our URL params.
@@ -65,7 +96,7 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 
 		// So that's great, there's a username there.
 		// Let's start the request to pull up the user's files.
-		$scope.getFilesForUser();
+		$scope.getLabelsForUser();
 
 	} else {
 		// Set that it's the search page, this is the default way you come into the page.

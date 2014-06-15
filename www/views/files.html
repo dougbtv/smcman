@@ -58,11 +58,13 @@
 					<label for="selectlabel" class="control-label">Files in label</label>
 				</div>
 
-				<div id="selectlabel" class="col-sm-10">
-					<select class="form-control">
-						<option value="{all}">{All Files}</option>
-						<option>bar</option>
+				<div class="col-sm-10">
+
+					<select ng-model="filterlabel" class="form-control" ng-options="label.label for label in labellist">
+						<option style="display:none" value="">{All Labels}</option>
 					</select>
+					<br>
+
 				</div>
 			</div>
 
