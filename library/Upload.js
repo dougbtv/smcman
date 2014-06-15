@@ -19,7 +19,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		indate: Date,			// Date of upload
 		is_smc: Boolean,		// Is this for an SMC?
 		description: String,	// A description.
-		category: String,		// (Unused?) A category.
+		label: String,			// A label, like a gmail email label, same idea.
 		complete: Boolean, 		// Is the upload complete?
 		tiny_url: Number,		// What's it's tiny url ID?
 		deleted: Boolean,		// Is this removed?

@@ -68,6 +68,11 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	// Our upload module describes an upload / file we host.
 	var Upload = require("./Upload.js");
 	this.upload = new Upload(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+
+	// Our labels for uploads.
+	var Label = require("./Label.js");
+	this.label = new Label(this,this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+
 	
 	// Our User module
 	var User = require("./User.js");

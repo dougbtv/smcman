@@ -1,3 +1,5 @@
+	<!-- - - - - Search for a nick.... - - - - - - - - - - - - - - - -->
+
 	<div class="row featurette" ng-hide="filesuser">
 		<div class="page-header">
 			<h1>Find Files</h1>
@@ -22,7 +24,7 @@
 			</div>
 
 			<div ng-switch-when="noresults" class="alert alert-warning" >
-				<strong>Try this...</strong> Search by two characters or more.
+				<strong>Sorry...</strong> No one's nick matches "{{searchnick}}".
 			</div>
 
 			<div ng-switch-when="results">
@@ -40,11 +42,32 @@
 
 	</div>
 
+	<!-- - - - - Show and manage files... - - - - - - - - - - - - - - - -->
+
 	<div class="row featurette" ng-show="filesuser">
 
 		<div class="page-header">
 			<h1>Files for {{filesuser}}</h1>
 		</div>
+
+		<div class="files-filter-bar">
+
+			<div class="form-group">
+
+				<div class="col-sm-2 ">
+					<label for="selectlabel" class="control-label">Files in label</label>
+				</div>
+
+				<div id="selectlabel" class="col-sm-10">
+					<select class="form-control">
+						<option value="{all}">{All Files}</option>
+						<option>bar</option>
+					</select>
+				</div>
+			</div>
+
+		</div>
+
 
 		We have a user!
 	</div>

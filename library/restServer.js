@@ -62,6 +62,10 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.post('/api/searchForFilesNick', this.searchForFilesNick);
 		server.head('/api/searchForFilesNick', this.searchForFilesNick);
 		
+		server.get('/api/getLabels', this.getLabels);
+		server.post('/api/getLabels', this.getLabels);
+		server.head('/api/getLabels', this.getLabels);
+		
 
 	};
 
@@ -73,6 +77,21 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		});
 
 	}
+
+	
+	this.getLabels = function(req, res, next) {
+
+		var nick = req.params.nick;
+
+		// Request the labels from the labels object.
+		smcman.label.getLabels(nick,function(labels){
+
+			res.contentType = 'json';
+			res.send(labels);
+
+		});
+
+	}	
 
 	this.searchForFilesNick = function(req, res, next) {
 
