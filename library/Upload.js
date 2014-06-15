@@ -60,18 +60,55 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 			// api/view is our path
 			// SSS is the first three characters of our secret.
 			// XXXX is the hex value of the tiny url
+
+			if (this.legacy.recnum) {
+				return "http://speedmodeling.org/smcfiles/" + this.legacy.file;
+			}
+
 			return privates.URL_SMCSITE + constants.PATH_URL_FILESTORAGE + "/" + this.symlinkname;
+		});
+
+	uploadSchema.virtual('is_image')
+		.get(function(){
+
+			if (this.legacy.recnum) {
+				// Ok, determine if it's an image based on the extension.
+				var ext = this.legacy.file.replace(/^.+\.(.+)$/,'$1');
+				// console.log("!trace FILENAME / EXTENSION: %s / %s",this.legacy.file,ext);
+				// Now see if it matches by it's extension.
+				var re_image = new RegExp('(jpg|jpeg|png|tiff|gif|bmp)','i');
+				if (ext.match(re_image)) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+			if (typeof this.mime_type == 'undefined') {
+				return false;
+			}
+
+			if (this.mime_type.match(/(image|jpg|jpeg|png|tga|bmp|svg|gif)/)) {
+					return true;
+			} else {
+					return false;
+			}
+
 		});
 
 		// 
 
 	uploadSchema.virtual('symlinkname')
 		.get(function () {
+			if (this.legacy.recnum) {
+				return false;
+			}
 			return this.secret.substring(0,3) + this.tiny_url.toString(16);
 		});
 
 	uploadSchema.virtual('file_directory')
 		.get(function () {
+			if (typeof this.secret === 'undefined') { return false; }
 			return constants.PATH_UPLOAD_STORAGE + this.secret.substring(0,2) + "/";
 		});
 

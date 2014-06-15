@@ -70,14 +70,28 @@
 
 .files-filter-bar {
 
-  
+
 
 }
 
 .fileitem {
-  background-color: red;
+  /* background-color: red; */
+  border-top-right-radius: 6px 6px;
+  border-top-left-radius: 6px 6px;
+  border-bottom-right-radius: 6px 6px;
+  border-bottom-left-radius: 6px 6px;
+  border: 1px solid;
+  border-color: #2aabd2;
+  
   margin: 10px;
   padding: 5px;
+  min-height: 360px;
+}
+
+.filesthumb {
+  max-width: 320px;
+  max-height: 320px;
+  margin: 0 auto; 
 }
 
 /* ------------------------------------------------------------------ SMC Clock Styles */

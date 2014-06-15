@@ -74,9 +74,9 @@
 
 		<div class="col-sm-4" ng-repeat="file in files_list">
 			<div class="fileitem">
-				{{file.description}} - {{file.is_image}}
+				{{file.description}}
 
-				<img ng-show="file.is_image" ng-src="{{file.url}}" width="320"/>
+				<img ng-show="file.is_image" ng-src="{{file.url}}" class="text-center filesthumb img-responsive"/>
 			</div>
 		</div>
 

@@ -51,6 +51,7 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 				// We'll groom the uploads to do some nice things for display.
 				var uploads = data.uploads;
 
+				/*
 				for (var i = 0; i < uploads.length; i++) {
 					// Go ahead and do a few things:
 					// 1. Set a pretty date.
@@ -59,6 +60,7 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 					uploads[i].is_image = $scope.isImage(uploads[i].mime_type);
 
 				}
+				*/
 
 				// Now, go and set the file list scope item.
 				$scope.files_list = uploads;
@@ -72,20 +74,6 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 				console.log("ERROR: Dangit, screwed up when I went to get a list of files.");
 
 			}.bind(this));
-
-	}
-
-	$scope.isImage = function(mimetype) {
-
-		if (typeof mimetype == 'undefined') {
-			return false;
-		}
-
-		if (mimetype.match(/(image|jpg|jpeg|png|tga|bmp|svg|gif)/)) {
-			return true;
-		} else {
-			return false;
-		}
 
 	}
 

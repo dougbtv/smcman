@@ -13,12 +13,10 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	this.getLabels = function(nick,callback) {
 
-		console.log("Which nick?");
+		// console.log("Which nick?");
 
 		Label.find({nick: nick},function(err,labels){
 
-			console.log("!trace LIST OF LABELS: ",labels);
-			console.log("!trace error OF LABELS: ",err);
 			callback(labels);
 
 		});
