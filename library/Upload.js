@@ -31,6 +31,20 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		},
 	}, { collection: 'uploads' });
 
+	// We want virtuals when we export to json.
+	uploadSchema.set('toObject', { virtuals: true });
+
+	// Elegant little way to hide properties when transforming to object.
+	// http://mongoosejs.com/docs/api.html#document_Document-toObject
+	// (do a find for "hide", both on that doc, and here. To see it in action)
+	uploadSchema.options.toObject.transform = function (doc, ret, options) {
+	  if (options.hide) {
+	    options.hide.split(' ').forEach(function (prop) {
+	      delete ret[prop];
+	    });
+	  }
+	}
+
 	// The URL to upload to.
 	uploadSchema.virtual('upload_url')
 		.get(function () {
@@ -330,6 +344,43 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 			} else {
 				callback(false);
 			}
+
+		});
+
+	}
+
+	// How about listing files for a user?
+	// !bang
+	this.listFiles = function(nick,label,limit,page,callback) {
+
+		// Setup our search.
+		var search = {};
+		if (label) {
+			search = {nick: nick, label: label};
+		} else {
+			search = {nick: nick};
+		}
+
+		Upload.count(search,function(err,counted){
+
+			Upload.find(search).sort({indate: -1}).skip(limit * (page-1)).limit(limit).exec(function(err,uploads){
+
+				var total_result = [];
+
+				for (var i = 0; i < uploads.length; i++) {
+					total_result.push(
+						uploads[i].toObject({hide: 'file_full_path file_directory secret upload_url', transform: true ,virtuals: true})
+					);
+				}
+
+				// console.log("!trace total_result: %j",total_result);
+
+				callback({
+					total: counted,
+					uploads: total_result,
+				});
+
+			});
 
 		});
 

@@ -66,6 +66,9 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.post('/api/getLabels', this.getLabels);
 		server.head('/api/getLabels', this.getLabels);
 		
+		server.get('/api/listFiles', this.listFiles);
+		server.post('/api/listFiles', this.listFiles);
+		server.head('/api/listFiles', this.listFiles);
 
 	};
 
@@ -79,6 +82,25 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 	}
 
 	
+	this.listFiles = function(req, res, next) {
+
+		var input = req.params;
+
+		// { nick: nick, label: label, page: $scope.files_pageon, limit: $scope.MAX_PER_PAGE }
+		// Ok, query the upload object for this list.
+		smcman.upload.listFiles(input.nick,input.label,input.limit,input.page,function(uploadresult){
+
+			// Cool, send back that file list.
+			res.contentType = 'json';
+			res.send(uploadresult);
+
+		});
+
+		// listFiles = function(nick,label,limit,page,callback) {
+	
+	}
+
+	// Get a list of labels for a particular user.
 	this.getLabels = function(req, res, next) {
 
 		var nick = req.params.nick;
@@ -93,6 +115,7 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 
 	}	
 
+	// Search for a nick from the files page.
 	this.searchForFilesNick = function(req, res, next) {
 
 		// Make a new regex from what they search by.

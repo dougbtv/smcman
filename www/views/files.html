@@ -55,7 +55,7 @@
 			<div class="form-group">
 
 				<div class="col-sm-2 ">
-					<label for="selectlabel" class="control-label">Files in label</label>
+					<label for="selectlabel" class="control-label">Filter to label:</label>
 				</div>
 
 				<div class="col-sm-10">
@@ -63,13 +63,28 @@
 					<select ng-model="filterlabel" class="form-control" ng-options="label.label for label in labellist">
 						<option style="display:none" value="">{All Labels}</option>
 					</select>
-					<br>
 
 				</div>
 			</div>
 
 		</div>
 
-
 		We have a user!
+		<HR/>
+
+		<div class="col-sm-4" ng-repeat="file in files_list">
+			<div class="fileitem">
+				{{file.description}} - {{file.is_image}}
+
+				<img ng-show="file.is_image" ng-src="{{file.url}}" width="320"/>
+			</div>
+		</div>
+
+		<div class="clearfix"></div>
+
+		<div ng-if="files_list">
+			<paginator baseurl="files_baseurl" maxperpage="MAX_PER_PAGE" maxpages="MAX_PAGES" total="files_datatotal"></paginator>
+		</div>
+
+
 	</div>

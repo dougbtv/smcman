@@ -1,6 +1,22 @@
 smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$cookies', 'smcSocketService', function($scope,$location,$http,$cookies,socketservice) {
 
+	// Our default label (e.g. when none is selected)
 	var DEFAULT_LABEL = "{All Labels}";
+
+	// Figure out what page we're on.
+	$scope.files_pageon = $location.search().page;
+	if (typeof $scope.files_pageon == 'undefined') {
+		// Set that it's the first page.
+		$scope.files_pageon = 1;
+	}
+
+	// Maximums for pagination.
+	$scope.MAX_PER_PAGE = 15;
+	$scope.MAX_PAGES = 5;
+
+	// Default the actual list we use.
+	$scope.files_list = false;
+	$scope.files_baseurl = "#/files";
 
 	// Constructor at the bottom, so I can define the methods....
 
@@ -8,13 +24,68 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 	$scope.setLabel = function() {
 
 		// Hey, we can get the files given this guy.
-		$scope.getFiles();
+		$scope.getFileList();
 
 	}
 
-	$scope.getFiles = function(nick,label) {
+	$scope.getFileList = function() {
 
-		
+		var label = $scope.filterlabel;
+		var nick = $scope.filesuser;
+
+		// Change the label if it's the default.
+		// ...We'll just clear it.
+		if (label == DEFAULT_LABEL) {
+			label = false;
+		}
+
+		// Now let's make that ajax call.
+		$http.post('/api/listFiles', { nick: nick, label: label, page: $scope.files_pageon, limit: $scope.MAX_PER_PAGE })
+			.success(function(data){
+
+				console.log("!trace file RAW: ",data);
+
+				// Set the total for the paginator.
+				$scope.files_datatotal = data.total;
+
+				// We'll groom the uploads to do some nice things for display.
+				var uploads = data.uploads;
+
+				for (var i = 0; i < uploads.length; i++) {
+					// Go ahead and do a few things:
+					// 1. Set a pretty date.
+					// 2. Set if is an image.
+
+					uploads[i].is_image = $scope.isImage(uploads[i].mime_type);
+
+				}
+
+				// Now, go and set the file list scope item.
+				$scope.files_list = uploads;
+
+				console.log("!trace file list: ",uploads);
+
+
+			}.bind(this)).error(function(data){
+
+				// Log an error with our API request.
+				console.log("ERROR: Dangit, screwed up when I went to get a list of files.");
+
+			}.bind(this));
+
+	}
+
+	$scope.isImage = function(mimetype) {
+
+		if (typeof mimetype == 'undefined') {
+			return false;
+		}
+
+		if (mimetype.match(/(image|jpg|jpeg|png|tga|bmp|svg|gif)/)) {
+			return true;
+		} else {
+			return false;
+		}
 
 	}
 
@@ -97,6 +168,12 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 		// So that's great, there's a username there.
 		// Let's start the request to pull up the user's files.
 		$scope.getLabelsForUser();
+
+		// Hook that onto our baseurl.
+		$scope.files_baseurl += "?user=" + $scope.filesuser;
+
+		// And also get the default page for 'em.
+		$scope.getFileList();
 
 	} else {
 		// Set that it's the search page, this is the default way you come into the page.
