@@ -51,6 +51,14 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 			return privates.URL_SMCSITE + "#/upload?key=" + this.secret;
 		});
 
+	// The URL to upload to.
+	uploadSchema.virtual('timeago')
+		.get(function () {
+			// !bang
+			var sincewhen = new moment(this.indate);
+			return sincewhen.fromNow();
+		});
+
 	// The final URL
 	uploadSchema.virtual('url')
 		.get(function () {

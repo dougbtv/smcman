@@ -20,18 +20,13 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 
 	// Constructor at the bottom, so I can define the methods....
 
-	// Set the label to filter by.
-	$scope.setLabel = function() {
-
-		// Hey, we can get the files given this guy.
-		$scope.getFileList();
-
-	}
 
 	$scope.getFileList = function() {
 
-		var label = $scope.filterlabel;
+		var label = $scope.filterlabel.label;
 		var nick = $scope.filesuser;
+
+		console.log("!trace CHECKING LABEL: ",label);
 
 		// Change the label if it's the default.
 		// ...We'll just clear it.
