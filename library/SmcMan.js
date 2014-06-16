@@ -196,6 +196,16 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 						this.upload.newUpload(from);
 						break;
 
+					case "files": 	
+						// And we'll create a new upload
+						this.upload.filesFor(command, from);
+						break;
+
+					case "totalfiles": 	
+						// And we'll create a new upload
+						this.upload.chatTotalFiles(command, from);
+						break;
+
 					// ---------------------------------------------------------
 					// -- User commands.
 					// ---------------------------------------------------------

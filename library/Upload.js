@@ -499,6 +499,106 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	}
 
+	// Used for the !files command. Shows a URL for a user's files
+
+	this.filesFor = function(command,from) {
+
+		console.log("!trace the command: ",command);
+
+		if (command.arglist) {
+
+			var fornick = command.arglist[0];
+
+			// If we have the arglist we go by nick.
+			this.totalFilesForNick(fornick,function(counted){
+
+				switch (counted) {
+					case 0:
+						chat.say("nofiles",[fornick]);
+						break;
+					default:
+						var url = privates.URL_SMCSITE + "#/files?user=" + fornick;
+						chat.say("files",[url]);
+						break;
+				}
+
+			});
+
+
+		} else {
+
+			// Or they can get the general files URL.
+			chat.say("allfiles",[privates.URL_SMCSITE + "#/files"]);
+
+		}
+		
+	}
+
+	// totalfiles_one
+	// totalfiles_server
+	// totalfiles_none
+	// totalfiles
+
+	this.chatTotalFiles = function(command,from) {
+
+		if (command.arglist) {
+
+			var fornick = command.arglist[0];
+
+			// If we have the arglist we go by nick.
+			this.totalFilesForNick(fornick,function(counted){
+
+				switch (counted) {
+					case 0:
+						chat.say("totalfiles_none",[fornick]);
+						break;
+					case 1:
+						chat.say("totalfiles_none",[fornick,counted]);
+						break;
+					default:
+						chat.say("totalfiles",[fornick,counted]);
+						break;
+				}
+
+			});
+
+
+		} else {
+
+			// Or they can get the general number of files
+			this.totalFilesOnServer(function(counted){
+				chat.say("totalfiles_server",[counted]);
+			});
+
+			
+
+		}
+
+	}
+
+
+	// Returns the total number of files for a nick.
+	// ...excluding those marked deleted.
+
+	this.totalFilesForNick = function(nick,callback) {
+
+		Upload.count({nick: nick, $or: [ { deleted: false }, { deleted: {"$exists": false} } ]}, function(err, counted) {
+
+			callback(counted);
+
+		});
+
+	}
+
+	this.totalFilesOnServer = function(callback) {
+
+		Upload.count({$or: [ { deleted: false }, { deleted: {"$exists": false} } ]}, function(err, counted) {
+
+			callback(counted);
+
+		});
+
+	}
 	
 
 }
