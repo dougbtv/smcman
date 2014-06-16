@@ -84,7 +84,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 				var ext = this.legacy.file.replace(/^.+\.(.+)$/,'$1');
 				// console.log("!trace FILENAME / EXTENSION: %s / %s",this.legacy.file,ext);
 				// Now see if it matches by it's extension.
-				var re_image = new RegExp('(jpg|jpeg|png|tiff|gif|bmp)','i');
+				var re_image = new RegExp('(jpg|jpeg|png|gif|bmp)','i');
 				if (ext.match(re_image)) {
 					return true;
 				} else {
@@ -394,6 +394,42 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	}
 
+	// -------------------------------------------------------
+	// --------- Web Application Features
+	// -------------------------------------------------------
+	
+	this.webappEditFile = function(inputfile,nick,callback) {
+
+		// Alright, let's get that inputfile, then we'll update it, and save it.
+		Upload.findOne({_id: inputfile._id, nick: nick},function(err, upload){
+
+			if (!err) {
+
+				// Ok, set the properties that we like.
+				// Mostly, description and label.
+				upload.description = inputfile.description;
+				upload.label = inputfile.label;
+
+				// mark deleted if need be.
+				if (inputfile.deleted) {
+					upload.deleted = inputfile.deleted;
+				}
+
+				upload.save();
+
+				callback(false);
+
+			} else {
+
+				console.log("ERROR: Couldn't update _id: %s during webapp inputfile edit",inputfile._id);
+				callback(true);
+
+			}
+
+		});
+
+	}
+
 	// How about listing files for a user?
 	// !bang
 	this.listFiles = function(nick,label,limit,page,callback) {
@@ -401,9 +437,9 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		// Setup our search.
 		var search = {};
 		if (label) {
-			search = {nick: nick, label: label};
+			search = {nick: nick, label: label, $or: [ { deleted: false }, { deleted: {"$exists": false} } ] };
 		} else {
-			search = {nick: nick};
+			search = {nick: nick, $or: [ { deleted: false }, { deleted: {"$exists": false} } ] };
 		}
 
 		Upload.count(search,function(err,counted){

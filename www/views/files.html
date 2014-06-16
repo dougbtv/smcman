@@ -60,7 +60,7 @@
 
 				<div class="col-sm-10">
 
-					<select ng-model="filterlabel" ng-change="getFileList()" class="form-control" ng-options="label.label for label in labellist">
+					<select ng-model="filterlabel" ng-change="getFileList()" class="form-control" ng-options="label for label in labellist">
 						<option style="display:none" value="">{All Labels}</option>
 					</select>
 
@@ -69,16 +69,70 @@
 
 		</div>
 
-		We have a user!
+		<div class="clearfix"></div>
 		<HR/>
+
+		<div class="row" ng-repeat="i in files_list.range()">
+
+			<div class="col-sm-6 col-md-4" ng-repeat="file in files_list.slice(i,i+3)">
+				<div class="thumbnail filegridhelper">
+					<div class="fileheader">
+						{{file.description}}&nbsp; <span ng-click="editIt($index+i)" ng-show="can_edit" class="glyphicon glyphicon-pencil pull-right fileediticon"></span>
+					</div>
+
+					<div ng-show="files_list[$index+i].edit_mode" class="fileseditbox">
+
+						<div class="input-group">
+							<span class="input-group-addon">Description:</span>
+							<input ng-model="files_list[$index+i].description" type="text" class="form-control" placeholder="Description">
+						</div>
+
+						<div class="input-group">
+							<span class="input-group-addon">Label:</span>
+							<select ng-model="files_list[$index+i].label" class="form-control" ng-options="label for label in labellist">
+								<option style="display:none" value="">{All Labels}</option>
+							</select>
+						</div>
+
+						<div class="fileeditbuttonbox">
+							<button ng-click="saveIt($index+i)" type="button" class="btn btn-sm btn-primary">Save</button>
+							<button ng-click="cancelIt($index+i)" type="button" class="btn btn-sm btn-info">Cancel</button>
+						
+							<button ng-hide="files_list[$index+i].delete_warning" ng-click="files_list[$index+i].delete_warning=1" type="button" class="btn btn-sm btn-warning">Delete?</button>
+							<button ng-show="files_list[$index+i].delete_warning" ng-click="deleteIt($index+i)" type="button" class="btn btn-sm btn-danger">Are you <strong>sure</strong>?</button>
+						</div>
+						
+					</div>
+
+					<div class="filegridexpander text-center">
+						<img ng-src="{{file.url}}" ng-if="file.is_image" class="filesthumb" alt="...">
+					</div>
+					
+					<div class="caption">
+						<p ng-show="file.label"><strong>Labeled:</strong> {{file.label}}</p>
+						<p ng-show="file.legacy.file"><strong>Legacy file name:</strong> {{file.legacy.file}}</p>
+						<p><strong>Created:</strong> {{file.timeago}}</p>
+						<!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> -->
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<!--
 
 		<div class="col-sm-4" ng-repeat="file in files_list">
 			<div class="fileitem">
-				{{file.description}}
+				<div class="fileheader">
+					{{file.description}}&nbsp;
+				</div>
 
 				<img ng-show="file.is_image" ng-src="{{file.url}}" class="text-center filesthumb img-responsive"/>
 			</div>
 		</div>
+
+		-->
 
 		<div class="clearfix"></div>
 

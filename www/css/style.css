@@ -68,6 +68,9 @@
 
 }
 
+/* ------------------------------------------------------------------ Files Styles */
+
+
 .files-filter-bar {
 
 
@@ -81,17 +84,43 @@
   border-bottom-right-radius: 6px 6px;
   border-bottom-left-radius: 6px 6px;
   border: 1px solid;
-  border-color: #2aabd2;
-  
+  border-color: #2aabd2;  
   margin: 10px;
-  padding: 5px;
   min-height: 360px;
+  min-width: 350px;
+}
+
+.filegridhelper {
+  padding: 0px;
+}
+
+.filegridexpander {
+  /* min-height: 350px;  */
+  margin-top: 8px;
+}
+
+.fileheader {
+  background-image: linear-gradient(to bottom,#e7e7e7 0,#f8f8f8 100%);
+  padding: 5px;
+}
+
+.fileseditbox {
+  background-color: #f8f8f8;
+  margin: 3px;
+}
+
+.fileeditbuttonbox {
+  padding-top: 3px;
 }
 
 .filesthumb {
   max-width: 320px;
   max-height: 320px;
   margin: 0 auto; 
+}
+
+.fileediticon {
+    cursor: pointer;
 }
 
 /* ------------------------------------------------------------------ SMC Clock Styles */

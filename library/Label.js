@@ -17,11 +17,17 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 		Label.find({nick: nick},function(err,labels){
 
-			callback(labels);
+			// Make a plain list of labels.
+			var list = [];
+
+			for (var i = 0; i < labels.length; i++) {
+				list.push(labels[i].label);
+			}
+
+			callback(list);
 
 		});
 
 	}
-
 
 }

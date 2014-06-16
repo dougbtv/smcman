@@ -70,6 +70,12 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.post('/api/listFiles', this.listFiles);
 		server.head('/api/listFiles', this.listFiles);
 
+		
+
+		server.get('/api/editFile', this.editFile);
+		server.post('/api/editFile', this.editFile);
+		server.head('/api/editFile', this.editFile);
+
 	};
 
 	this.serverStart = function() {
@@ -77,6 +83,34 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		// And then fire up the server.
 		server.listen(constants.SERVER_PORT, function() {
 			console.log(server.name + ' listening at ' + server.url);
+		});
+
+	}
+
+	
+
+	this.editFile = function(req, res, next) {
+
+		var input = req.params;
+
+		smcman.user.validateSession(input.username,input.session,function(isvalid){
+
+			if (isvalid) {
+		
+				smcman.upload.webappEditFile(input.file,input.username,function(err){
+
+					// Ok, we edited that document.
+					res.contentType = 'json';
+					res.send({});
+
+				});
+
+			} else {
+
+				console.log("ERROR: Couldn't validate a user session for %s while trying to update a file.",input.username);
+
+			}
+
 		});
 
 	}
@@ -113,7 +147,7 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 
 		});
 
-	}	
+	}
 
 	// Search for a nick from the files page.
 	this.searchForFilesNick = function(req, res, next) {

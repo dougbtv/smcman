@@ -18,15 +18,82 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 	$scope.files_list = false;
 	$scope.files_baseurl = "#/files";
 
+	// Default that a user cannot edit.
+	$scope.can_edit = false;
+
 	// Constructor at the bottom, so I can define the methods....
+
+	$scope.editIt = function(idx) {
+
+		// Set an edit mode on the file in list @ index.
+		if (!$scope.files_list[idx].edit_mode) {
+			$scope.files_list[idx].edit_mode = true;
+		} else {
+			$scope.files_list[idx].edit_mode = false;
+		}
+
+	}
+
+	$scope.saveIt = function(idx,callback) {
+
+		if (typeof callback === 'undefined') {
+			callback = function(){};
+		}
+
+		// console.log("!trace saveIt: ",$scope.files_list[idx]);
+
+		// Alright, ship the whole thing back to the API.
+		$http.post('/api/editFile', { username: $cookies.username, session: $cookies.session, file: $scope.files_list[idx] })
+			.success(function(data){
+
+				// console.log("!trace success saving resulted in: ",data);
+				// Ok, I think you can close the edit mode.
+				$scope.files_list[idx].edit_mode = false;
+
+				callback();
+
+			}.bind(this)).error(function(data){
+
+				// Log an error with our API request.
+				console.log("ERROR: That's a downer, I couldn't save changed to a file.");
+
+			}.bind(this));
+
+	}
+
+	$scope.cancelIt = function(idx) {
+		// Set edit mode as false.
+		$scope.files_list[idx].edit_mode = false;
+		// Set delete warning false.
+		$scope.files_list[idx].delete_warning = false;
+		// You could, if you wanted...
+		// Reset all the data for it.
+		// But that'd require some non-destructive save of an instance of it.
+		// maybe later.
+	}
+
+	$scope.deleteIt = function(idx) {
+		// console.log("!trace deleteIt: ",idx);
+		// Ok, we should just be able to set the deleted property, and ship it back via save it.
+		$scope.files_list[idx].deleted = true;
+
+		$scope.saveIt(idx,function(){
+
+			// Ok, we deleted it.
+			// Let's refresh.
+			$scope.getFileList();
+
+		});
+
+	}
 
 
 	$scope.getFileList = function() {
 
-		var label = $scope.filterlabel.label;
+		var label = $scope.filterlabel;
 		var nick = $scope.filesuser;
 
-		console.log("!trace CHECKING LABEL: ",label);
+		// console.log("!trace CHECKING LABEL: ",label);
 
 		// Change the label if it's the default.
 		// ...We'll just clear it.
@@ -38,7 +105,7 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 		$http.post('/api/listFiles', { nick: nick, label: label, page: $scope.files_pageon, limit: $scope.MAX_PER_PAGE })
 			.success(function(data){
 
-				console.log("!trace file RAW: ",data);
+				// console.log("!trace file RAW: ",data);
 
 				// Set the total for the paginator.
 				$scope.files_datatotal = data.total;
@@ -60,7 +127,24 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 				// Now, go and set the file list scope item.
 				$scope.files_list = uploads;
 
-				console.log("!trace file list: ",uploads);
+				// We set this range for bootstrap scaffolding.
+				// http://stackoverflow.com/questions/11056819/how-would-i-use-angularjs-ng-repeat-with-twitter-bootstraps-scaffolding
+				$scope.files_list.range = function() {
+					var range = [];
+					for ( var i = 0; i < $scope.files_list.length; i = i + 3 ) {
+						range.push(i);
+					}
+					return range;
+				}
+
+				// Check if this user can edit this.
+				if ($cookies.username == nick) {
+					$scope.can_edit = true;
+				} else {
+					$scope.can_edit = false;
+				}
+
+				// console.log("!trace file list: ",uploads);
 
 
 			}.bind(this)).error(function(data){
@@ -79,11 +163,11 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 			.success(function(data){
 
 				// Add the default at the beginning.
-				data.unshift({label: DEFAULT_LABEL});
+				data.unshift(DEFAULT_LABEL);
 	
 				$scope.labellist = data;
 
-				console.log("!trace label list: ",data);
+				// console.log("!trace label list: ",data);
 
 
 			}.bind(this)).error(function(data){
