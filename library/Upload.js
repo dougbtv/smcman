@@ -76,6 +76,8 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 			return privates.URL_SMCSITE + constants.PATH_URL_FILESTORAGE + "/" + this.symlinkname;
 		});
 
+	// Determine if what we've got here is an image.
+
 	uploadSchema.virtual('is_image')
 		.get(function(){
 
@@ -97,9 +99,39 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 			}
 
 			if (this.mime_type.match(/(image|jpg|jpeg|png|tga|bmp|svg|gif)/)) {
-					return true;
+				return true;
 			} else {
+				return false;
+			}
+
+		});
+
+	// We show icons if it's not an image, in the web app.
+	// based on bootstrap glyphs: http://getbootstrap.com/components/#glyphicons
+
+	uploadSchema.virtual('icon')
+		.get(function(){
+
+			var target = "";
+
+			if (this.legacy.recnum) {
+				target = this.legacy.file.replace(/^.+\.(.+)$/,'$1');
+			} else {
+				target = this.mime_type;
+			}
+
+			if (typeof target == 'undefined') {
+				return false;
+			}
+
+			if (target.match(/(audio|mpeg|mp3|wav|aiff|aif|ogg|vorbis|opus)/)) {
+				return "glyphicon-music";
+			} else {
+				if (target.match(/(video|mp4|wmv|mov)/)) {
+					return "glyphicon-facetime-video";
+				} else {
 					return false;
+				}
 			}
 
 		});

@@ -110,7 +110,7 @@
 }
 
 .fileeditbuttonbox {
-  padding-top: 3px;
+  padding: 3px;
 }
 
 .filesthumb {
@@ -121,6 +121,10 @@
 
 .fileediticon {
     cursor: pointer;
+}
+
+.filetypeicon {
+    font-size:72px;
 }
 
 /* ------------------------------------------------------------------ SMC Clock Styles */

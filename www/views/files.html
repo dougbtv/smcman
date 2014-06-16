@@ -98,16 +98,22 @@
 							<button ng-click="saveIt($index+i)" type="button" class="btn btn-sm btn-primary">Save</button>
 							<button ng-click="cancelIt($index+i)" type="button" class="btn btn-sm btn-info">Cancel</button>
 						
-							<button ng-hide="files_list[$index+i].delete_warning" ng-click="files_list[$index+i].delete_warning=1" type="button" class="btn btn-sm btn-warning">Delete?</button>
-							<button ng-show="files_list[$index+i].delete_warning" ng-click="deleteIt($index+i)" type="button" class="btn btn-sm btn-danger">Are you <strong>sure</strong>?</button>
+							<span ng-hide="file.is_smc">
+								<button ng-hide="files_list[$index+i].delete_warning" ng-click="files_list[$index+i].delete_warning=1" type="button" class="btn btn-sm btn-warning">Delete?</button>
+								<button ng-show="files_list[$index+i].delete_warning" ng-click="deleteIt($index+i)" type="button" class="btn btn-sm btn-danger">Are you <strong>sure</strong>?</button>
+							</span>
 						</div>
 						
 					</div>
 
-					<div class="filegridexpander text-center">
-						<img ng-src="{{file.url}}" ng-if="file.is_image" class="filesthumb" alt="...">
+					<div class="filegridexpander text-center" ng-if="file.is_image">
+						<a ng-href="{{file.url}}" target="_blank"><img ng-src="{{file.url}}" class="filesthumb" alt="..."></a>
 					</div>
 					
+					<div class="filegridexpander text-center" ng-if="!file.is_image">
+						<a ng-href="{{file.url}}" target="_blank"><span class="glyphicon {{file.icon}} filetypeicon"></a>
+					</div>
+
 					<div class="caption">
 						<p ng-show="file.label"><strong>Labeled:</strong> {{file.label}}</p>
 						<p ng-show="file.legacy.file"><strong>Legacy file name:</strong> {{file.legacy.file}}</p>
