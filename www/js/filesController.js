@@ -2,6 +2,7 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 
 	// Our default label (e.g. when none is selected)
 	var DEFAULT_LABEL = "{All Labels}";
+	var TOP_FILES_LIMIT = 100;
 
 	// Figure out what page we're on.
 	$scope.files_pageon = $location.search().page;
@@ -223,6 +224,25 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 
 	}
 
+	$scope.topFiles = function() {
+
+		$http.post('/api/topFilesList', { limit: TOP_FILES_LIMIT })
+			.success(function(data){
+
+				// Add the default at the beginning.
+				// console.log("!trace top files list: ",data);
+				$scope.top_files = data;
+
+
+			}.bind(this)).error(function(data){
+
+				// Log an error with our API request.
+				console.log("ERROR: Crap, couldn't get the topFilesList");
+
+			}.bind(this));
+
+	}
+
 	$scope.filterlabel = DEFAULT_LABEL;
 
 	// Constructor type actions....
@@ -245,6 +265,9 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 	} else {
 		// Set that it's the search page, this is the default way you come into the page.
 		$scope.filesuser = false;
+
+		// Let's kick off getting the list of users to fill out this page.
+		$scope.topFiles();
 	}
 
 }]);

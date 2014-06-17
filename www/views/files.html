@@ -19,8 +19,20 @@
 				<strong>Try this...</strong> Search by two characters or more.
 			</div>
 
-			<div ng-switch-when="emptysearch" class="alert alert-info" >
-				<strong>Search for a user</strong> Enter a username, and we'll search for them, to show you their files.
+			<div ng-switch-when="emptysearch">
+				<div class="alert alert-info" >
+					<strong>Search for a user</strong> Enter a username, and we'll search for them, to show you their files.
+				</div>
+
+				<h3>Top 100 Uploaders</h3>
+				<hr />
+
+				<div class="col-sm-4">
+				<div class="list-group">
+					<a ng-repeat="dude in top_files" href="#/files?user={{dude.nick}}" class="list-group-item">{{dude.nick}} <em class="pull-right">({{dude.total}} files)</em></a>
+				</div>
+				</div><!-- /.col-sm-4 -->
+
 			</div>
 
 			<div ng-switch-when="noresults" class="alert alert-warning" >

@@ -19,6 +19,8 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.post('/api/foo', this.testFunction);
 		server.head('/api/foo', this.testFunction);
 
+		// ----------------- Upload calls.
+
 		server.get('/api/verifyUploadKey', this.verifyUploadKey);
 		server.post('/api/verifyUploadKey', this.verifyUploadKey);
 		server.head('/api/verifyUploadKey', this.verifyUploadKey);
@@ -31,6 +33,8 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.post('/api/upload', this.fileUpload);
 		server.head('/api/upload', this.fileUpload);
 
+		// ----------------- Login calls.
+
 		server.get('/api/login', this.userLogin);
 		server.post('/api/login', this.userLogin);
 		server.head('/api/login', this.userLogin);
@@ -39,12 +43,17 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.post('/api/validateSession', this.validateSession);
 		server.head('/api/validateSession', this.validateSession);
 
-		server.get('/api/livesmc', this.liveSMCInfo);
-		server.post('/api/livesmc', this.liveSMCInfo);
-		server.head('/api/livesmc', this.liveSMCInfo);
+		// ----------------- View call.
+		// ...mostly I want this to be shunted via nginx/apache.
 
 		server.get('/api/view/:tinyURL', this.viewUpload);
 		server.get('/view/:tinyURL', this.viewUpload);
+
+		// ----------------- SMC calls.
+
+		server.get('/api/livesmc', this.liveSMCInfo);	// obsolete?
+		server.post('/api/livesmc', this.liveSMCInfo);
+		server.head('/api/livesmc', this.liveSMCInfo);
 
 		server.get('/api/joinOrLeaveSMC', this.joinOrLeaveSMC);
 		server.post('/api/joinOrLeaveSMC', this.joinOrLeaveSMC);
@@ -58,6 +67,8 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.post('/api/voteForSMC', this.voteForSMC);
 		server.head('/api/voteForSMC', this.voteForSMC);
 
+		// ----------------- Files calls.
+
 		server.get('/api/searchForFilesNick', this.searchForFilesNick);
 		server.post('/api/searchForFilesNick', this.searchForFilesNick);
 		server.head('/api/searchForFilesNick', this.searchForFilesNick);
@@ -70,11 +81,14 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.post('/api/listFiles', this.listFiles);
 		server.head('/api/listFiles', this.listFiles);
 
-		
-
 		server.get('/api/editFile', this.editFile);
 		server.post('/api/editFile', this.editFile);
 		server.head('/api/editFile', this.editFile);
+
+		server.get('/api/topFilesList', this.topFilesList);
+		server.post('/api/topFilesList', this.topFilesList);
+		server.head('/api/topFilesList', this.topFilesList);
+		
 
 	};
 
@@ -83,6 +97,19 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		// And then fire up the server.
 		server.listen(constants.SERVER_PORT, function() {
 			console.log(server.name + ' listening at ' + server.url);
+		});
+
+	}
+
+	this.topFilesList = function(req, res, next) {
+
+		var limit = req.params.limit;
+
+		smcman.upload.topFilesList(limit,function(result){
+
+			res.contentType = 'json';
+			res.send(result);
+
 		});
 
 	}

@@ -599,11 +599,46 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	}
 
+	// Gives us the total number of files we have stored on the server.
+
 	this.totalFilesOnServer = function(callback) {
 
 		Upload.count({$or: [ { deleted: false }, { deleted: {"$exists": false} } ]}, function(err, counted) {
 
 			callback(counted);
+
+		});
+
+	}
+
+	// Here's the list of top uploaders, which we'll use for the intro page.
+	// nice article dougbtv learned from: http://lostechies.com/derickbailey/2013/10/28/group-by-count-with-mongodb-and-mongoosejs/
+
+	this.topFilesList = function(limit,callback) {
+
+		var agg = [
+			{$group: {
+				_id: "$nick",
+				// SUCCESS!!! :D
+				total: {$sum: 1}
+			}},
+			{ $sort: { total: -1 } },
+			{ $limit: limit }
+		];
+
+		Upload.aggregate(agg, function(err, topnicks){
+			if (err) { 
+				console.log("ERROR: Couldn't aggregate the topfiles list");
+			}
+
+			// Let's make a clean array.
+			var topresult = [];
+
+			for (i = 0; i < topnicks.length; i++) {
+				topresult.push({nick: topnicks[i]._id, total: topnicks[i].total});
+			}
+
+			callback(topresult);
 
 		});
 
