@@ -553,7 +553,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 						chat.say("totalfiles_none",[fornick]);
 						break;
 					case 1:
-						chat.say("totalfiles_none",[fornick,counted]);
+						chat.say("totalfiles_one",[fornick,counted]);
 						break;
 					default:
 						chat.say("totalfiles",[fornick,counted]);
