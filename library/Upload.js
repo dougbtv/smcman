@@ -128,9 +128,18 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 				return "glyphicon-music";
 			} else {
 				if (target.match(/(video|mp4|wmv|mov)/)) {
-					return "glyphicon-facetime-video";
+					return "glyphicon-film";
 				} else {
-					return false;
+					if (target.match(/(pdf)/)) {
+						return "glyphicon-book";
+					} else {
+						if (target.match(/(blend)/)) {
+							return "glyphicon-asterisk";
+						} else {
+							// Default icon.
+							return "glyphicon-download-alt";
+						}
+					}
 				}
 			}
 
