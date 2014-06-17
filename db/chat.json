@@ -46,14 +46,14 @@
 { "_id" : { "$oid" : "53696b204a3647a8c53b48b1" }, "fields" : 1, "identifier" : "topten", "text" : "Letterman's Top Ten Uploaders Who Also Make Fun Of Your Mother are: *drumroll* %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48b2" }, "fields" : 1, "identifier" : "topten", "text" : "The sexiest people in this channel are: %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48b3" }, "fields" : 1, "identifier" : "topten", "text" : "Top Ten Uploaders! These people rock: %0" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48b4" }, "fields" : 1, "identifier" : "totalfiles", "text" : "%0 has no files uploaded! Loser." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48b5" }, "fields" : 1, "identifier" : "totalfiles", "text" : "I can't find any files for %0. Are you sure you spelled it right?" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48b6" }, "fields" : 1, "identifier" : "totalfiles", "text" : "Hey %0! Upload some files! There aren't any in the database." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48b7" }, "fields" : 1, "identifier" : "totalfiles", "text" : "%0 has exactly ONE file. Slacker." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48b4" }, "fields" : 1, "identifier" : "totalfiles_none", "text" : "%0 has no files uploaded! Loser." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48b5" }, "fields" : 1, "identifier" : "totalfiles_none", "text" : "I can't find any files for %0. Are you sure you spelled it right?" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48b6" }, "fields" : 1, "identifier" : "totalfiles_none", "text" : "Hey %0! Upload some files! There aren't any in the database." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48b7" }, "fields" : 1, "identifier" : "totalfiles_one", "text" : "%0 has exactly ONE file. Slacker." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48b8" }, "fields" : 1, "identifier" : "totalfiles", "text" : "Only one file found for %0." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48b9" }, "fields" : 2, "identifier" : "totalfiles", "text" : "Wow! %0 has %1 files!" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48ba" }, "fields" : 2, "identifier" : "totalfiles", "text" : "%0 has been busy. %1 files found." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48bb" }, "fields" : 1, "identifier" : "totalfiles", "text" : "There are a grand total of %0 files on the server." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48bb" }, "fields" : 1, "identifier" : "totalfiles_server", "text" : "There are a grand total of %0 files on the server." }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48bc" }, "fields" : 1, "identifier" : "totalfiles", "text" : "Holy crap! %0 files found!" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48bd" }, "fields" : 1, "identifier" : "topsmc", "text" : "All hail the mighty Top Ten SMCers! %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48be" }, "fields" : 1, "identifier" : "topsmc", "text" : "If SMCing were like having sex, these people would be sluts: %0" }
@@ -72,14 +72,14 @@
 { "_id" : { "$oid" : "53696b204a3647a8c53b48cb" }, "fields" : 1, "identifier" : "files", "text" : "Their files are listed here: %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48cc" }, "fields" : 1, "identifier" : "files", "text" : "Their files are listed @ %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48cd" }, "fields" : 1, "identifier" : "files", "text" : "Get 'em while they're hot! %0" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48ce" }, "fields" : 1, "identifier" : "files", "text" : "No files found for %0." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48cf" }, "fields" : 1, "identifier" : "files", "text" : "I can't find any files for %0." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48d0" }, "fields" : 1, "identifier" : "files", "text" : "Ahh! %0 doesn't have any files!" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48d1" }, "fields" : 1, "identifier" : "files", "text" : "Too bad. No files for %0." }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48d2" }, "fields" : 1, "identifier" : "files", "text" : "Do some browsing on everyone's files. %0" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48d3" }, "fields" : 1, "identifier" : "files", "text" : "Looking for everyone's files? %0" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48d4" }, "fields" : 1, "identifier" : "files", "text" : "Files! I got 'em right here! %0" }
-{ "_id" : { "$oid" : "53696b204a3647a8c53b48d5" }, "fields" : 1, "identifier" : "files", "text" : "Did someone say \"!files\"? %0" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48ce" }, "fields" : 1, "identifier" : "nofiles", "text" : "No files found for %0." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48cf" }, "fields" : 1, "identifier" : "nofiles", "text" : "I can't find any files for %0." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48d0" }, "fields" : 1, "identifier" : "nofiles", "text" : "Ahh! %0 doesn't have any files!" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48d1" }, "fields" : 1, "identifier" : "nofiles", "text" : "Too bad. No files for %0." }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48d2" }, "fields" : 1, "identifier" : "allfiles", "text" : "Do some browsing on everyone's files. %0" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48d3" }, "fields" : 1, "identifier" : "allfiles", "text" : "Looking for everyone's files? %0" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48d4" }, "fields" : 1, "identifier" : "allfiles", "text" : "Files! I got 'em right here! %0" }
+{ "_id" : { "$oid" : "53696b204a3647a8c53b48d5" }, "fields" : 1, "identifier" : "allfiles", "text" : "Did someone say \"!files\"? %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48d6" }, "fields" : 1, "identifier" : "ideas", "text" : "Browse the list of SMC ideas: %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48d7" }, "fields" : 1, "identifier" : "ideas", "text" : "All the crazy ideas are listed here: %0" }
 { "_id" : { "$oid" : "53696b204a3647a8c53b48d8" }, "fields" : 2, "identifier" : "addidea", "text" : "'%0' has been added to the list of ideas by %1." }
