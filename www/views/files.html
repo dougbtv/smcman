@@ -80,16 +80,16 @@
 						{{file.description}}&nbsp; <span ng-click="editIt($index+i)" ng-show="can_edit" class="glyphicon glyphicon-pencil pull-right fileediticon"></span>
 					</div>
 
-					<div ng-show="files_list[$index+i].edit_mode" class="fileseditbox">
+					<div ng-show="file.edit_mode" class="fileseditbox">
 
 						<div class="input-group">
 							<span class="input-group-addon">Description:</span>
-							<input ng-model="files_list[$index+i].description" type="text" class="form-control" placeholder="Description">
+							<input ng-model="file.description" type="text" class="form-control" placeholder="Description">
 						</div>
 
 						<div class="input-group">
 							<span class="input-group-addon">Label:</span>
-							<select ng-model="files_list[$index+i].label" class="form-control" ng-options="label for label in labellist">
+							<select ng-model="file.label" class="form-control" ng-options="label for label in labellist">
 								<option style="display:none" value="">{All Labels}</option>
 							</select>
 						</div>
@@ -99,8 +99,8 @@
 							<button ng-click="cancelIt($index+i)" type="button" class="btn btn-sm btn-info">Cancel</button>
 						
 							<span ng-hide="file.is_smc">
-								<button ng-hide="files_list[$index+i].delete_warning" ng-click="files_list[$index+i].delete_warning=1" type="button" class="btn btn-sm btn-warning">Delete?</button>
-								<button ng-show="files_list[$index+i].delete_warning" ng-click="deleteIt($index+i)" type="button" class="btn btn-sm btn-danger">Are you <strong>sure</strong>?</button>
+								<button ng-hide="file.delete_warning" ng-click="file.delete_warning=1" type="button" class="btn btn-sm btn-warning">Delete?</button>
+								<button ng-show="file.delete_warning" ng-click="deleteIt($index+i)" type="button" class="btn btn-sm btn-danger">Are you <strong>sure</strong>?</button>
 							</span>
 						</div>
 						

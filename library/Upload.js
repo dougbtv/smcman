@@ -468,10 +468,10 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 		// Setup our search.
 		var search = {};
+		search = {nick: nick, complete: true, $or: [ { deleted: false }, { deleted: {"$exists": false} } ] };
+		
 		if (label) {
-			search = {nick: nick, label: label, $or: [ { deleted: false }, { deleted: {"$exists": false} } ] };
-		} else {
-			search = {nick: nick, $or: [ { deleted: false }, { deleted: {"$exists": false} } ] };
+			search.label = label;
 		}
 
 		Upload.count(search,function(err,counted){
