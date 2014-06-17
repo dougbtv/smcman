@@ -75,14 +75,12 @@ smcFrontEnd.directive('paginator', function () {
 				// Push out the end if it's too short.
 
 				if (end > totalpages) { 
-					console.log("!trace a");
 					// This is the boundary at the end of the range.
 					end = totalpages;
 					begin = (totalpages - $scope.max_number_pages) + 1;
 					if (begin < 1) { begin = 1;}
 
 				} else {
-					console.log("!trace b");
 					// This is the boundary at the beginning of the range.
 					if ((end - begin) < $scope.max_number_pages-1) {
 						end = $scope.max_number_pages;
