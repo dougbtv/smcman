@@ -543,6 +543,47 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		
 	}
 
+	// When the label module deletes a label, we strip it from the upload document.
+
+	this.stripLabels = function(nick,labelnamed,callback) {
+
+		Upload.find({nick: nick, label: labelnamed},function(err,uploads){
+
+			for (var i = 0; i < uploads.length; i++) {
+				upload = uploads[i];
+				// Ok, change the label.
+				upload.label = undefined;
+				upload.save();
+			}
+
+			// Now we can call back.
+			callback();
+
+		});
+
+	}
+				
+
+	this.updateLabels = function (nick,original,newlabel,callback) {
+
+		// Alright, go ahead and update the labels for this guy.
+		Upload.find({nick: nick, label: original},function(err,uploads){
+
+			for (var i = 0; i < uploads.length; i++) {
+				var upload = uploads[i];
+				
+				// Ok, change the label.
+				upload.label = newlabel;
+				upload.save();
+			}
+
+			// Now we can call back.
+			callback();
+
+		});
+
+	}
+
 	// totalfiles_one
 	// totalfiles_server
 	// totalfiles_none

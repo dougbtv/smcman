@@ -70,18 +70,82 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 
 	}
 
+	$scope.saveLabelAdd = function() {
+
+		// Ok, save the added label.
+		console.log("!trace adding new label: ",$scope.new_label);
+
+		$http.post('/api/addLabel', { username: $cookies.username, session: $cookies.session, label: $scope.new_label })
+			.success(function(data){
+
+				// And we can virtually cancel edits, to reset the edit mode.
+				$scope.cancelLabelEdit();
+
+				// Ok, that's great, let's reload it all.
+				$scope.getLabelsForUser();
+				$scope.getFileList();
+				
+			}.bind(this)).error(function(data){
+
+				// Log an error with our API request.
+				console.log("ERROR: No bueno, couldn't save a new label");
+
+			}.bind(this));
+
+	}
+
 	$scope.saveLabelEdit = function() {
 
 		// Save edits to a label.
 		console.log("!trace saving edit to: %s / new label: %s",$scope.saved_label,$scope.filterlabel);
 
+		$http.post('/api/editLabel', { username: $cookies.username, session: $cookies.session, previous: $scope.saved_label, newlabel: $scope.filterlabel })
+			.success(function(data){
+
+
+				// Reload the labels.
+				$scope.getLabelsForUser();
+
+				// We need to set our URL, which will reload files.
+				$scope.filterByLabel();
+
+				// We also need to leave the edit mode.
+				$scope.label_edit_status = EDIT_STATUS_NONE;
+				
+			}.bind(this)).error(function(data){
+
+				// Log an error with our API request.
+				console.log("ERROR: No bueno, couldn't save a new label");
+
+			}.bind(this));
 
 	}
 
-	$scope.saveLabelAdd = function() {
+	$scope.deleteLabel = function() {
 
-		// Ok, save the added label.
-		console.log("!trace adding new label: ",$scope.new_label);
+		console.log("!trace deleting label: ",$scope.filterlabel);
+
+		$http.post('/api/deleteLabel', { username: $cookies.username, session: $cookies.session, label: $scope.filterlabel })
+			.success(function(data){
+
+				// Reload the labels.
+				$scope.getLabelsForUser();
+
+				// Since we deleted a label, we wanna go back to the default.
+				$scope.filterlabel = DEFAULT_LABEL;
+
+				// We need to set our URL, which will reload files.
+				$scope.filterByLabel();
+
+				// We also need to leave the edit mode.
+				$scope.label_edit_status = EDIT_STATUS_NONE;
+				
+			}.bind(this)).error(function(data){
+
+				// Log an error with our API request.
+				console.log("ERROR: Zut alors! Couldn't delete that label.");
+
+			}.bind(this));
 
 	}
 
@@ -152,8 +216,6 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 	}
 
 	$scope.filterByLabel = function() {
-
-		console.log("!trace a",$scope.filterlabel);
 
 		// Ok, i want to use a location param for this.
 		// So i've refactored it.

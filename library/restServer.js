@@ -88,9 +88,43 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.get('/api/topFilesList', this.topFilesList);
 		server.post('/api/topFilesList', this.topFilesList);
 		server.head('/api/topFilesList', this.topFilesList);
-		
+
+		// --------------- Labels calls
+
+		server.get('/api/addLabel', this.addLabel);
+		server.post('/api/addLabel', this.addLabel);
+		server.head('/api/addLabel', this.addLabel);
+
+		server.get('/api/editLabel', this.editLabel);
+		server.post('/api/editLabel', this.editLabel);
+		server.head('/api/editLabel', this.editLabel);
+
+		server.get('/api/deleteLabel', this.deleteLabel);
+		server.post('/api/deleteLabel', this.deleteLabel);
+		server.head('/api/deleteLabel', this.deleteLabel);
 
 	};
+
+	/*
+
+		-------------- your handy stub!
+		this.theStub = function(req, res, next) {
+
+			var input = req.params;
+
+			smcman.user.validateSession(input.username,input.session,function(isvalid){
+
+				if (isvalid) {
+
+				} else {
+
+				}
+
+			});
+
+		}
+
+	*/
 
 	this.serverStart = function() {
 
@@ -98,6 +132,86 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 		server.listen(constants.SERVER_PORT, function() {
 			console.log(server.name + ' listening at ' + server.url);
 		});
+
+	}
+
+	this.deleteLabel = function(req, res, next) {
+
+		var input = req.params;
+
+		smcman.user.validateSession(input.username,input.session,function(isvalid){
+
+			if (isvalid) {
+
+				// Ok, let's add this label.
+				smcman.label.deleteLabel(input.username,input.label,function(){
+
+					res.contentType = 'json';
+					res.send({});
+
+				});
+
+			} else {
+
+				console.log("ERROR: Couldn't validate a user session for %s while trying to delete a label",input.username);
+
+			}
+
+		});
+
+	}
+
+	this.editLabel = function(req, res, next) {
+
+		var input = req.params;
+
+		smcman.user.validateSession(input.username,input.session,function(isvalid){
+
+			if (isvalid) {
+
+				// Ok, let's add this label.
+				smcman.label.editLabel(input.username,input.previous,input.newlabel,function(){
+
+					res.contentType = 'json';
+					res.send({});
+
+				});
+
+			} else {
+
+				console.log("ERROR: Couldn't validate a user session for %s while trying to edit a label",input.username);
+
+			}
+
+		});
+
+	}
+
+
+	this.addLabel = function(req, res, next) {
+
+		var input = req.params;
+
+		smcman.user.validateSession(input.username,input.session,function(isvalid){
+
+			if (isvalid) {
+
+				// Ok, let's add this label.
+				smcman.label.addLabel(input.username,input.label,function(){
+
+					res.contentType = 'json';
+					res.send({});
+
+				});
+
+			} else {
+
+				console.log("ERROR: Couldn't validate a user session for %s while trying to create a label",input.username);
+
+			}
+
+		});
+		
 
 	}
 
