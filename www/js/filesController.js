@@ -18,6 +18,8 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 		$scope.filterlabel = DEFAULT_LABEL;
 	}
 
+	// In our "constructor" we set if the label is editable.
+
 	// Maximums for pagination.
 	$scope.MAX_PER_PAGE = 15;
 	$scope.MAX_PAGES = 5;
@@ -29,7 +31,61 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 	// Default that a user cannot edit.
 	$scope.can_edit = false;
 
+	// Default that we're not editing labels.
+	var EDIT_STATUS_NONE = "none";
+	var EDIT_STATUS_ADD = "add";
+	var EDIT_STATUS_EDIT = "edit";
+
+	$scope.label_edit_status = EDIT_STATUS_NONE;
+
+
 	// Constructor at the bottom, so I can define the methods....
+
+	// ------------------------- Label Edit Methods
+
+	$scope.labelEditMode = function() {
+		console.log("!trace filterlabel: ",$scope.filterlabel);
+		// Save the current label, we'll use it on cancel, and for saving.
+		$scope.saved_label = $scope.filterlabel;
+
+		// Set the mode.
+		$scope.label_edit_status = EDIT_STATUS_EDIT;
+	}
+
+	$scope.labelAddMode = function() {
+		$scope.label_edit_status = EDIT_STATUS_ADD;
+
+	}
+
+	$scope.cancelLabelEdit = function() {
+
+		// Reset the old label.
+		$scope.filterlabel = $scope.saved_label;
+
+		// Reset any possible new label.
+		$scope.new_label = "";
+
+		// Go back to not-editing-mode.
+		$scope.label_edit_status = EDIT_STATUS_NONE;
+
+	}
+
+	$scope.saveLabelEdit = function() {
+
+		// Save edits to a label.
+		console.log("!trace saving edit to: %s / new label: %s",$scope.saved_label,$scope.filterlabel);
+
+
+	}
+
+	$scope.saveLabelAdd = function() {
+
+		// Ok, save the added label.
+		console.log("!trace adding new label: ",$scope.new_label);
+
+	}
+
+	// ------------------------- File Edit Methods
 
 	$scope.editIt = function(idx) {
 
@@ -63,7 +119,7 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 			}.bind(this)).error(function(data){
 
 				// Log an error with our API request.
-				console.log("ERROR: That's a downer, I couldn't save changed to a file.");
+				console.log("ERROR: That's a downer, I couldn't save changes to a file.");
 
 			}.bind(this));
 
@@ -97,12 +153,17 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 
 	$scope.filterByLabel = function() {
 
+		console.log("!trace a",$scope.filterlabel);
+
 		// Ok, i want to use a location param for this.
 		// So i've refactored it.
 
 		// Flip back to the first page.
 		$scope.files_pageon = 1;
 		$location.search('page', null);
+
+		// Reset the delete warning.
+		$scope.label_delete_warning = false;
 
 		// Find out what it is.
 		// Filter by all, but clear the URL if it's default.
@@ -115,12 +176,14 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 			$location.search('label', $scope.filterlabel);
 		}
 
+		// Check if it's editable.
+		$scope.setIfLabelIsEditable();
+
 		// Set our base URLs for pagination.
 		$scope.setBaseURLForPagination();
 
 		// Now we can refresh that file list.
 		$scope.getFileList();
-
 
 	}
 
@@ -288,16 +351,31 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 		}
 	}
 
+	$scope.setIfLabelIsEditable = function() {
+
+		// Can the user edit this label?
+		$scope.label_is_editable = false;
+		// If this is their user, and, it's not the default label, yes they can.
+		if ($scope.filesuser == $cookies.username && $scope.filterlabel != DEFAULT_LABEL) {
+			$scope.label_is_editable = true;
+		}
+
+	}
+
 	// Constructor type actions....
 	$scope.search_status = "emptysearch";
 
 	// Here's our URL params.
 	$scope.filesuser = $location.search().user;
+
 	if (typeof $scope.filesuser != 'undefined') {
 
 		// So that's great, there's a username there.
 		// Let's start the request to pull up the user's files.
 		$scope.getLabelsForUser();
+
+		// Check if that label is editable.
+		$scope.setIfLabelIsEditable();
 
 		// Set the base URLs for pagination.
 		$scope.setBaseURLForPagination();

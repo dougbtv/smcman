@@ -64,19 +64,68 @@
 
 		<div class="files-filter-bar">
 
-			<div class="form-group">
+			<div class="form-group" ng-switch="label_edit_status">
 
-				<div class="col-sm-2 ">
-					<label for="selectlabel" class="control-label">Filter to label:</label>
-				</div>
+				<span ng-switch-when="none">
 
-				<div class="col-sm-10">
+					<div class="row">
 
-					<select ng-model="filterlabel" ng-change="filterByLabel()" class="form-control" ng-options="label for label in labellist">
-						<option style="display:none" value="">{All Labels}</option>
-					</select>
+						<div class="col-sm-6">
+							<div class="input-group">
+								<span class="input-group-addon">Showing Label:</span>
+								<select ng-model="$parent.filterlabel" ng-change="filterByLabel()" class="form-control" ng-options="label for label in labellist">
+									<option style="display:none" value="">{All Labels}</option>
+								</select>
+							</div>
+						</div>
 
-				</div>
+						<div class="col-sm-4">
+							<button ng-show="label_is_editable" ng-click="labelEditMode()" type="button" class="btn btn-sm btn-info">Edit</button>
+							<span ng-show="label_is_editable" ng-switch="search_status" >
+								<button ng-hide="label_delete_warning" ng-click="label_delete_warning=true;" type="button" class="btn btn-sm btn-warning">Delete</button>
+								<button ng-show="label_delete_warning" ng-click="deleteLabel()" type="button" class="btn btn-sm btn-danger">Are you sure?</button>
+							</span>
+							<button ng-show="can_edit" ng-click="labelAddMode()" type="button" class="btn btn-sm btn-primary">Add New Label</button>
+						</div>
+
+					</div>
+
+				</span>
+
+				<span ng-switch-when="edit">
+					<!-- -  - - - - - - -  editing a label -->
+
+					<div class="col-sm-6">
+						<div class="input-group">
+							<span class="input-group-addon">Edit Label:</span>
+							<input type="text" ng-model="$parent.filterlabel" class="form-control" ng-options="label for label in labellist">
+						</div>
+					</div>
+
+					<div class="col-sm-4">
+						<button ng-click="saveLabelEdit()" type="button" class="btn btn-sm btn-primary">Save</button>
+						<button ng-click="cancelLabelEdit()" type="button" class="btn btn-sm btn-info">Cancel</button>
+					</div>
+
+				</span>
+
+				<span ng-switch-when="add">
+					<!-- -  - - - - - - -  adding a label -->
+					
+					<div class="col-sm-6">
+						<div class="input-group">
+							<span class="input-group-addon">Add Label:</span>
+							<input type="text" placeholder="(Your new label)" ng-model="$parent.new_label" class="form-control" ng-options="label for label in labellist">
+						</div>
+					</div>
+
+					<div class="col-sm-4">
+						<button ng-click="saveLabelAdd()" type="button" class="btn btn-sm btn-primary">Save</button>
+						<button ng-click="cancelLabelEdit()" type="button" class="btn btn-sm btn-info">Cancel</button>
+					</div>
+
+				</span>
+
 			</div>
 
 		</div>
