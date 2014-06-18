@@ -11,6 +11,13 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 		$scope.files_pageon = 1;
 	}
 
+	// See if there's a filter in the URL.
+	$scope.filterlabel = $location.search().label;
+	if (typeof $scope.filterlabel == 'undefined') {
+		// Default it if need be.
+		$scope.filterlabel = DEFAULT_LABEL;
+	}
+
 	// Maximums for pagination.
 	$scope.MAX_PER_PAGE = 15;
 	$scope.MAX_PAGES = 5;
@@ -88,6 +95,34 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 
 	}
 
+	$scope.filterByLabel = function() {
+
+		// Ok, i want to use a location param for this.
+		// So i've refactored it.
+
+		// Flip back to the first page.
+		$scope.files_pageon = 1;
+		$location.search('page', null);
+
+		// Find out what it is.
+		// Filter by all, but clear the URL if it's default.
+		if ($scope.filterlabel == DEFAULT_LABEL) {
+			// Ok, it's a default.
+			// You can clear it with a null.
+			$location.search('label', null);
+		} else {
+			// That in the URL.
+			$location.search('label', $scope.filterlabel);
+		}
+
+		// Set our base URLs for pagination.
+		$scope.setBaseURLForPagination();
+
+		// Now we can refresh that file list.
+		$scope.getFileList();
+
+
+	}
 
 	$scope.getFileList = function() {
 
@@ -243,7 +278,15 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 
 	}
 
-	$scope.filterlabel = DEFAULT_LABEL;
+	$scope.setBaseURLForPagination = function() {
+		// Hook that onto our baseurl.
+		$scope.files_baseurl += "?user=" + $scope.filesuser;
+
+		// Do we need a label there too?
+		if ($scope.filterlabel != DEFAULT_LABEL) {
+			$scope.files_baseurl += "&label=" + $scope.filterlabel;
+		}
+	}
 
 	// Constructor type actions....
 	$scope.search_status = "emptysearch";
@@ -256,8 +299,8 @@ smcFrontEnd.controller('filesController', ['$scope', '$location', '$http', '$coo
 		// Let's start the request to pull up the user's files.
 		$scope.getLabelsForUser();
 
-		// Hook that onto our baseurl.
-		$scope.files_baseurl += "?user=" + $scope.filesuser;
+		// Set the base URLs for pagination.
+		$scope.setBaseURLForPagination();
 
 		// And also get the default page for 'em.
 		$scope.getFileList();
