@@ -18,6 +18,9 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 	var MAX_IN_PAGINATOR = 5;
 
 	// Defaults
+
+	// Our base URL, which we need for the paginator.
+	$scope.smc_baseurl = "#/smc";
 	
 	// $scope.message = "quux";
 	console.log("!trace smc controller reporting in:",moment().format('MMMM Do YYYY, h:mm:ss a'));
@@ -35,7 +38,10 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 		// Set that it's the first page.
 		$scope.smc_pageon = 1;
 	}
-	
+
+	// Assume no list.
+	$scope.smc_list = false;
+
 	$scope.smcClockUpdate = function() {
 
 		if (inprogress) {
@@ -90,59 +96,7 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 	};
 
-	$scope.buildPaginator = function(pageon,total) {
-
-		// Ahh maybe strings being passed through the URL.
-		total = parseInt(total);
-		pageon = parseInt(pageon);
-
-		// Ok, we need to figure out max
-		var totalpages = Math.ceil(total/MAX_PER_PAGE);
-
-		// Then, given the pageon, which items do we show in the paginator?
-		// Only show up to MAX_IN_PAGINATOR entries.
-		var paginator = [];
-
-		// We a boundary given the max in paginator... which is /2 and floor it.
-		// So, for example if we show a max of 5, we show 2 on either side. 5/2 = 2.5 = 2
-		var boundary = Math.floor(MAX_IN_PAGINATOR / 2);
-
-		// Given that boundary, how close are we to the edge?
-		var begin = pageon - boundary;
-		if (begin < 1) { begin = 1; }
-
-		var end = pageon + boundary;
-
-		// Push out the end if it's too short.
-
-			if (end > totalpages) { 
-				// This is the boundary at the end of the range.
-				end = totalpages;
-				begin = (totalpages - MAX_IN_PAGINATOR) + 1;
-			} else {
-				// This is the boundary at the beginning of the range.
-				if ((end - begin) < MAX_IN_PAGINATOR-1) {
-					end = MAX_IN_PAGINATOR;
-				}
-			}
-
-		for (var i = begin; i <= end; i++) {
-
-			var myclass = "";
-			if (i == pageon) {
-				myclass = "active";
-			}
-
-			paginator.push({
-				page: i,
-				class: myclass
-			});
-		}
-
-		$scope.paginator = paginator;
-		$scope.paginator_lastpage = totalpages;
-
-	}
+	
 
 	$scope.submitVote = function(id,nick) {
 
@@ -213,10 +167,17 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 				}
 
+				// Set pagination properties.
+				$scope.smc_maxperpage = MAX_PER_PAGE;
+				$scope.smc_maxinpaginator = MAX_IN_PAGINATOR;
+				$scope.smc_datatotal = data.total;
+
+				console.log("!trace this is when the smc list is loaded.");
+
+				// Now load the list
 				$scope.smc_list = data.smcs;
 
-				$scope.buildPaginator(page,data.total);
-
+				// $scope.buildPaginator(page,data.total);
 
 			}.bind(this)).error(function(data){
 

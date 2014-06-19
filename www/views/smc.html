@@ -83,19 +83,13 @@
 				
 				</span>
 				
-				<img src="{{entry.url}}" width="325">
+				<img ng-src="{{entry.url}}" width="325">
 			</div>
 			
 		</div>
 	</div>
 
-	<ul class="pagination">
-		<li><a href="#/smc?page=1">&laquo;</a></li>
-
-		<li ng-repeat="page in paginator" class="{{page.class}}">
-			<a href="#/smc?page={{page.page}}">{{page.page}}</a>
-		</li>
-
-		<li><a href="#/smc?page={{paginator_lastpage}}">&raquo;</a></li>
-	</ul>
+	<div ng-if="smc_list">
+		<paginator baseurl="smc_baseurl" maxperpage="smc_maxperpage" maxpages="smc_maxinpaginator" total="smc_datatotal"></paginator>
+	</div>
 

@@ -60,6 +60,9 @@
 		<script src="/js/preferencesController.js"></script>
 		<script src="/js/smcSocketService.js"></script>
 		<script src="/js/smcController.js"></script>
+		<script src="/js/filesController.js"></script>
+		<script src="/js/paginationComponent.js"></script>
+		<script src="/js/hitEnterDirective.js"></script>
 
 		<style type="text/css">
 		</style>
@@ -89,6 +92,7 @@
 						<li ng-class="navClass('home')" 	ng-click="switchPage('home')"><a href="#/home">Home</a></li>
 						<li ng-class="navClass('smc')" 		ng-click="switchPage('smc')"><a href="#/smc">SMC!</a></li>
 						<li ng-class="navClass('upload')" 	ng-click="switchPage('upload')"><a href="#/upload">Upload</a></li>
+						<li ng-class="navClass('files')" 	ng-click="switchPage('files')"><a href="#/files">Files</a></li>
 						<li ng-class="navClass('help')" 	ng-click="switchPage('help')"><a href="#/help">Help</a></li>
 						<li ng-class="navClass('about')" 	ng-click="switchPage('about')"><a href="#/about">About</a></li>
 					
@@ -124,6 +128,7 @@
 							</a>
 
 							<ul class="dropdown-menu">
+								<li><a ng-href="#/files?user={{username}}">My Files</a></li>								
 								<li><a href="#/preferences">My Preferences</a></li>								
 								<li class="divider"></li>
 								<li><a href="#" ng-click="logOutUser()">Logout</a></li>

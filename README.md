@@ -20,10 +20,7 @@ Requires internal (should come with your node) modules:
 ---
 **Install**
 
-Firstly, copy the file "config_private.js" to "config_private_mine.js" and (optionally) add to svn ignore.
-
-    [user@host]$ cp config_private.js config_private_mine.js
-    [user@host]$ svn propset svn:ignore config_private_mine.js .
+Firstly, copy the file "config_private.js" to "config_private_mine.js" and (optionally) add to your git ignore.
 
 Secondly, you should be able to get the modules you need right in this cwd with npm, 
 

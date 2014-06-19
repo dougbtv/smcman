@@ -19,17 +19,44 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		indate: Date,			// Date of upload
 		is_smc: Boolean,		// Is this for an SMC?
 		description: String,	// A description.
-		category: String,		// (Unused?) A category.
+		label: String,			// A label, like a gmail email label, same idea.
 		complete: Boolean, 		// Is the upload complete?
 		tiny_url: Number,		// What's it's tiny url ID?
 		deleted: Boolean,		// Is this removed?
-
+		legacy: {				// Exists for legacy items, only.
+			recnum: Number,		// Record number from mysql.
+			secret: String,		// Old secret.
+			file: String,		// The file path (probably most important.)
+			category: String,	// Category from filemanage, likely obsolete.
+		},
 	}, { collection: 'uploads' });
+
+	// We want virtuals when we export to json.
+	uploadSchema.set('toObject', { virtuals: true });
+
+	// Elegant little way to hide properties when transforming to object.
+	// http://mongoosejs.com/docs/api.html#document_Document-toObject
+	// (do a find for "hide", both on that doc, and here. To see it in action)
+	uploadSchema.options.toObject.transform = function (doc, ret, options) {
+	  if (options.hide) {
+	    options.hide.split(' ').forEach(function (prop) {
+	      delete ret[prop];
+	    });
+	  }
+	}
 
 	// The URL to upload to.
 	uploadSchema.virtual('upload_url')
 		.get(function () {
 			return privates.URL_SMCSITE + "#/upload?key=" + this.secret;
+		});
+
+	// The URL to upload to.
+	uploadSchema.virtual('timeago')
+		.get(function () {
+			// !bang
+			var sincewhen = new moment(this.indate);
+			return sincewhen.fromNow();
 		});
 
 	// The final URL
@@ -41,18 +68,96 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 			// api/view is our path
 			// SSS is the first three characters of our secret.
 			// XXXX is the hex value of the tiny url
+
+			if (this.legacy.recnum) {
+				return "http://speedmodeling.org/smcfiles/" + this.legacy.file;
+			}
+
 			return privates.URL_SMCSITE + constants.PATH_URL_FILESTORAGE + "/" + this.symlinkname;
+		});
+
+	// Determine if what we've got here is an image.
+
+	uploadSchema.virtual('is_image')
+		.get(function(){
+
+			if (this.legacy.recnum) {
+				// Ok, determine if it's an image based on the extension.
+				var ext = this.legacy.file.replace(/^.+\.(.+)$/,'$1');
+				// console.log("!trace FILENAME / EXTENSION: %s / %s",this.legacy.file,ext);
+				// Now see if it matches by it's extension.
+				var re_image = new RegExp('(jpg|jpeg|png|gif|bmp)','i');
+				if (ext.match(re_image)) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+			if (typeof this.mime_type == 'undefined') {
+				return false;
+			}
+
+			if (this.mime_type.match(/(image|jpg|jpeg|png|tga|bmp|svg|gif)/)) {
+				return true;
+			} else {
+				return false;
+			}
+
+		});
+
+	// We show icons if it's not an image, in the web app.
+	// based on bootstrap glyphs: http://getbootstrap.com/components/#glyphicons
+
+	uploadSchema.virtual('icon')
+		.get(function(){
+
+			var target = "";
+
+			if (this.legacy.recnum) {
+				target = this.legacy.file.replace(/^.+\.(.+)$/,'$1');
+			} else {
+				target = this.mime_type;
+			}
+
+			if (typeof target == 'undefined') {
+				return false;
+			}
+
+			if (target.match(/(audio|mpeg|mp3|wav|aiff|aif|ogg|vorbis|opus)/)) {
+				return "glyphicon-music";
+			} else {
+				if (target.match(/(video|mp4|wmv|mov)/)) {
+					return "glyphicon-film";
+				} else {
+					if (target.match(/(pdf)/)) {
+						return "glyphicon-book";
+					} else {
+						if (target.match(/(blend)/)) {
+							return "glyphicon-asterisk";
+						} else {
+							// Default icon.
+							return "glyphicon-download-alt";
+						}
+					}
+				}
+			}
+
 		});
 
 		// 
 
 	uploadSchema.virtual('symlinkname')
 		.get(function () {
+			if (this.legacy.recnum) {
+				return false;
+			}
 			return this.secret.substring(0,3) + this.tiny_url.toString(16);
 		});
 
 	uploadSchema.virtual('file_directory')
 		.get(function () {
+			if (typeof this.secret === 'undefined') { return false; }
 			return constants.PATH_UPLOAD_STORAGE + this.secret.substring(0,2) + "/";
 		});
 
@@ -330,6 +435,255 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	}
 
+	// -------------------------------------------------------
+	// --------- Web Application Features
+	// -------------------------------------------------------
+	
+	this.webappEditFile = function(inputfile,nick,callback) {
+
+		// Alright, let's get that inputfile, then we'll update it, and save it.
+		Upload.findOne({_id: inputfile._id, nick: nick},function(err, upload){
+
+			if (!err) {
+
+				// Ok, set the properties that we like.
+				// Mostly, description and label.
+				upload.description = inputfile.description;
+				upload.label = inputfile.label;
+
+				// mark deleted if need be.
+				if (inputfile.deleted) {
+					upload.deleted = inputfile.deleted;
+				}
+
+				upload.save();
+
+				callback(false);
+
+			} else {
+
+				console.log("ERROR: Couldn't update _id: %s during webapp inputfile edit",inputfile._id);
+				callback(true);
+
+			}
+
+		});
+
+	}
+
+	// How about listing files for a user?
+	// !bang
+	this.listFiles = function(nick,label,limit,page,callback) {
+
+		// Setup our search.
+		var search = {};
+		search = {nick: nick, complete: true, $or: [ { deleted: false }, { deleted: {"$exists": false} } ] };
+		
+		if (label) {
+			search.label = label;
+		}
+
+		Upload.count(search,function(err,counted){
+
+			Upload.find(search).sort({indate: -1}).skip(limit * (page-1)).limit(limit).exec(function(err,uploads){
+
+				var total_result = [];
+
+				for (var i = 0; i < uploads.length; i++) {
+					total_result.push(
+						uploads[i].toObject({hide: 'file_full_path file_directory secret upload_url', transform: true ,virtuals: true})
+					);
+				}
+
+				// console.log("!trace total_result: %j",total_result);
+
+				callback({
+					total: counted,
+					uploads: total_result,
+				});
+
+			});
+
+		});
+
+	}
+
+	// Used for the !files command. Shows a URL for a user's files
+
+	this.filesFor = function(command,from) {
+
+		console.log("!trace the command: ",command);
+
+		if (command.arglist) {
+
+			var fornick = command.arglist[0];
+
+			// If we have the arglist we go by nick.
+			this.totalFilesForNick(fornick,function(counted){
+
+				switch (counted) {
+					case 0:
+						chat.say("nofiles",[fornick]);
+						break;
+					default:
+						var url = privates.URL_SMCSITE + "#/files?user=" + fornick;
+						chat.say("files",[url]);
+						break;
+				}
+
+			});
+
+
+		} else {
+
+			// Or they can get the general files URL.
+			chat.say("allfiles",[privates.URL_SMCSITE + "#/files"]);
+
+		}
+		
+	}
+
+	// When the label module deletes a label, we strip it from the upload document.
+
+	this.stripLabels = function(nick,labelnamed,callback) {
+
+		Upload.find({nick: nick, label: labelnamed},function(err,uploads){
+
+			for (var i = 0; i < uploads.length; i++) {
+				upload = uploads[i];
+				// Ok, change the label.
+				upload.label = undefined;
+				upload.save();
+			}
+
+			// Now we can call back.
+			callback();
+
+		});
+
+	}
+				
+
+	this.updateLabels = function (nick,original,newlabel,callback) {
+
+		// Alright, go ahead and update the labels for this guy.
+		Upload.find({nick: nick, label: original},function(err,uploads){
+
+			for (var i = 0; i < uploads.length; i++) {
+				var upload = uploads[i];
+				
+				// Ok, change the label.
+				upload.label = newlabel;
+				upload.save();
+			}
+
+			// Now we can call back.
+			callback();
+
+		});
+
+	}
+
+	// totalfiles_one
+	// totalfiles_server
+	// totalfiles_none
+	// totalfiles
+
+	this.chatTotalFiles = function(command,from) {
+
+		if (command.arglist) {
+
+			var fornick = command.arglist[0];
+
+			// If we have the arglist we go by nick.
+			this.totalFilesForNick(fornick,function(counted){
+
+				switch (counted) {
+					case 0:
+						chat.say("totalfiles_none",[fornick]);
+						break;
+					case 1:
+						chat.say("totalfiles_one",[fornick,counted]);
+						break;
+					default:
+						chat.say("totalfiles",[fornick,counted]);
+						break;
+				}
+
+			});
+
+
+		} else {
+
+			// Or they can get the general number of files
+			this.totalFilesOnServer(function(counted){
+				chat.say("totalfiles_server",[counted]);
+			});
+
+			
+
+		}
+
+	}
+
+
+	// Returns the total number of files for a nick.
+	// ...excluding those marked deleted.
+
+	this.totalFilesForNick = function(nick,callback) {
+
+		Upload.count({nick: nick, $or: [ { deleted: false }, { deleted: {"$exists": false} } ]}, function(err, counted) {
+
+			callback(counted);
+
+		});
+
+	}
+
+	// Gives us the total number of files we have stored on the server.
+
+	this.totalFilesOnServer = function(callback) {
+
+		Upload.count({$or: [ { deleted: false }, { deleted: {"$exists": false} } ]}, function(err, counted) {
+
+			callback(counted);
+
+		});
+
+	}
+
+	// Here's the list of top uploaders, which we'll use for the intro page.
+	// nice article dougbtv learned from: http://lostechies.com/derickbailey/2013/10/28/group-by-count-with-mongodb-and-mongoosejs/
+
+	this.topFilesList = function(limit,callback) {
+
+		var agg = [
+			{$group: {
+				_id: "$nick",
+				// SUCCESS!!! :D
+				total: {$sum: 1}
+			}},
+			{ $sort: { total: -1 } },
+			{ $limit: limit }
+		];
+
+		Upload.aggregate(agg, function(err, topnicks){
+			if (err) { 
+				console.log("ERROR: Couldn't aggregate the topfiles list");
+			}
+
+			// Let's make a clean array.
+			var topresult = [];
+
+			for (i = 0; i < topnicks.length; i++) {
+				topresult.push({nick: topnicks[i]._id, total: topnicks[i].total});
+			}
+
+			callback(topresult);
+
+		});
+
+	}
 	
 
 }

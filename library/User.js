@@ -110,6 +110,22 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 	}
 
+	this.searchForUsers = function(re_searchnick,callback) {
+
+		User.find({nick: re_searchnick},function(err,users){
+
+			var nicks = [];
+			for (var i = 0; i < users.length; i++) {
+				var eachuser = users[i];
+				nicks.push(eachuser.nick);
+			}
+
+			callback(nicks);
+
+		});		
+
+	}
+
 	this.createUser = function(from,callback) {
 
 		var user = new User();
