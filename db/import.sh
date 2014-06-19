@@ -1,12 +1,15 @@
 #!/bin/bash
-echo "Just clearing out chat...."
+echo "Just clearing out chat and uploads...."
 function clearCollection {
     mongo <<EOF
     use smcman
     db.chat.remove()
+    db.uploads.remove()
 EOF
 }
 clearCollection
+
+echo "Now importing everything..."
 
 mongoimport --db smcman --collection chat --file chat.json
 mongoimport --db smcman --collection notes --file notes.json
