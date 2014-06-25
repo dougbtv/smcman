@@ -5,5 +5,5 @@ mongoexport --db smcman --collection admins --out admins.json
 mongoexport --db smcman --collection counters --out counters.json
 mongoexport --db smcman --collection uploads --out uploads.json
 mongoexport --db smcman --collection users --out users.json
-
+mongoexport --db smcman --collection smcs --out smcs.json
 

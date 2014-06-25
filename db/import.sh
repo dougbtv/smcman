@@ -17,4 +17,5 @@ mongoimport --db smcman --collection admins --file admins.json
 mongoimport --db smcman --collection counters --file counters.json
 mongoimport --db smcman --collection uploads --file uploads.json
 mongoimport --db smcman --collection users --file users.json
+mongoimport --db smcman --collection smcs --file smcs.json
 
