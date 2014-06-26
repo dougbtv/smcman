@@ -1,5 +1,8 @@
+// DS ran this from smcman with:
+//		var Convert = require("../db/smcconvert/baWalker.js");
+//		this.convert = new Convert(this);
 
-var baWalker = function () {
+module.exports = function(smcman) {
 
 	// Scrape BA to fill up SMC documents in mongodb.
 	// ...wish I coded it into smcman previously, lol.
@@ -11,7 +14,7 @@ var baWalker = function () {
 	var moment = require('moment');				// momentjs <3
 	var schedule = require('node-schedule');	// schedule stuff (we don't wanna hammer BA.)
 
-	var SCHEDULE_WAIT = 2;
+	var SCHEDULE_WAIT = 1;
 
 	var MONTHS = [
 		"{zero}",
@@ -35,7 +38,7 @@ var baWalker = function () {
 
 	// This is important, it tells us the BA page to list from.
 	// ...we countdown from this number.
-	var baListPageNumber = 74;
+	var baListPageNumber = 65;
 
 	var getPostList = function(options,callback) {
 
@@ -128,8 +131,8 @@ var baWalker = function () {
 								var smcdoc = {
 									ba_url: posturl,
 									duration: parseInt(postduration),
-									endsat: { "$date" : postdate.valueOf() },
-									startsat: { "$date" : postdate.subtract("minutes",parseInt(postduration)).valueOf() },
+									endsat: postdate.toDate(),
+									startsat: postdate.subtract("minutes",parseInt(postduration)).toDate(),
 									topic: posttopic,
 									phase: 4,
 									smcers: [],
@@ -158,8 +161,6 @@ var baWalker = function () {
 
 	var getSMCPost = function(smc,callback) {
 
-		console.log("!trace prepping to get: ",smc.ba_url);
-
 		var perpost_options = {
 			method: 'GET',
 			uri: smc.ba_url,
@@ -172,8 +173,53 @@ var baWalker = function () {
 				// We use cheerio for dom parsing
 				var $ = cheerio.load(html);
 
-				console.log("!trace GREAT, got that page.");
-				callback();
+				var images = [];
+
+				var postcontainer = $('.postcontent').find('img').each(function(idx,theimg){
+					var eachimage = theimg.attribs.src;
+					if (eachimage.match(/speedmodeling\.org.+smcfiles/)) {
+						// console.log("!trace theimg: ",eachimage);
+						images.push(eachimage);
+					} else {
+						// console.log("!trace NO MATCH: ",eachimage);
+					}
+				});
+
+				// Wow, that was screwing me over, setting a variable to an array makes a pointer.
+				var imagelistcopy = images.slice(0);
+
+				// Ok, get the nicks for all of these.
+				getNickRecurse(images,[],function(nicklist){
+
+					// The nicklist is backwards.
+					nicklist.reverse();
+
+					// We should be able to build the document now...
+					var smcerslist = [];
+
+					for (var i = 0; i < imagelistcopy.length; i++) {
+						smcerslist.push({nick: nicklist[i], url: imagelistcopy[i], uploaded: true});
+					}
+
+					// Set the array-of-hashes of smcers.
+					smc.smcers = smcerslist;
+
+					// Now, we finally save it!
+					smcman.smc.legacyInsert(smc,function(didinsert){
+						// Ok, we saved it!
+						if (didinsert) {
+							console.log("SUCCESS: Inserted '%s' from ",smc.topic,smc.endsat);
+						}
+						
+						// Ok, that's a success, go back to where you came.
+						callback();
+
+					});
+
+
+				}.bind(images));
+
+				
 
 			} else {
 				console.log("!ERROR: Couldn't get that URL, in getting an SMC post.");
@@ -183,23 +229,31 @@ var baWalker = function () {
 
 	}
 
-	/*
-	this.foo = "bar!";
+	var getNickRecurse = function(imglist,result,callback) {
 
-	this.pagePopper = function(smcdocs,callback) {
+		if (imglist.length) {
 
-		var eachsmc = smcdocs.shift();
+			// Ok, make the call to smcman.
+			var img = imglist.pop();
 
-		getSMCPost(eachsmc,function(smcers){
+			// Ok make the request using that.
+			smcman.upload.getNickByLegacyName(img,function(nick){
 
-			console.log("!trace FOO: ",this.foo);
-			// now recurse...
-			callback(this.pagePopper(smcdocs));
+				result.push(nick);
+				getNickRecurse(imglist,result,function(){
+					// console.log("!trace Stepping out.");
+					callback(result);
+				});
 
-		}.bind(this));
+			});
 
-	}.bind(this);
-	*/
+
+		} else {
+			// console.log("!trace NICK RECURSE ENDPOINT.");
+			callback(result);
+		}
+
+	}
 	
 	// -------------------------- The Handler! (comes at the end, all JS style.
 
@@ -283,5 +337,3 @@ var baWalker = function () {
 	listRecurse();
 
 }
-
-var walker = new baWalker();

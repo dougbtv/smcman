@@ -684,6 +684,30 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 		});
 
 	}
+
+	// ------------------------------- Conversion Utils!
+	// These are from converting from the old SMC data.
+
+	this.getNickByLegacyName = function(url,callback) {
+
+		// Strip name from url.
+		var legacyname = decodeURIComponent(url.replace(/^.+smcfiles\/(.+)$/,"$1"));
+
+		Upload.findOne({"legacy.file": legacyname},function(err,upload){
+
+			if (!upload) {
+				console.log("!ERROR: Fudge, couldn't find a nick by legacy url, url: ",url);
+				callback("{unknown}");
+			} else {
+				// Send back that nick.
+				// console.log("!trace TARGET NICK: ",upload,url);
+				callback(upload.nick);
+			}
+
+
+		});
+
+	}
 	
 
 }

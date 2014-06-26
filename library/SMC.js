@@ -668,4 +668,39 @@ module.exports = function(smcman, bot, chat, mongoose, db, socketserver, constan
 
 	}
 
+	// ------------------------ Legacy Insertion!
+
+	this.legacyInsert = function(legacy,callback) {
+
+		// Check if this exists...
+		SMC.findOne({topic: legacy.topic, endsat: legacy.endsat},function(err,foundsmc){
+
+			if (!foundsmc) {
+
+				// Ok, create a new document.
+				var newsmc = new SMC;
+
+				newsmc.duration = legacy.duration;
+				newsmc.endsat = legacy.endsat;
+				newsmc.startsat = legacy.startsat;
+				newsmc.topic = legacy.topic;
+				newsmc.phase = legacy.phase;
+				newsmc.smcers = legacy.smcers;
+
+				newsmc.save(function(err){
+					callback(true);
+				});
+
+
+			} else {
+				console.log("!NOTICE: I found that SMC '%s'",legacy.topic);
+				callback(false);
+			}
+
+		});
+
+	}
+
+
+
 }
