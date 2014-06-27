@@ -54,7 +54,6 @@
 
 	<div class="alert alert-info" ng-hide="smc">
 		<h5>There's no live SMC in progress, right now. (When there is, you'll see info about it here)</h5>
-
 	</div>
 	
 	<div class="page-header">
@@ -82,7 +81,12 @@
 		<div class="smcentry" ng-repeat="entry in eachsmc.smcers">
 			
 			<div class="smcentryhead">
-				{{entry.votes}} Votes - {{entry.nick}}
+				<span ng-switch on="entry.votes || 'null'">
+					<span ng-switch-when="0">No Votes - </span>
+					<span ng-switch-when="null">No Votes - </span>
+					<span ng-switch-when="1">1 Vote - </span>
+					<span ng-switch-default>{{entry.votes}} Votes - </span>
+				</span>{{entry.nick}}
 			</div>
 			
 			<div class="entryimagecontainer">
