@@ -518,13 +518,30 @@ module.exports = function(smcman, bot, chat, mongoose, db, socketserver, constan
 		
 	}
 
-	this.smcPage = function(page,limit,callback) {
+	this.smcPage = function(page,limit,extended,callback) {
+
+		// We have extended search paramters in this case.
+		var search = {};
+		if (extended) {
+
+			// Use a regex to search.
+			var re_search = new RegExp(extended.text,'i');
+
+			switch (extended.metric) {
+				case "Topic":
+					search = {topic: re_search};
+					break;
+				case "Nick":
+					search = {"smcers.nick": re_search};
+					break;
+			}
+		}
 
 		// We're going to want a total count of documents in the collection.
-		SMC.count({},function(err,counted){
+		SMC.count(search,function(err,counted){
 
 			// Ok, let's get some SMCs.
-			var result = SMC.find({}).sort({startsat: -1}).skip(limit * (page-1)).limit(limit).exec(function(err,smclist){
+			var result = SMC.find(search).sort({startsat: -1}).skip(limit * (page-1)).limit(limit).exec(function(err,smclist){
 
 				// Return what we've got.
 				callback({total: counted, smcs: smclist});
@@ -667,5 +684,40 @@ module.exports = function(smcman, bot, chat, mongoose, db, socketserver, constan
 		console.log("------------------------------------------");
 
 	}
+
+	// ------------------------ Legacy Insertion!
+
+	this.legacyInsert = function(legacy,callback) {
+
+		// Check if this exists...
+		SMC.findOne({topic: legacy.topic, endsat: legacy.endsat},function(err,foundsmc){
+
+			if (!foundsmc) {
+
+				// Ok, create a new document.
+				var newsmc = new SMC;
+
+				newsmc.duration = legacy.duration;
+				newsmc.endsat = legacy.endsat;
+				newsmc.startsat = legacy.startsat;
+				newsmc.topic = legacy.topic;
+				newsmc.phase = legacy.phase;
+				newsmc.smcers = legacy.smcers;
+
+				newsmc.save(function(err){
+					callback(true);
+				});
+
+
+			} else {
+				console.log("!NOTICE: I found that SMC '%s'",legacy.topic);
+				callback(false);
+			}
+
+		});
+
+	}
+
+
 
 }

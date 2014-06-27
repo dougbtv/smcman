@@ -19,6 +19,7 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 	// Defaults
 
+	
 	// Our base URL, which we need for the paginator.
 	$scope.smc_baseurl = "#/smc";
 	
@@ -38,6 +39,22 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 		// Set that it's the first page.
 		$scope.smc_pageon = 1;
 	}
+
+	// We set the search metric to topic by default (can be changed to "Nick" as well)
+	$scope.search_metric = $location.search().metric;
+	if (typeof $scope.search_metric == 'undefined') {
+		// Topic is the default.
+		$scope.search_metric = "Topic";
+	}
+
+	// Get our search text
+	$scope.search_text = $location.search().search;
+	if (typeof $scope.search_text == 'undefined') {
+		// By default, no search text.
+		$scope.search_text = "";
+	}
+
+	// NOTE: Construction at bottom.
 
 	// Assume no list.
 	$scope.smc_list = false;
@@ -120,12 +137,32 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 	}
 
-	$scope.getSMCPage = function(page) {
+	$scope.getSMCPage = function(page,search) {
+
+		var searchparams = { page: page, limit: MAX_PER_PAGE };
+
+		var extended_search = false;
+		if (typeof search != 'undefined') {
+			// Add to the search params.
+			searchparams.metric = search.metric;
+			searchparams.text = search.text;
+			extended_search = true;
+		}
 
 		// Ok, get those SMCs.
+		// Reset the list to false? (*shrugs*)
+		// The reason to do this is so that the pagination updates.
+		$scope.smc_list = false;
 
-		$http.post('/api/getSMCList', { page: page, limit: MAX_PER_PAGE })
+		$http.post('/api/getSMCList', searchparams)
 			.success(function(data){
+
+				// Creates a nasty infinite loop.
+				if (extended_search) {
+					// console.log("!trace extended search? ",extended_search);
+					// $location.search('search', $scope.search_metric);
+					// $location.search('metric', $scope.search_text);
+				}
 
 				// Alright, this is good.
 				// Set which page we're on.
@@ -172,8 +209,6 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 				$scope.smc_maxinpaginator = MAX_IN_PAGINATOR;
 				$scope.smc_datatotal = data.total;
 
-				console.log("!trace this is when the smc list is loaded.");
-
 				// Now load the list
 				$scope.smc_list = data.smcs;
 
@@ -186,9 +221,6 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 			}.bind(this));
 
 	}
-
-	// Make a call to get the page in the URL (or the default if it's not specified)....
-	$scope.getSMCPage($scope.smc_pageon);
 
 	$scope.joinOrLeaveSMC = function(joinit) {
 
@@ -355,6 +387,57 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 		}
 
 	}
+
+	// --------------------------------------------------- Search features
+
+	$scope.setSearchMetric = function(metric) {
+
+		if (metric != $scope.search_metric) {
+			// We act on change.
+			// Set the metric.
+			$scope.search_metric = metric;
+			// Clear the current search? yes.
+			$scope.search_text = "";
+		}
+
+	}
+
+	// Keep a promise for this search. We'll reset it on each update, and act only after a delay.
+	$scope.searchpromise = null;
+
+	$scope.setSearchText = function() {
+
+		// Ok, let's check the length first.
+		if ($scope.search_text.length > 2) {
+			if ($scope.searchpromise) {
+				$timeout.cancel($scope.searchpromise);
+			}
+
+			$scope.searchpromise = $timeout(function(){
+				// Things you'll do:
+				// 1. Set the location
+				// 2. Call the method to query the API.
+				$scope.getSMCPage($scope.smc_pageon,{metric: $scope.search_metric,text: $scope.search_text});
+				// 3. Set the base URL for pagination.
+				$scope.smc_baseurl = "#/smc?metric=" + $scope.search_metric + "&search=" + encodeURIComponent($scope.search_text);
+
+			},200);
+		}
+
+	}
+
+
+	// Make a call to get the page in the URL (or the default if it's not specified)....
+	// So we need to check if our search is set or not...
+
+	if ($scope.search_text != "") {
+		// Ok, run the search by search text.
+		$scope.setSearchText();
+	} else {
+		// No search, just use the default.
+		$scope.getSMCPage($scope.smc_pageon);
+	}
+	
 
 	// Poll immediately, and let it take care of further polling if need be.
 	/*

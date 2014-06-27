@@ -340,10 +340,19 @@ module.exports = function(server, smcman, bot, chat, mongoose, db, constants, pr
 
 		var input = req.params;
 
+		// Hey did they search for something? We'll include that if we did.
+		var extended_search = false;
+		if (input.text) {
+			extended_search = {
+				text: input.text,
+				metric: input.metric
+			};
+		}
+
 		// Ok, we'll want to query for a number of smcs....
 		// limit ____________v
 		// page ___________v
-		smcman.smc.smcPage(input.page,input.limit,function(smclist){
+		smcman.smc.smcPage(input.page,input.limit,extended_search,function(smclist){
 
 			res.contentType = 'json';
 			res.send(smclist);
