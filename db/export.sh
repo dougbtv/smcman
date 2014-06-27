@@ -1,9 +1,9 @@
 #!/bin/bash
-mongoexport --db smcman --collection chat --out chat.json
-mongoexport --db smcman --collection notes --out notes.json 
-mongoexport --db smcman --collection admins --out admins.json 
-mongoexport --db smcman --collection counters --out counters.json
-mongoexport --db smcman --collection uploads --out uploads.json
-mongoexport --db smcman --collection users --out users.json
-mongoexport --db smcman --collection smcs --out smcs.json
+mongoexport --db smcman --collection chat --out json/chat.json
+mongoexport --db smcman --collection notes --out json/notes.json 
+mongoexport --db smcman --collection admins --out json/admins.json 
+mongoexport --db smcman --collection counters --out json/counters.json
+mongoexport --db smcman --collection uploads --out json/uploads.json
+mongoexport --db smcman --collection users --out json/users.json
+mongoexport --db smcman --collection smcs --out json/smcs.json
 
