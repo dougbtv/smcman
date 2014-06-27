@@ -6,4 +6,5 @@ mongoexport --db smcman --collection counters --out json/counters.json
 mongoexport --db smcman --collection uploads --out json/uploads.json
 mongoexport --db smcman --collection users --out json/users.json
 mongoexport --db smcman --collection smcs --out json/smcs.json
+mongoexport --db smcman --collection ideas --out json/ideas.json
 

@@ -54,13 +54,18 @@ module.exports = function(bot, mongoose, db, constants, privates) {
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	// We have a "Chat" object which uses mongo to make for a data-driven "chat" from this bot.
-	Chat = require("./Chat.js");
+	var Chat = require("./Chat.js");
 	this.chat = new Chat(this.bot,this.mongoose,this.db,this.constants,this.privates);
 	
 	// This is an object which handles the delivery and storage of "notes" (messages to users for the next time they speak)
-	Note = require("./Note.js");
+	var Note = require("./Note.js");
 	this.note = new Note(this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
 	
+	// How about our ideas?
+	Idea = require("./Idea.js");
+	this.idea = new Idea(this.bot,this.chat,this.mongoose,this.db,this.constants,this.privates);
+	
+
 	// We have an object to describe an SMC itself.
 	var SMC = require("./SMC.js");       // The object describing an SMC itself.
 	this.smc = new SMC(this,this.bot,this.chat,this.mongoose,this.db,this.socketserver,this.constants,this.privates);
