@@ -65,6 +65,17 @@
 		<h5>Did you know that you can vote on these if you're logged in? <a href="#/login">Login!</a></h5>
 	</div>
 
+	<div class="input-group">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{search_metric}} <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a ng-click="setSearchMetric('Topic')">Topic</a></li>
+          <li><a ng-click="setSearchMetric('Nick')">Nick</a></li>
+        </ul>
+      </div><!-- /btn-group -->
+      <input type="text" class="form-control" ng-model="search_text" ng-change="setSearchText()">
+    </div><!-- /input-group -->
+
 	<div class="smcpane" ng-repeat="eachsmc in smc_list">
 		<h4>{{eachsmc.topic}}</h4>
 		<p>Went for {{eachsmc.duration}} Minutes @ {{eachsmc.startsat}}<p>
