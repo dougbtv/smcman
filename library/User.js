@@ -203,7 +203,7 @@ module.exports = function(smcman, bot, chat, mongoose, db, constants, privates) 
 
 			if (user) {
 				// Good, that's found.
-				console.log("!trace SESSION FOUND.");
+				// console.log("!trace SESSION FOUND.");
 
 				var now = new moment();
 

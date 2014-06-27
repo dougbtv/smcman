@@ -555,8 +555,6 @@ module.exports = function(smcman, bot, chat, mongoose, db, socketserver, constan
 	// Here we can handle the submission of votes.
 	this.submitVote = function(id,votefornick,votefromnick,callback) {
 
-		console.log("!trace INTO SUBMIT VOTE: %s / %s",id,votefornick);
-
 		// Ok let's pull up that smc.
 		// !bang
 		SMC.findOne({_id: id}, function(err,thesmc) { 

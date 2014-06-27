@@ -117,16 +117,20 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 
 	$scope.submitVote = function(id,nick) {
 
-		console.log("Vote on: ",id);
-		console.log("Vote for: ",nick);
-
+		// console.log("Vote on: ",id);
+		// console.log("Vote for: ",nick);
 
 		// Ok, now call up the API.
 		$http.post('/api/voteForSMC', { username: $cookies.username, session: $cookies.session, voteon: id, votefor: nick })
 			.success(function(data){
 
 				// OK, we can now go ahead and pull up this page again, showing the new votes.
-				$scope.getSMCPage($scope.smc_pageon);
+				// We need to set a search if we have one.
+				var extrasearch = undefined;
+				if ($scope.search_text != '') {
+					extrasearch = {metric: $scope.search_metric,text: $scope.search_text}
+				}
+				$scope.getSMCPage($scope.smc_pageon,extrasearch);
 
 			}.bind(this)).error(function(data){
 
@@ -147,12 +151,10 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 			searchparams.metric = search.metric;
 			searchparams.text = search.text;
 			extended_search = true;
-		}
+			// Reset the list to false? (*shrugs*)
 
+		}
 		// Ok, get those SMCs.
-		// Reset the list to false? (*shrugs*)
-		// The reason to do this is so that the pagination updates.
-		$scope.smc_list = false;
 
 		$http.post('/api/getSMCList', searchparams)
 			.success(function(data){
@@ -420,12 +422,15 @@ smcFrontEnd.controller('smcController', ['$scope', '$location', '$http', '$timeo
 				$scope.getSMCPage($scope.smc_pageon,{metric: $scope.search_metric,text: $scope.search_text});
 				// 3. Set the base URL for pagination.
 				$scope.smc_baseurl = "#/smc?metric=" + $scope.search_metric + "&search=" + encodeURIComponent($scope.search_text);
+	
+				// The reason to do this is so that the pagination updates.
+				// Hrmmm, we only want to do this when the search changes, too.
+				$scope.smc_list = false;
 
 			},200);
 		}
 
 	}
-
 
 	// Make a call to get the page in the URL (or the default if it's not specified)....
 	// So we need to check if our search is set or not...
